@@ -13,6 +13,7 @@ import { FocusAreaScreen } from '../screens/FocusAreaScreen';
 import { HistoryScreen } from '../screens/HistoryScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { AccountScreen } from '../screens/AccountScreen';
+import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/type';
 
@@ -90,11 +91,17 @@ export function RootNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        initialRouteName="Welcome"
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: colors.bg },
         }}
       >
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{ animation: 'fade' }}
+        />
         <Stack.Screen name="Tabs" component={TabsNavigator} />
         <Stack.Screen
           name="Belief"

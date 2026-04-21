@@ -9,6 +9,7 @@ export type TabsParamList = {
 };
 
 export type RootStackParamList = {
+  Welcome: undefined;
   Tabs: NavigatorScreenParams<TabsParamList>;
   Belief: undefined;
   PracticeDetail: { practiceId: string };
