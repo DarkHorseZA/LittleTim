@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../theme/colors';
+import { text } from '../theme/type';
 
 type Props = {
   eyebrow?: string;
@@ -11,9 +11,9 @@ type Props = {
 export function SectionHeader({ eyebrow, title, subtitle }: Props) {
   return (
     <View style={styles.wrap}>
-      {eyebrow ? <Text style={styles.eyebrow}>{eyebrow.toUpperCase()}</Text> : null}
-      <Text style={styles.title}>{title}</Text>
-      {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+      {eyebrow ? <Text style={text.eyebrow}>{eyebrow}</Text> : null}
+      <Text style={[text.h1, styles.title]}>{title}</Text>
+      {subtitle ? <Text style={[text.body, styles.subtitle]}>{subtitle}</Text> : null}
     </View>
   );
 }
@@ -22,22 +22,10 @@ const styles = StyleSheet.create({
   wrap: {
     marginBottom: 16,
   },
-  eyebrow: {
-    fontSize: 12,
-    letterSpacing: 1.4,
-    color: colors.inkFaint,
-    marginBottom: 6,
-    fontWeight: '600',
-  },
   title: {
-    fontSize: 26,
-    color: colors.ink,
-    fontWeight: '700',
+    marginTop: 8,
   },
   subtitle: {
-    marginTop: 6,
-    fontSize: 15,
-    color: colors.inkSoft,
-    lineHeight: 22,
+    marginTop: 8,
   },
 });

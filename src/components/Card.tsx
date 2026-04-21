@@ -1,16 +1,33 @@
 import React from 'react';
-import { StyleSheet, View, ViewProps } from 'react-native';
-import { colors, radius } from '../theme/colors';
+import { StyleSheet, View, ViewProps, ViewStyle } from 'react-native';
+import { colors, radius, shadows } from '../theme/colors';
 
 type Props = ViewProps & {
   tint?: keyof typeof colors;
+  elevation?: 'none' | 'sm' | 'md' | 'lg';
+  padded?: boolean;
 };
 
-export function Card({ style, tint = 'card', children, ...rest }: Props) {
+export function Card({
+  style,
+  tint = 'surface',
+  elevation = 'sm',
+  padded = true,
+  children,
+  ...rest
+}: Props) {
+  const elevStyle =
+    elevation === 'none' ? undefined : (shadows[elevation] as ViewStyle);
   return (
     <View
       {...rest}
-      style={[styles.card, { backgroundColor: colors[tint] }, style]}
+      style={[
+        styles.card,
+        padded && styles.padded,
+        { backgroundColor: (colors as any)[tint] },
+        elevStyle,
+        style,
+      ]}
     >
       {children}
     </View>
@@ -20,11 +37,8 @@ export function Card({ style, tint = 'card', children, ...rest }: Props) {
 const styles = StyleSheet.create({
   card: {
     borderRadius: radius.lg,
+  },
+  padded: {
     padding: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 1,
   },
 });

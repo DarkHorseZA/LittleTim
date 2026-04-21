@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Alert,
   Linking,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,20 +10,29 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, radius } from '../theme/colors';
+import { colors, radius, shadows } from '../theme/colors';
+import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { Card } from '../components/Card';
 import { focusAreas } from '../data/focusAreas';
 import { COACHING_URL, hasCoachingUrl } from '../config';
 import { useDay } from '../store/DayContext';
+import { FocusArea } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FocusArea'>;
+
+const tintFor = (area: FocusArea) => colors[area];
+const tintSoftFor = (area: FocusArea) =>
+  colors[(area + 'Soft') as keyof typeof colors] as string;
 
 export function FocusAreaScreen({ navigation, route }: Props) {
   const { focusArea } = route.params;
   const fa = focusAreas[focusArea];
+  const tint = tintFor(focusArea);
+  const tintSoft = tintSoftFor(focusArea);
   const { today, updateToday } = useDay();
   const [reflection, setReflection] = useState(today.tracker?.reflection ?? '');
 
@@ -46,94 +56,157 @@ export function FocusAreaScreen({ navigation, route }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.eyebrow}>{fa.label.toUpperCase()}</Text>
-        <Text style={styles.emoji}>{fa.emoji}</Text>
+    <View style={styles.root}>
+      <LinearGradient
+        colors={[tintSoft, colors.bg]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.6, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.topRow}>
+          <Pressable
+            hitSlop={16}
+            onPress={() => navigation.popToTop()}
+            style={styles.closeBtn}
+          >
+            <Ionicons name="close" size={22} color={colors.ink} />
+          </Pressable>
+        </View>
 
-        <Text style={styles.question}>{fa.question}</Text>
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={[styles.emojiCircle, { backgroundColor: tintSoft }]}>
+            <Text style={styles.emoji}>{fa.emoji}</Text>
+          </View>
+          <Text style={[styles.eyebrow, { color: tint }]}>{fa.label}</Text>
+          <Text style={styles.question}>{fa.question}</Text>
 
-        <Card style={styles.inputCard}>
-          <Text style={styles.inputLabel}>Your reflection (private)</Text>
-          <TextInput
-            value={reflection}
-            onChangeText={setReflection}
-            placeholder="Let the first honest sentence land here…"
-            placeholderTextColor={colors.inkFaint}
-            multiline
-            style={styles.input}
+          <View style={styles.inputCard}>
+            <View style={styles.inputHeader}>
+              <Ionicons name="create-outline" size={16} color={colors.inkSoft} />
+              <Text style={styles.inputLabel}>Reflection (private)</Text>
+            </View>
+            <TextInput
+              value={reflection}
+              onChangeText={setReflection}
+              placeholder="Let the first honest sentence land here…"
+              placeholderTextColor={colors.inkFaint}
+              multiline
+              style={styles.input}
+            />
+          </View>
+
+          <View style={[styles.teaserCard, { backgroundColor: tintSoft }]}>
+            <Ionicons name="heart-circle-outline" size={22} color={tint} />
+            <Text style={[styles.teaser, { color: colors.ink }]}>
+              {fa.coachingTeaser}
+            </Text>
+          </View>
+
+          <View style={{ height: 20 }} />
+
+          <Button
+            title={
+              hasCoachingUrl()
+                ? 'Book a coaching session'
+                : 'Book a coaching session (coming soon)'
+            }
+            icon="calendar-outline"
+            onPress={openCoaching}
+            size="lg"
           />
-        </Card>
-
-        <View style={{ height: 16 }} />
-
-        <Card tint="accentSoft">
-          <Text style={styles.teaser}>{fa.coachingTeaser}</Text>
-        </Card>
-
-        <View style={{ height: 16 }} />
-
-        <Button
-          title={
-            hasCoachingUrl()
-              ? 'Book a coaching session'
-              : 'Book a coaching session (coming soon)'
-          }
-          onPress={openCoaching}
-        />
-        <View style={{ height: 8 }} />
-        <Button
-          title="Save & close"
-          variant="soft"
-          onPress={async () => {
-            await saveReflection();
-            navigation.popToTop();
-          }}
-        />
-      </ScrollView>
-    </SafeAreaView>
+          <View style={{ height: 10 }} />
+          <Button
+            title="Save & close"
+            variant="ghost"
+            onPress={async () => {
+              await saveReflection();
+              navigation.popToTop();
+            }}
+          />
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.bg },
-  container: { padding: 24, paddingBottom: 40 },
-  eyebrow: {
-    letterSpacing: 2,
-    color: colors.inkFaint,
-    fontWeight: '800',
-    fontSize: 12,
+  root: { flex: 1, backgroundColor: colors.bg },
+  topRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
-  emoji: {
-    fontSize: 48,
-    marginTop: 8,
-    marginBottom: 8,
+  closeBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  question: {
-    fontSize: 22,
-    color: colors.ink,
-    fontWeight: '700',
-    lineHeight: 30,
+  container: { padding: 28, paddingTop: 12, paddingBottom: 40 },
+  emojiCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 20,
   },
-  inputCard: {},
+  emoji: {
+    fontSize: 44,
+  },
+  eyebrow: {
+    fontFamily: fonts.sansBold,
+    fontSize: 11,
+    letterSpacing: 2.4,
+    textTransform: 'uppercase',
+    marginBottom: 12,
+  },
+  question: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 26,
+    lineHeight: 34,
+    color: colors.ink,
+    marginBottom: 24,
+  },
+  inputCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 18,
+    ...shadows.sm,
+    marginBottom: 16,
+  },
+  inputHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   inputLabel: {
-    color: colors.inkSoft,
-    marginBottom: 8,
-    fontSize: 13,
-    fontWeight: '600',
+    ...text.eyebrow,
+    marginLeft: 6,
   },
   input: {
     minHeight: 110,
     textAlignVertical: 'top',
-    borderRadius: radius.sm,
+    fontFamily: fonts.sans,
     fontSize: 16,
     color: colors.ink,
     padding: 0,
   },
+  teaserCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: 16,
+    borderRadius: radius.lg,
+    gap: 10,
+  },
   teaser: {
-    color: colors.ink,
-    fontSize: 15,
-    lineHeight: 22,
+    fontFamily: fonts.sans,
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
   },
 });

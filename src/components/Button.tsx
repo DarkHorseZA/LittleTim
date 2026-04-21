@@ -4,11 +4,14 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  View,
   ViewStyle,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors, radius } from '../theme/colors';
+import { fonts } from '../theme/type';
 
-type Variant = 'primary' | 'ghost' | 'soft';
+type Variant = 'primary' | 'soft' | 'ghost' | 'dark';
 
 type Props = {
   title: string;
@@ -16,7 +19,10 @@ type Props = {
   variant?: Variant;
   disabled?: boolean;
   loading?: boolean;
+  icon?: keyof typeof Ionicons.glyphMap;
+  trailingIcon?: keyof typeof Ionicons.glyphMap;
   style?: ViewStyle;
+  size?: 'md' | 'lg';
 };
 
 export function Button({
@@ -25,52 +31,97 @@ export function Button({
   variant = 'primary',
   disabled,
   loading,
+  icon,
+  trailingIcon,
   style,
+  size = 'md',
 }: Props) {
-  const bg =
-    variant === 'primary'
-      ? colors.accent
-      : variant === 'soft'
-      ? colors.accentSoft
-      : 'transparent';
-  const fg =
-    variant === 'primary'
-      ? '#FFFFFF'
-      : variant === 'soft'
-      ? colors.accent
-      : colors.ink;
-  const borderColor = variant === 'ghost' ? colors.line : 'transparent';
-
+  const palette = palettes[variant];
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
       style={({ pressed }) => [
         styles.btn,
-        { backgroundColor: bg, borderColor, opacity: disabled ? 0.5 : pressed ? 0.85 : 1 },
+        size === 'lg' && styles.btnLg,
+        {
+          backgroundColor: palette.bg,
+          borderColor: palette.border,
+          opacity: disabled ? 0.5 : pressed ? 0.88 : 1,
+          transform: [{ scale: pressed ? 0.99 : 1 }],
+        },
         style,
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={fg} />
+        <ActivityIndicator color={palette.fg} />
       ) : (
-        <Text style={[styles.label, { color: fg }]}>{title}</Text>
+        <View style={styles.row}>
+          {icon ? (
+            <Ionicons
+              name={icon}
+              size={18}
+              color={palette.fg}
+              style={{ marginRight: 8 }}
+            />
+          ) : null}
+          <Text style={[styles.label, { color: palette.fg }]}>{title}</Text>
+          {trailingIcon ? (
+            <Ionicons
+              name={trailingIcon}
+              size={18}
+              color={palette.fg}
+              style={{ marginLeft: 8 }}
+            />
+          ) : null}
+        </View>
       )}
     </Pressable>
   );
 }
 
+const palettes = {
+  primary: {
+    bg: colors.clay,
+    fg: '#FFFFFF',
+    border: 'transparent',
+  },
+  soft: {
+    bg: colors.claySoft,
+    fg: colors.clayDeep,
+    border: 'transparent',
+  },
+  ghost: {
+    bg: 'transparent',
+    fg: colors.ink,
+    border: colors.line,
+  },
+  dark: {
+    bg: colors.ink,
+    fg: '#FFFFFF',
+    border: 'transparent',
+  },
+} as const;
+
 const styles = StyleSheet.create({
   btn: {
     paddingVertical: 14,
     paddingHorizontal: 20,
-    borderRadius: radius.md,
+    borderRadius: radius.pill,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  btnLg: {
+    paddingVertical: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   label: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontFamily: fonts.sansSemi,
+    fontSize: 15,
+    letterSpacing: 0.2,
   },
 });

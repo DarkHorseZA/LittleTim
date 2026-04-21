@@ -7,13 +7,13 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
-import { colors, radius } from '../theme/colors';
-import { Card } from '../components/Card';
-import { SectionHeader } from '../components/SectionHeader';
+import { colors, radius, shadows } from '../theme/colors';
+import { fonts, text } from '../theme/type';
 import { msgPractices, seePractices } from '../data/practices';
 import { PracticeKind } from '../types';
 import { useDay } from '../store/DayContext';
@@ -34,40 +34,26 @@ export function PracticeScreen({ navigation, route }: Props) {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.container}>
-        <SectionHeader
-          eyebrow="Practice"
-          title="Choose your technology"
-          subtitle="One gentle dose. You can always come back for more."
-        />
-
-        <View style={styles.toggle}>
-          <Pressable
-            style={[styles.toggleBtn, kind === 'MSG' && styles.toggleOn]}
-            onPress={() => setKind('MSG')}
-          >
-            <Text
-              style={[styles.toggleText, kind === 'MSG' && styles.toggleTextOn]}
-            >
-              MSG
-            </Text>
-          </Pressable>
-          <Pressable
-            style={[styles.toggleBtn, kind === 'SEE' && styles.toggleOn]}
-            onPress={() => setKind('SEE')}
-          >
-            <Text
-              style={[styles.toggleText, kind === 'SEE' && styles.toggleTextOn]}
-            >
-              SEE
-            </Text>
-          </Pressable>
-        </View>
-
-        <Text style={styles.blurb}>
-          {kind === 'MSG'
-            ? 'Meditative Somatic Gestures — small shapes the body remembers.'
-            : 'Somatic Experiencing Exercises — completing what the body started.'}
+        <Text style={text.eyebrow}>Practice</Text>
+        <Text style={styles.title}>Choose your technology</Text>
+        <Text style={styles.body}>
+          One gentle dose. You can always come back for more.
         </Text>
+
+        <View style={styles.segment}>
+          <SegmentButton
+            label="MSG"
+            description="Meditative Somatic Gestures"
+            active={kind === 'MSG'}
+            onPress={() => setKind('MSG')}
+          />
+          <SegmentButton
+            label="SEE"
+            description="Somatic Experiencing Exercises"
+            active={kind === 'SEE'}
+            onPress={() => setKind('SEE')}
+          />
+        </View>
 
         {list.map((p) => {
           const isDone = doneForKind && doneId === p.id;
@@ -79,87 +65,171 @@ export function PracticeScreen({ navigation, route }: Props) {
               }
               style={{ marginBottom: 12 }}
             >
-              <Card style={[styles.card, isDone && styles.cardDone]}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardTitle}>{p.title}</Text>
-                  <Text style={styles.cardDur}>{p.durationMin} min</Text>
+              <View style={[styles.card, shadows.sm, isDone && styles.cardDone]}>
+                <View style={styles.cardRow}>
+                  <View style={styles.cardLeft}>
+                    <Text style={styles.cardTitle}>{p.title}</Text>
+                    <Text style={styles.cardCue}>{p.cue}</Text>
+                  </View>
+                  {isDone ? (
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={24}
+                      color={colors.done}
+                    />
+                  ) : (
+                    <Ionicons
+                      name="chevron-forward"
+                      size={22}
+                      color={colors.inkFaint}
+                    />
+                  )}
                 </View>
-                <Text style={styles.cardCue}>{p.cue}</Text>
-                {isDone ? (
-                  <Text style={styles.cardDoneLabel}>✓ Completed today</Text>
-                ) : null}
-              </Card>
+                <View style={styles.metaRow}>
+                  <View style={styles.pill}>
+                    <Ionicons
+                      name="time-outline"
+                      size={12}
+                      color={colors.clayDeep}
+                    />
+                    <Text style={styles.pillText}>{p.durationMin} min</Text>
+                  </View>
+                  {isDone ? (
+                    <Text style={styles.doneTag}>Completed today</Text>
+                  ) : null}
+                </View>
+              </View>
             </Pressable>
           );
         })}
+
+        <View style={{ height: 24 }} />
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function SegmentButton({
+  label,
+  description,
+  active,
+  onPress,
+}: {
+  label: string;
+  description: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.segBtn, active && styles.segBtnActive]}
+    >
+      <Text style={[styles.segLabel, active && styles.segLabelActive]}>
+        {label}
+      </Text>
+      <Text style={[styles.segDesc, active && styles.segDescActive]}>
+        {description}
+      </Text>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   container: { padding: 20, paddingBottom: 40 },
-  toggle: {
+  title: {
+    ...text.h1,
+    marginTop: 8,
+    marginBottom: 6,
+  },
+  body: {
+    ...text.body,
+    marginBottom: 20,
+  },
+  segment: {
     flexDirection: 'row',
-    backgroundColor: colors.line,
-    borderRadius: radius.md,
-    padding: 4,
-    marginBottom: 16,
+    gap: 10,
+    marginBottom: 18,
   },
-  toggleBtn: {
+  segBtn: {
     flex: 1,
-    paddingVertical: 10,
-    borderRadius: radius.sm,
-    alignItems: 'center',
-  },
-  toggleOn: {
-    backgroundColor: colors.card,
-  },
-  toggleText: {
-    color: colors.inkSoft,
-    fontWeight: '700',
-    letterSpacing: 1.5,
-  },
-  toggleTextOn: {
-    color: colors.accent,
-  },
-  blurb: {
-    color: colors.inkSoft,
-    marginBottom: 16,
-    lineHeight: 20,
-  },
-  card: {
+    padding: 14,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.line,
+    backgroundColor: colors.surfaceSoft,
+  },
+  segBtnActive: {
+    borderColor: colors.clay,
+    backgroundColor: colors.clayWash,
+  },
+  segLabel: {
+    fontFamily: fonts.sansBold,
+    fontSize: 16,
+    letterSpacing: 2,
+    color: colors.inkSoft,
+  },
+  segLabelActive: {
+    color: colors.clayDeep,
+  },
+  segDesc: {
+    fontFamily: fonts.sans,
+    fontSize: 11,
+    color: colors.inkFaint,
+    marginTop: 4,
+  },
+  segDescActive: {
+    color: colors.clayDeep,
+  },
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 20,
   },
   cardDone: {
-    backgroundColor: colors.sageSoft,
-    borderColor: colors.sage,
+    backgroundColor: colors.doneSoft,
   },
-  cardHeader: {
+  cardRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
+  cardLeft: {
+    flex: 1,
+    paddingRight: 12,
+  },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontFamily: fonts.serifBold,
+    fontSize: 20,
     color: colors.ink,
   },
-  cardDur: {
-    color: colors.inkFaint,
-    fontWeight: '600',
-  },
   cardCue: {
+    ...text.body,
     marginTop: 6,
-    color: colors.inkSoft,
-    lineHeight: 20,
   },
-  cardDoneLabel: {
-    marginTop: 10,
-    color: '#4F7A4E',
-    fontWeight: '700',
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 14,
+    gap: 10,
+  },
+  pill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.clayWash,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: radius.pill,
+  },
+  pillText: {
+    fontFamily: fonts.sansSemi,
     fontSize: 12,
+    color: colors.clayDeep,
+    marginLeft: 4,
+  },
+  doneTag: {
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    color: colors.done,
   },
 });
