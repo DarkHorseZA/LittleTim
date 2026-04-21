@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "LittleTim",
+    "slug": "littletim",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "littletim",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#F7F3EE"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.littletim.app"
+    },
+    "android": {
+      "package": "com.littletim.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#F7F3EE"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
