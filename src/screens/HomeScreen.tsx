@@ -39,6 +39,7 @@ export function HomeScreen({ navigation }: Props) {
   const { today, streak, entries, settings, updateSettings } = useDay();
   const now = useMemo(() => new Date(), []);
   const belief = useMemo(() => beliefForDate(now), [now]);
+  const firstName = (settings.profile?.displayName ?? '').split(' ')[0];
 
   useEffect(() => {
     const key = todayKey(now);
@@ -70,7 +71,10 @@ export function HomeScreen({ navigation }: Props) {
             </Pressable>
           </View>
 
-          <Text style={styles.greeting}>{greet(now)},</Text>
+          <Text style={styles.greeting}>
+            {greet(now)}
+            {firstName ? `, ${firstName}` : ''}
+          </Text>
           <Text style={styles.date}>{prettyDate(now)}</Text>
 
           <View style={styles.streakCard}>

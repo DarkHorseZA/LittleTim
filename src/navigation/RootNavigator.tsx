@@ -12,6 +12,7 @@ import { TrackerScreen } from '../screens/TrackerScreen';
 import { FocusAreaScreen } from '../screens/FocusAreaScreen';
 import { HistoryScreen } from '../screens/HistoryScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
+import { AccountScreen } from '../screens/AccountScreen';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/type';
 
@@ -114,6 +115,11 @@ export function RootNavigator() {
           name="FocusArea"
           component={FocusAreaScreen}
           options={{ presentation: 'modal', animation: 'fade_from_bottom' }}
+        />
+        <Stack.Screen
+          name="Account"
+          component={AccountScreen}
+          options={{ presentation: 'modal' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

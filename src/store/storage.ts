@@ -4,13 +4,20 @@ import { DailyEntry } from '../types';
 const KEY_ENTRIES = 'littletim:entries:v1';
 const KEY_SETTINGS = 'littletim:settings:v1';
 
+export type Profile = {
+  displayName?: string;
+  email?: string;
+};
+
 export type Settings = {
   reminderHour: number; // 0-23, when the daily belief pops up in-app
   lastBeliefSeenOn?: string; // YYYY-MM-DD
+  profile?: Profile;
 };
 
 const defaultSettings: Settings = {
   reminderHour: 8,
+  profile: {},
 };
 
 export function todayKey(d: Date = new Date()): string {

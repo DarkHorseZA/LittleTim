@@ -14,4 +14,5 @@ export type RootStackParamList = {
   PracticeDetail: { practiceId: string };
   Tracker: undefined;
   FocusArea: { focusArea: FocusArea };
+  Account: undefined;
 };

@@ -10,16 +10,33 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { APP_NAME, COACHING_URL, hasCoachingUrl } from '../config';
 import { useDay } from '../store/DayContext';
 
+type Props = CompositeScreenProps<
+  BottomTabScreenProps<TabsParamList, 'Settings'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
+
 const HOURS = [6, 7, 8, 9, 10, 12, 18, 20];
 
-export function SettingsScreen() {
+function initials(name?: string): string {
+  if (!name) return '✴︎';
+  const parts = name.trim().split(/\s+/).slice(0, 2);
+  return parts.map((p) => p[0]?.toUpperCase() ?? '').join('') || '✴︎';
+}
+
+export function SettingsScreen({ navigation }: Props) {
   const { settings, updateSettings } = useDay();
+  const profile = settings.profile ?? {};
+  const signedIn = !!profile.displayName;
 
   const openCoaching = async () => {
     if (!hasCoachingUrl()) {
@@ -40,6 +57,43 @@ export function SettingsScreen() {
         <Text style={styles.body}>
           Calibrate the quiet rhythm of your day.
         </Text>
+
+        <Pressable onPress={() => navigation.navigate('Account')}>
+          <View style={styles.accountCard}>
+            <View
+              style={[
+                styles.avatar,
+                !signedIn && { backgroundColor: colors.clayWash },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.avatarText,
+                  !signedIn && { color: colors.clay },
+                ]}
+              >
+                {initials(profile.displayName)}
+              </Text>
+            </View>
+            <View style={styles.accountText}>
+              <Text style={styles.accountName}>
+                {profile.displayName || 'Guest'}
+              </Text>
+              <Text style={styles.accountSub}>
+                {signedIn
+                  ? profile.email || 'Local account'
+                  : 'Tap to sign in or set a display name'}
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={colors.inkFaint}
+            />
+          </View>
+        </Pressable>
+
+        <View style={{ height: 14 }} />
 
         <View style={styles.card}>
           <View style={styles.cardHead}>
@@ -74,7 +128,9 @@ export function SettingsScreen() {
 
         <View style={[styles.card, { backgroundColor: colors.clayWash }]}>
           <View style={styles.cardHead}>
-            <View style={[styles.iconCircle, { backgroundColor: colors.surface }]}>
+            <View
+              style={[styles.iconCircle, { backgroundColor: colors.surface }]}
+            >
               <Ionicons name="calendar-outline" size={16} color={colors.clay} />
             </View>
             <Text style={styles.cardTitle}>Working with a coach</Text>
@@ -87,7 +143,9 @@ export function SettingsScreen() {
           <View style={{ height: 12 }} />
           <Button
             title={
-              hasCoachingUrl() ? 'Open coaching link' : 'Coaching link (coming soon)'
+              hasCoachingUrl()
+                ? 'Open coaching link'
+                : 'Coaching link (coming soon)'
             }
             icon="open-outline"
             onPress={openCoaching}
@@ -96,7 +154,7 @@ export function SettingsScreen() {
 
         <View style={{ height: 24 }} />
         <Text style={styles.footer}>
-          v0.2 · Local-only. Your entries stay on this device.
+          v0.3 · Local-only. Your entries stay on this device.
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -108,6 +166,40 @@ const styles = StyleSheet.create({
   container: { padding: 20, paddingBottom: 40 },
   title: { ...text.h1, marginTop: 8, marginBottom: 6 },
   body: { ...text.body, marginBottom: 20 },
+  accountCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 16,
+    ...shadows.sm,
+  },
+  avatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: colors.clay,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 14,
+  },
+  avatarText: {
+    fontFamily: fonts.serifBold,
+    fontSize: 22,
+    color: '#FFFFFF',
+  },
+  accountText: {
+    flex: 1,
+  },
+  accountName: {
+    fontFamily: fonts.serifBold,
+    fontSize: 17,
+    color: colors.ink,
+  },
+  accountSub: {
+    ...text.caption,
+    marginTop: 2,
+  },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
