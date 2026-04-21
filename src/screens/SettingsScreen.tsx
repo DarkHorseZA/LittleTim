@@ -13,7 +13,7 @@ import { colors, radius } from '../theme/colors';
 import { Card } from '../components/Card';
 import { SectionHeader } from '../components/SectionHeader';
 import { Button } from '../components/Button';
-import { APP_NAME, COACHING_URL } from '../config';
+import { APP_NAME, COACHING_URL, hasCoachingUrl } from '../config';
 import { useDay } from '../store/DayContext';
 
 const HOURS = [6, 7, 8, 9, 10, 12, 18, 20];
@@ -22,11 +22,10 @@ export function SettingsScreen() {
   const { settings, updateSettings } = useDay();
 
   const openCoaching = async () => {
-    const supported = await Linking.canOpenURL(COACHING_URL);
-    if (!supported) {
+    if (!hasCoachingUrl()) {
       Alert.alert(
-        'Coaching link not set',
-        'Edit src/config.ts and set COACHING_URL to your booking page.'
+        'Coming soon',
+        'Coaching booking will open here once a link is added.'
       );
       return;
     }
@@ -73,11 +72,17 @@ export function SettingsScreen() {
         <Card tint="accentSoft">
           <Text style={styles.coachTitle}>Working with a coach</Text>
           <Text style={styles.coachBody}>
-            The check-in flow ends with an option to book a session. You can
-            set your own link in {`src/config.ts`}.
+            {hasCoachingUrl()
+              ? 'The check-in flow ends with an option to book a session. Edit the link any time in src/config.ts.'
+              : 'Placeholder for now. When you add a COACHING_URL in src/config.ts, the check-in flow and the button below will open it.'}
           </Text>
           <View style={{ height: 12 }} />
-          <Button title="Open coaching link" onPress={openCoaching} />
+          <Button
+            title={
+              hasCoachingUrl() ? 'Open coaching link' : 'Coaching link (coming soon)'
+            }
+            onPress={openCoaching}
+          />
         </Card>
 
         <View style={{ height: 24 }} />

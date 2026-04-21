@@ -1,6 +1,13 @@
-// App-wide config. Replace COACHING_URL with your actual booking link
-// (Calendly, Cal.com, Acuity, etc.) before shipping.
-export const COACHING_URL = 'https://calendly.com/your-handle/soul-session';
+// App-wide config.
+//
+// COACHING_URL: set this to your real booking link (Calendly, Cal.com, Acuity, etc.)
+// when you're ready. While it's empty, the "Book a coaching session" button shows
+// a friendly "coming soon" message instead of opening anything.
+export const COACHING_URL = '';
 
 export const APP_NAME = 'LittleTim';
 export const APP_TAGLINE = 'Soul technologies, one small practice at a time';
+
+export function hasCoachingUrl(): boolean {
+  return COACHING_URL.trim().length > 0;
+}

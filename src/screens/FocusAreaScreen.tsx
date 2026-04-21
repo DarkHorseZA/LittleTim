@@ -15,7 +15,7 @@ import { colors, radius } from '../theme/colors';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { focusAreas } from '../data/focusAreas';
-import { COACHING_URL } from '../config';
+import { COACHING_URL, hasCoachingUrl } from '../config';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FocusArea'>;
@@ -35,11 +35,10 @@ export function FocusAreaScreen({ navigation, route }: Props) {
 
   const openCoaching = async () => {
     await saveReflection();
-    const supported = await Linking.canOpenURL(COACHING_URL);
-    if (!supported) {
+    if (!hasCoachingUrl()) {
       Alert.alert(
-        'Coaching link not set',
-        'Edit src/config.ts and set COACHING_URL to your booking page.'
+        'Coming soon',
+        'Coaching booking will open here once a link is added.'
       );
       return;
     }
@@ -74,7 +73,14 @@ export function FocusAreaScreen({ navigation, route }: Props) {
 
         <View style={{ height: 16 }} />
 
-        <Button title="Book a coaching session" onPress={openCoaching} />
+        <Button
+          title={
+            hasCoachingUrl()
+              ? 'Book a coaching session'
+              : 'Book a coaching session (coming soon)'
+          }
+          onPress={openCoaching}
+        />
         <View style={{ height: 8 }} />
         <Button
           title="Save & close"
