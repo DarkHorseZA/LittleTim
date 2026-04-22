@@ -23,6 +23,8 @@ type Props = {
   trailingIcon?: keyof typeof Ionicons.glyphMap;
   style?: ViewStyle;
   size?: 'md' | 'lg';
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
 };
 
 export function Button({
@@ -35,12 +37,18 @@ export function Button({
   trailingIcon,
   style,
   size = 'md',
+  accessibilityLabel,
+  accessibilityHint,
 }: Props) {
   const palette = palettes[variant];
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel ?? title}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ disabled: !!(disabled || loading), busy: !!loading }}
       style={({ pressed }) => [
         styles.btn,
         size === 'lg' && styles.btnLg,

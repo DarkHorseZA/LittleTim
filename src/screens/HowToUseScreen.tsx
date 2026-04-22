@@ -47,6 +47,8 @@ export function HowToUseScreen({ navigation, route }: Props) {
               hitSlop={16}
               onPress={() => navigation.goBack()}
               style={styles.closeBtn}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
             >
               <Ionicons name="close" size={22} color={colors.ink} />
             </Pressable>
@@ -62,8 +64,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
 
           <View style={styles.lead}>
             <Text style={styles.leadText}>
-              "The book is the thread. This app is the needle you pick up
-              each day."
+              {`\u201CThe book is the thread. This app is the needle you pick up each day.\u201D`}
             </Text>
           </View>
 
@@ -179,7 +180,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
               style={{ marginBottom: 8 }}
             />
             <Text style={styles.reminderText}>
-              "Repetition unravels and resews. Small stitches make the quilt."
+              {`\u201CRepetition unravels and resews. Small stitches make the quilt.\u201D`}
             </Text>
           </View>
 
@@ -263,9 +264,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.7)',
     alignItems: 'center',
     justifyContent: 'center',

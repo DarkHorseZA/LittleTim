@@ -66,6 +66,7 @@ function TabsNavigator() {
         component={HomeScreen as any}
         options={{
           tabBarIcon: tabIcon('sunny', 'sunny-outline'),
+          tabBarAccessibilityLabel: 'Today, ritual and daily practices',
         }}
       />
       <Tabs.Screen
@@ -73,6 +74,7 @@ function TabsNavigator() {
         component={PracticeScreen as any}
         options={{
           tabBarIcon: tabIcon('leaf', 'leaf-outline'),
+          tabBarAccessibilityLabel: 'Practice, MSG, SEE, and WHEN gestures',
         }}
       />
       <Tabs.Screen
@@ -80,6 +82,7 @@ function TabsNavigator() {
         component={JournalScreen as any}
         options={{
           tabBarIcon: tabIcon('create', 'create-outline'),
+          tabBarAccessibilityLabel: 'Journal, tonight\u2019s stitch',
         }}
       />
       <Tabs.Screen
@@ -87,6 +90,7 @@ function TabsNavigator() {
         component={HistoryScreen as any}
         options={{
           tabBarIcon: tabIcon('calendar', 'calendar-outline'),
+          tabBarAccessibilityLabel: 'History, your quiet progress',
         }}
       />
       <Tabs.Screen
@@ -94,6 +98,7 @@ function TabsNavigator() {
         component={SettingsScreen as any}
         options={{
           tabBarIcon: tabIcon('settings', 'settings-outline'),
+          tabBarAccessibilityLabel: 'Settings',
         }}
       />
     </Tabs.Navigator>

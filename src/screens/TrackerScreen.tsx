@@ -99,6 +99,8 @@ export function TrackerScreen({ navigation }: Props) {
             hitSlop={16}
             onPress={() => navigation.goBack()}
             style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Close check-in"
           >
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
@@ -181,6 +183,8 @@ export function TrackerScreen({ navigation }: Props) {
             hitSlop={16}
             onPress={() => navigation.goBack()}
             style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Close check-in"
           >
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
@@ -236,6 +240,8 @@ export function TrackerScreen({ navigation }: Props) {
           hitSlop={16}
           onPress={() => navigation.popToTop()}
           style={styles.closeBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Close and return to Today"
         >
           <Ionicons name="close" size={22} color={colors.ink} />
         </Pressable>
@@ -259,7 +265,12 @@ export function TrackerScreen({ navigation }: Props) {
             <Pressable
               key={area}
               onPress={() => chooseArea(area)}
-              style={{ marginBottom: 10 }}
+              style={({ pressed }) => [
+                { marginBottom: 10 },
+                pressed && { opacity: 0.92 },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel={`Focus on ${fa.label}, currently ${scores[area]} out of 10`}
             >
               <View style={[styles.areaRow, { backgroundColor: tintSoft }]}>
                 <View style={styles.areaLeft}>
@@ -297,9 +308,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',

@@ -219,7 +219,13 @@ export function MorningRitualScreen({ navigation }: Props) {
               />
             ))}
           </View>
-          <Pressable hitSlop={16} onPress={close} style={styles.closeBtn}>
+          <Pressable
+            hitSlop={16}
+            onPress={close}
+            style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Close ritual"
+          >
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
         </View>
@@ -298,7 +304,7 @@ export function MorningRitualScreen({ navigation }: Props) {
               <View style={styles.beliefPanel}>
                 <Text style={styles.beliefLabel}>Today's belief</Text>
                 <Text style={styles.beliefStatement}>
-                  "{belief.statement}"
+                  {`\u201C${belief.statement}\u201D`}
                 </Text>
               </View>
             ) : null}
@@ -395,7 +401,7 @@ function CompletionView({
           <Text style={styles.completionEyebrow}>Sewn</Text>
           <Text style={styles.completionTitle}>One more stitch.</Text>
           <Text style={styles.completionBody}>
-            "{beliefStatement}"
+            {`\u201C${beliefStatement}\u201D`}
           </Text>
           <Text style={styles.completionSub}>
             Small stitches make the quilt.
@@ -440,9 +446,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.line,
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.7)',
     alignItems: 'center',
     justifyContent: 'center',

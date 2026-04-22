@@ -35,6 +35,8 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
           hitSlop={16}
           onPress={() => navigation.goBack()}
           style={styles.closeBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Close gesture"
         >
           <Ionicons name="close" size={22} color={colors.ink} />
         </Pressable>
@@ -95,9 +97,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',

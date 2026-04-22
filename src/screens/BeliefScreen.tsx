@@ -48,6 +48,8 @@ export function BeliefScreen({ navigation }: Props) {
             hitSlop={16}
             onPress={() => navigation.navigate('Glossary')}
             style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Open glossary"
           >
             <Ionicons
               name="help-circle-outline"
@@ -59,6 +61,8 @@ export function BeliefScreen({ navigation }: Props) {
             hitSlop={16}
             onPress={() => navigation.goBack()}
             style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Close"
           >
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
@@ -69,7 +73,7 @@ export function BeliefScreen({ navigation }: Props) {
             <Ionicons name="sparkles" size={20} color={colors.clayDeep} />
           </View>
           <Text style={styles.eyebrow}>Belief reminder</Text>
-          <Text style={styles.statement}>"{belief.statement}"</Text>
+          <Text style={styles.statement}>{`\u201C${belief.statement}\u201D`}</Text>
 
           <View style={styles.card}>
             <View style={styles.cardHeaderRow}>
@@ -113,9 +117,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.65)',
     alignItems: 'center',
     justifyContent: 'center',

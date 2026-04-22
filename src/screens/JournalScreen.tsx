@@ -119,10 +119,11 @@ export function JournalScreen() {
             <TextInput
               value={sewedWith}
               onChangeText={setSewedWith}
-              placeholder="Today I sewed with love when I…"
+              placeholder="Today I sewed with love when I\u2026"
               placeholderTextColor={colors.inkFaint}
               multiline
               style={styles.input}
+              accessibilityLabel="Sewed with love, one sentence"
             />
 
             <View style={styles.divider} />
@@ -141,16 +142,22 @@ export function JournalScreen() {
             <TextInput
               value={threadPulled}
               onChangeText={setThreadPulled}
-              placeholder="Today, when the old thread pulled, I…"
+              placeholder="Today, when the old thread pulled, I\u2026"
               placeholderTextColor={colors.inkFaint}
               multiline
               style={styles.input}
+              accessibilityLabel="When the old thread pulled, one sentence"
             />
           </View>
 
           <Pressable
             onPress={canSave ? save : undefined}
             disabled={!canSave && !savedJustNow}
+            accessibilityRole="button"
+            accessibilityLabel={
+              savedJustNow ? 'Stitch saved' : canSave ? 'Save stitch' : 'Nothing to save yet'
+            }
+            accessibilityState={{ disabled: !canSave && !savedJustNow }}
             style={({ pressed }) => [
               styles.saveBtn,
               {

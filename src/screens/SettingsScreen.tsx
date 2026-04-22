@@ -45,7 +45,11 @@ export function SettingsScreen({ navigation }: Props) {
           Calibrate the quiet rhythm of your day.
         </Text>
 
-        <Pressable onPress={() => navigation.navigate('Account')}>
+        <Pressable
+          onPress={() => navigation.navigate('Account')}
+          accessibilityRole="button"
+          accessibilityLabel={signedIn ? `Account: ${profile.displayName}` : 'Open account to sign in or set a display name'}
+        >
           <View style={styles.accountCard}>
             <View
               style={[
@@ -82,7 +86,11 @@ export function SettingsScreen({ navigation }: Props) {
 
         <View style={{ height: 14 }} />
 
-        <Pressable onPress={() => navigation.navigate('HowToUse')}>
+        <Pressable
+          onPress={() => navigation.navigate('HowToUse')}
+          accessibilityRole="button"
+          accessibilityLabel="How to use re-Genesis: the rhythm of a day in the practice"
+        >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
               <Ionicons name="compass-outline" size={16} color={colors.clay} />
@@ -103,7 +111,11 @@ export function SettingsScreen({ navigation }: Props) {
 
         <View style={{ height: 10 }} />
 
-        <Pressable onPress={() => navigation.navigate('Glossary')}>
+        <Pressable
+          onPress={() => navigation.navigate('Glossary')}
+          accessibilityRole="button"
+          accessibilityLabel="Open glossary of terms from the book"
+        >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
               <Ionicons
@@ -147,6 +159,9 @@ export function SettingsScreen({ navigation }: Props) {
                 styles.chapterChip,
                 settings.currentChapter === undefined && styles.chapterChipOn,
               ]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: settings.currentChapter === undefined }}
+              accessibilityLabel="Auto chapter, rotate through all chapters"
             >
               <Text
                 style={[
@@ -165,6 +180,9 @@ export function SettingsScreen({ navigation }: Props) {
                   key={ch.id}
                   onPress={() => updateSettings({ currentChapter: ch.id })}
                   style={[styles.chapterChip, on && styles.chapterChipOn]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: on }}
+                  accessibilityLabel={`Chapter: ${ch.shortTitle}`}
                 >
                   <Text
                     style={[
@@ -201,6 +219,9 @@ export function SettingsScreen({ navigation }: Props) {
                   key={h}
                   onPress={() => updateSettings({ reminderHour: h })}
                   style={[styles.hour, on && styles.hourOn]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: on }}
+                  accessibilityLabel={`Reminder at ${h} o'clock`}
                 >
                   <Text style={[styles.hourText, on && styles.hourTextOn]}>
                     {h}:00
@@ -213,7 +234,11 @@ export function SettingsScreen({ navigation }: Props) {
 
         <View style={{ height: 14 }} />
 
-        <Pressable onPress={() => navigation.navigate('Connect')}>
+        <Pressable
+          onPress={() => navigation.navigate('Connect')}
+          accessibilityRole="button"
+          accessibilityLabel="Connect with T: sessions, talks, reader circle, and the book"
+        >
           <View style={[styles.card, { backgroundColor: colors.clayWash }]}>
             <View style={styles.cardHead}>
               <View

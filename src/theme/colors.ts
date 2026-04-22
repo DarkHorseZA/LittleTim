@@ -9,7 +9,10 @@ export const colors = {
   // Ink
   ink: '#211A13',
   inkSoft: '#5E554B',
-  inkFaint: '#9A9086',
+  // inkFaint meets WCAG AA (4.5:1) on bg `#F5EFE6`; used for captions, meta, subs.
+  inkFaint: '#6A6058',
+  // inkHush is decorative-only (legends, dots, borders). Not for readable text.
+  inkHush: '#9A9086',
   line: '#E7DCC9',
   lineSoft: '#F1E8D9',
 

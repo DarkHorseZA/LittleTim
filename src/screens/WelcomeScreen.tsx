@@ -213,7 +213,7 @@ export function WelcomeScreen({ navigation }: Props) {
             />
           </View>
 
-          <Text style={styles.tagline}>"{tagline}"</Text>
+          <Text style={styles.tagline}>{`\u201C${tagline}\u201D`}</Text>
           <Text style={styles.breathHint}>
             Inhale.  Settle.  Begin{firstName ? `, ${firstName}` : ''}.
           </Text>

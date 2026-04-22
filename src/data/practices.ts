@@ -213,7 +213,7 @@ export const seePractices: Practice[] = [
     durationMin: 8,
     cue: 'Meet the little you, and the you of now.',
     steps: [
-      'Print two portraits of yourself: one recent, one from when you were 4–7 years old.',
+      'Print two portraits of yourself: one recent, one from when you were 4 to 7 years old.',
       'Place them face-down side by side. Turn the childhood photo up. Look softly.',
       'Remember the clothes, sounds, smells, feelings of that time. Notice your body’s response.',
       'Thank the little you, for keeping you, so you could be here now.',

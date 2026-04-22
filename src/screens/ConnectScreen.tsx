@@ -71,6 +71,8 @@ export function ConnectScreen({ navigation }: Props) {
             hitSlop={16}
             onPress={() => navigation.goBack()}
             style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Close"
           >
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
@@ -239,7 +241,7 @@ export function ConnectScreen({ navigation }: Props) {
 
           <View style={{ height: 30 }} />
           <Text style={styles.footer}>
-            "Small stitches make the quilt."
+            {`\u201CSmall stitches make the quilt.\u201D`}
           </Text>
           <View style={{ height: 30 }} />
         </ScrollView>
@@ -268,7 +270,17 @@ function ActionCard({
   disabled?: boolean;
 }) {
   return (
-    <Pressable onPress={onPress} style={styles.actionCard}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.actionCard,
+        pressed && { opacity: 0.92 },
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel={`${title}. ${cta}`}
+      accessibilityHint={body}
+      accessibilityState={{ disabled: !!disabled }}
+    >
       <View style={styles.iconCircle}>
         <Ionicons name={icon} size={18} color={colors.clay} />
       </View>
@@ -281,7 +293,7 @@ function ActionCard({
             disabled && { color: colors.inkFaint },
           ]}
         >
-          {cta} {disabled ? '' : '→'}
+          {cta} {disabled ? '' : '\u2192'}
         </Text>
       </View>
     </Pressable>
@@ -306,7 +318,14 @@ function BookFormatRow({
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.formatRow, !last && styles.formatRowDivider]}
+      style={({ pressed }) => [
+        styles.formatRow,
+        !last && styles.formatRowDivider,
+        pressed && { opacity: 0.92 },
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}: ${sub}. ${hasLink ? 'Open' : 'Coming soon'}`}
+      accessibilityState={{ disabled: !hasLink }}
     >
       <View style={styles.iconCircleSmall}>
         <Ionicons name={icon} size={14} color={colors.clay} />
@@ -347,9 +366,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.7)',
     alignItems: 'center',
     justifyContent: 'center',

@@ -72,7 +72,12 @@ export function HomeScreen({ navigation }: Props) {
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.topRow}>
             <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
-            <Pressable onPress={() => navigation.navigate('Belief')}>
+            <Pressable
+              onPress={() => navigation.navigate('Belief')}
+              hitSlop={12}
+              accessibilityRole="button"
+              accessibilityLabel="Open today's belief reminder"
+            >
               <Ionicons name="sparkles-outline" size={20} color={colors.clayDeep} />
             </Pressable>
           </View>
@@ -93,7 +98,11 @@ export function HomeScreen({ navigation }: Props) {
             ]}
           />
 
-          <Pressable onPress={() => navigation.navigate('MorningRitual')}>
+          <Pressable
+            onPress={() => navigation.navigate('MorningRitual')}
+            accessibilityRole="button"
+            accessibilityLabel={ritualDone ? 'Practice the morning ritual again' : 'Begin the morning ritual, the Five Gestures'}
+          >
             <LinearGradient
               colors={ritualDone ? gradients.sage : gradients.clay}
               start={{ x: 0, y: 0 }}
@@ -156,7 +165,11 @@ export function HomeScreen({ navigation }: Props) {
             </Text>
           </View>
 
-          <Pressable onPress={() => navigation.navigate('Belief')}>
+          <Pressable
+            onPress={() => navigation.navigate('Belief')}
+            accessibilityRole="button"
+            accessibilityLabel={`Open belief reminder: ${belief.statement}`}
+          >
             <LinearGradient
               colors={gradients.heart}
               start={{ x: 0, y: 0 }}
@@ -253,7 +266,12 @@ export function HomeScreen({ navigation }: Props) {
           </View>
           <Pressable
             onPress={() => navigation.navigate('Connect')}
-            style={styles.connectCard}
+            style={({ pressed }) => [
+              styles.connectCard,
+              pressed && { opacity: 0.92 },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Connect with T: sessions, talks, reader circle, and the book"
           >
             <View style={styles.connectIcon}>
               <Ionicons
@@ -305,7 +323,13 @@ function PracticeTile({
   onPress: () => void;
 }) {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => pressed && { opacity: 0.9 }}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => pressed && { opacity: 0.9 }}
+      accessibilityRole="button"
+      accessibilityLabel={`${kind}: ${title}. ${done ? 'Complete for today.' : 'Tap to begin.'}`}
+      accessibilityHint={`${body}`}
+    >
       <View
         style={[
           styles.tile,

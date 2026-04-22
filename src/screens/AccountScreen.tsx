@@ -82,6 +82,8 @@ export function AccountScreen({ navigation }: Props) {
             hitSlop={16}
             onPress={() => navigation.goBack()}
             style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Close account"
           >
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
@@ -113,6 +115,7 @@ export function AccountScreen({ navigation }: Props) {
               style={styles.input}
               autoCapitalize="words"
               returnKeyType="next"
+              accessibilityLabel="Display name"
             />
 
             <View style={styles.divider} />
@@ -127,6 +130,7 @@ export function AccountScreen({ navigation }: Props) {
               autoCapitalize="none"
               keyboardType="email-address"
               autoCorrect={false}
+              accessibilityLabel="Email address, optional"
             />
             <Text style={styles.caption}>
               Saved locally only. We'll use it when cloud sync ships.
@@ -189,6 +193,8 @@ function ProviderButton({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}, coming soon`}
       style={({ pressed }) => [
         styles.provider,
         { opacity: pressed ? 0.85 : 1 },
@@ -219,9 +225,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.7)',
     alignItems: 'center',
     justifyContent: 'center',

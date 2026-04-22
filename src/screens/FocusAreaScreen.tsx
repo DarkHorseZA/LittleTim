@@ -69,6 +69,8 @@ export function FocusAreaScreen({ navigation, route }: Props) {
             hitSlop={16}
             onPress={() => navigation.popToTop()}
             style={styles.closeBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Close and return to Today"
           >
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
@@ -89,10 +91,12 @@ export function FocusAreaScreen({ navigation, route }: Props) {
             <TextInput
               value={reflection}
               onChangeText={setReflection}
-              placeholder="Let the first honest sentence land here…"
+              placeholder="Let the first honest sentence land here\u2026"
               placeholderTextColor={colors.inkFaint}
               multiline
               style={styles.input}
+              accessibilityLabel="Reflection, private"
+              accessibilityHint={`Write about ${fa.label.toLowerCase()}`}
             />
           </View>
 
@@ -139,9 +143,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: 'rgba(255,255,255,0.7)',
     alignItems: 'center',
     justifyContent: 'center',

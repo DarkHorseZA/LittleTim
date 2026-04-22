@@ -86,6 +86,8 @@ export function TourCard({
           onPress={dismiss}
           style={styles.closeBtn}
           hitSlop={12}
+          accessibilityRole="button"
+          accessibilityLabel="Dismiss this tip"
         >
           <Ionicons name="close" size={16} color={colors.inkSoft} />
         </Pressable>
@@ -100,7 +102,12 @@ export function TourCard({
         </View>
       ))}
 
-      <Pressable onPress={dismiss} style={styles.gotItBtn}>
+      <Pressable
+        onPress={dismiss}
+        style={styles.gotItBtn}
+        accessibilityRole="button"
+        accessibilityLabel="Got it, dismiss this tip"
+      >
         <Text style={styles.gotItText}>Got it</Text>
       </Pressable>
     </Animated.View>
