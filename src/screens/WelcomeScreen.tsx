@@ -236,7 +236,7 @@ export function WelcomeScreen({ navigation }: Props) {
                 if (!settings.hasSeenHowTo) {
                   navigation.replace('HowToUse', { firstRun: true });
                 } else {
-                  navigation.replace('Tabs');
+                  navigation.replace('Tabs', { screen: 'Today' });
                 }
               }}
               size="lg"
