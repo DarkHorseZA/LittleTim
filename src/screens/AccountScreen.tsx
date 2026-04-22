@@ -96,7 +96,7 @@ export function AccountScreen({ navigation }: Props) {
 
           <Text style={styles.eyebrow}>Account</Text>
           <Text style={styles.title}>
-            {signedIn ? `Hello, ${profile.displayName}` : 'You, on LittleTim'}
+            {signedIn ? `Hello, ${profile.displayName}` : 'You, on re-Genesis'}
           </Text>
           <Text style={styles.body}>
             Set a display name so the app feels like yours. Cloud sign-in and

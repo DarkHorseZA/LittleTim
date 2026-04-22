@@ -5,7 +5,8 @@
 // a friendly "coming soon" message instead of opening anything.
 export const COACHING_URL = '';
 
-export const APP_NAME = 'LittleTim';
+export const APP_NAME = 're-Genesis';
+export const APP_NAME_DISPLAY_CAPS = 'RE-GENESIS';
 export const APP_TAGLINE = 'Soul technologies, one small practice at a time';
 
 export function hasCoachingUrl(): boolean {

@@ -1,6 +1,7 @@
-# LittleTim
+# re-Genesis
 
-A gentle iOS + Android app for tracking daily **soul technologies**:
+A gentle iOS + Android app companion to the **re-Genesis** book — for
+tracking the daily **soul technologies** it teaches:
 
 - **MSG** — Meditative Somatic Gestures
 - **SEE** — Somatic Experiencing Exercises

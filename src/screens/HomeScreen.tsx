@@ -17,7 +17,7 @@ import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { StreakStrip } from '../components/StreakStrip';
-import { APP_NAME } from '../config';
+import { APP_NAME_DISPLAY_CAPS } from '../config';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
 import { todayKey } from '../store/storage';
@@ -65,7 +65,7 @@ export function HomeScreen({ navigation }: Props) {
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.topRow}>
-            <Text style={styles.brand}>{APP_NAME}</Text>
+            <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
             <Pressable onPress={() => navigation.navigate('Belief')}>
               <Ionicons name="sparkles-outline" size={20} color={colors.clayDeep} />
             </Pressable>

@@ -13,7 +13,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/type';
 import { Button } from '../components/Button';
-import { APP_NAME } from '../config';
+import { APP_NAME, APP_NAME_DISPLAY_CAPS } from '../config';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
@@ -143,7 +143,7 @@ export function WelcomeScreen({ navigation }: Props) {
 
       <SafeAreaView style={{ flex: 1 }}>
         <Animated.View style={[styles.content, { opacity: fade }]}>
-          <Text style={styles.brand}>{APP_NAME.toUpperCase()}</Text>
+          <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
 
           <View style={styles.symbolWrap}>
             {/* Slow-rotating ring of breath markers */}
