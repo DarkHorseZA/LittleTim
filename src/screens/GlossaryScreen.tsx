@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
+    flexGrow: 1,
     padding: 24,
     paddingTop: 12,
     paddingBottom: 40,

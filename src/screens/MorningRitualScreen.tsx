@@ -454,6 +454,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {
+    flexGrow: 1,
     padding: 28,
     paddingBottom: 24,
     alignItems: 'center',

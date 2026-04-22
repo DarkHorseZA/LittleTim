@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  container: { padding: 28, paddingTop: 12, paddingBottom: 40 },
+  container: { flexGrow: 1, padding: 28, paddingTop: 12, paddingBottom: 40 },
   emojiCircle: {
     width: 80,
     height: 80,

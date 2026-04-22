@@ -290,7 +290,7 @@ function SegmentButton({
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  container: { padding: 20, paddingBottom: 40 },
+  container: { flexGrow: 1, padding: 20, paddingBottom: 40 },
   title: {
     ...text.h1,
     marginTop: 8,

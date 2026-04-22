@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  container: { padding: 24, paddingTop: 10, paddingBottom: 40 },
+  container: { flexGrow: 1, padding: 24, paddingTop: 10, paddingBottom: 40 },
   avatarWrap: {
     alignItems: 'center',
     marginBottom: 18,

@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   container: {
+    flexGrow: 1,
     padding: 24,
     paddingTop: 8,
     paddingBottom: 48,

@@ -416,6 +416,7 @@ const styles = StyleSheet.create({
     bottom: undefined,
   },
   container: {
+    flexGrow: 1,
     padding: 20,
     paddingBottom: 40,
   },

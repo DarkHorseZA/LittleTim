@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...shadows.sm,
   },
-  container: { padding: 20, paddingTop: 8, paddingBottom: 40 },
+  container: { flexGrow: 1, padding: 20, paddingTop: 8, paddingBottom: 40 },
   title: {
     ...text.h1,
     marginTop: 8,
