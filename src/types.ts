@@ -58,3 +58,14 @@ export type FocusAreaPrompt = {
   question: string;
   coachingTeaser: string;
 };
+
+export type TriggerGesture = {
+  id: string;
+  chapter: number; // 0 = Introduction (always unlocked), 1-9 = chapters (unlocked when settings.currentChapter >= this value)
+  theme: string; // e.g. "Self-Acceptance"
+  title: string; // T's name for the gesture, e.g. "Golden Seamstress"
+  trigger: string; // the "when" phrase, e.g. "When I feel unworthy"
+  durationMin: number;
+  framing: string; // 2-3 lines in T's voice, setting the context
+  steps: string[]; // 3-5 body-led steps, feel / whisper / touch / breathe / bless pattern
+};

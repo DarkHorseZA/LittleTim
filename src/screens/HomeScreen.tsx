@@ -177,7 +177,7 @@ export function HomeScreen({ navigation }: Props) {
 
           <View style={styles.sectionHead}>
             <Text style={text.eyebrow}>Go deeper</Text>
-            <Text style={styles.sectionTitle}>Two soul technologies</Text>
+            <Text style={styles.sectionTitle}>Three soul technologies</Text>
             <Text style={styles.sectionBody}>
               Small and daily beats big and rare.
             </Text>
@@ -200,6 +200,16 @@ export function HomeScreen({ navigation }: Props) {
             done={seeDone}
             onPress={() =>
               navigation.navigate('Practice', { initialKind: 'SEE' })
+            }
+          />
+          <View style={{ height: 12 }} />
+          <PracticeTile
+            kind="WHEN"
+            title="For the moment"
+            body="Trigger-specific gestures. Unlock as you move through the book."
+            done={false}
+            onPress={() =>
+              navigation.navigate('Practice', { initialKind: 'WHEN' })
             }
           />
 
@@ -244,7 +254,7 @@ function PracticeTile({
   done,
   onPress,
 }: {
-  kind: 'MSG' | 'SEE';
+  kind: 'MSG' | 'SEE' | 'WHEN';
   title: string;
   body: string;
   done: boolean;

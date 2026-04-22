@@ -15,10 +15,13 @@ import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { msgPractices, seePractices } from '../data/practices';
+import { triggerGestures, isTriggerUnlocked } from '../data/triggers';
 import { chapterById } from '../data/chapters';
 import { PracticeKind } from '../types';
 import { useDay } from '../store/DayContext';
 import { TourCard } from '../components/TourCard';
+
+type Kind = PracticeKind | 'WHEN';
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, 'Practice'>,
@@ -26,12 +29,10 @@ type Props = CompositeScreenProps<
 >;
 
 export function PracticeScreen({ navigation, route }: Props) {
-  const initialKind = route.params?.initialKind ?? 'MSG';
-  const [kind, setKind] = useState<PracticeKind>(initialKind);
-  const { today } = useDay();
-  const list = kind === 'MSG' ? msgPractices : seePractices;
-  const doneForKind = kind === 'MSG' ? today.msgDone : today.seeDone;
-  const doneId = kind === 'MSG' ? today.msgPracticeId : today.seePracticeId;
+  const initialKind: Kind = route.params?.initialKind ?? 'MSG';
+  const [kind, setKind] = useState<Kind>(initialKind);
+  const { today, settings } = useDay();
+  const currentChapter = settings.currentChapter;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -44,90 +45,217 @@ export function PracticeScreen({ navigation, route }: Props) {
 
         <TourCard
           storageKey="practice"
-          title="Two soul technologies."
+          title="Three soul technologies."
           tips={[
             'MSG, gestures the body remembers. SEE, sensual exercises that surface hidden belief.',
-            'Each chapter has one of each. The pill on every card shows which chapter it lives in.',
-            'Tap a card to open the step-by-step. Mark complete when you\'ve practiced.',
+            'WHEN, trigger-specific gestures for a moment of shame, grief, fear, or joy.',
+            'Each card shows which chapter unlocks it. WHEN gestures unlock as you progress.',
           ]}
         />
 
         <View style={styles.segment}>
           <SegmentButton
             label="MSG"
-            description="Meditative Somatic Gestures"
+            description="Daily gestures"
             active={kind === 'MSG'}
             onPress={() => setKind('MSG')}
           />
           <SegmentButton
             label="SEE"
-            description="Somatic Experiencing Exercises"
+            description="Sensing exercises"
             active={kind === 'SEE'}
             onPress={() => setKind('SEE')}
           />
+          <SegmentButton
+            label="WHEN"
+            description="For the moment"
+            active={kind === 'WHEN'}
+            onPress={() => setKind('WHEN')}
+          />
         </View>
 
-        {list.map((p) => {
-          const isDone = doneForKind && doneId === p.id;
-          return (
-            <Pressable
-              key={p.id}
-              onPress={() =>
-                navigation.navigate('PracticeDetail', { practiceId: p.id })
-              }
-              style={{ marginBottom: 12 }}
-            >
-              <View style={[styles.card, shadows.sm, isDone && styles.cardDone]}>
-                <View style={styles.cardRow}>
-                  <View style={styles.cardLeft}>
-                    <Text style={styles.cardTitle}>{p.title}</Text>
-                    <Text style={styles.cardCue}>{p.cue}</Text>
-                  </View>
-                  {isDone ? (
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={24}
-                      color={colors.done}
-                    />
-                  ) : (
-                    <Ionicons
-                      name="chevron-forward"
-                      size={22}
-                      color={colors.inkFaint}
-                    />
-                  )}
-                </View>
-                <View style={styles.metaRow}>
-                  <View style={styles.pill}>
-                    <Ionicons
-                      name="time-outline"
-                      size={12}
-                      color={colors.clayDeep}
-                    />
-                    <Text style={styles.pillText}>{p.durationMin} min</Text>
-                  </View>
-                  <View style={[styles.pill, styles.chapterPill]}>
-                    <Ionicons
-                      name="book-outline"
-                      size={12}
-                      color={colors.inkSoft}
-                    />
-                    <Text style={styles.chapterPillText}>
-                      {chapterById(p.chapter)?.shortTitle ?? 'Ch.'}
-                    </Text>
-                  </View>
-                  {isDone ? (
-                    <Text style={styles.doneTag}>Completed today</Text>
-                  ) : null}
-                </View>
-              </View>
-            </Pressable>
-          );
-        })}
+        {kind === 'MSG' || kind === 'SEE'
+          ? renderPracticeList({ kind, today, navigation })
+          : renderTriggerList({ currentChapter, navigation })}
 
         <View style={{ height: 24 }} />
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function renderPracticeList({
+  kind,
+  today,
+  navigation,
+}: {
+  kind: PracticeKind;
+  today: ReturnType<typeof useDay>['today'];
+  navigation: Props['navigation'];
+}) {
+  const list = kind === 'MSG' ? msgPractices : seePractices;
+  const doneForKind = kind === 'MSG' ? today.msgDone : today.seeDone;
+  const doneId = kind === 'MSG' ? today.msgPracticeId : today.seePracticeId;
+
+  return list.map((p) => {
+    const isDone = doneForKind && doneId === p.id;
+    return (
+      <Pressable
+        key={p.id}
+        onPress={() =>
+          navigation.navigate('PracticeDetail', { practiceId: p.id })
+        }
+        style={{ marginBottom: 12 }}
+      >
+        <View style={[styles.card, shadows.sm, isDone && styles.cardDone]}>
+          <View style={styles.cardRow}>
+            <View style={styles.cardLeft}>
+              <Text style={styles.cardTitle}>{p.title}</Text>
+              <Text style={styles.cardCue}>{p.cue}</Text>
+            </View>
+            {isDone ? (
+              <Ionicons
+                name="checkmark-circle"
+                size={24}
+                color={colors.done}
+              />
+            ) : (
+              <Ionicons
+                name="chevron-forward"
+                size={22}
+                color={colors.inkFaint}
+              />
+            )}
+          </View>
+          <View style={styles.metaRow}>
+            <View style={styles.pill}>
+              <Ionicons
+                name="time-outline"
+                size={12}
+                color={colors.clayDeep}
+              />
+              <Text style={styles.pillText}>{p.durationMin} min</Text>
+            </View>
+            <View style={[styles.pill, styles.chapterPill]}>
+              <Ionicons
+                name="book-outline"
+                size={12}
+                color={colors.inkSoft}
+              />
+              <Text style={styles.chapterPillText}>
+                {chapterById(p.chapter)?.shortTitle ?? 'Ch.'}
+              </Text>
+            </View>
+            {isDone ? (
+              <Text style={styles.doneTag}>Completed today</Text>
+            ) : null}
+          </View>
+        </View>
+      </Pressable>
+    );
+  });
+}
+
+function renderTriggerList({
+  currentChapter,
+  navigation,
+}: {
+  currentChapter: number | undefined;
+  navigation: Props['navigation'];
+}) {
+  return (
+    <>
+      <View style={styles.whenIntro}>
+        <Text style={styles.whenIntroText}>
+          When the old thread pulls, reach for the matching gesture. Each one
+          unlocks as you reach its chapter.
+        </Text>
+        {currentChapter === undefined ? (
+          <Text style={styles.whenIntroHint}>
+            Set your chapter in Settings to unlock more gestures. The
+            Introduction is open to everyone.
+          </Text>
+        ) : null}
+      </View>
+      {triggerGestures.map((g) => {
+        const unlocked = isTriggerUnlocked(g, currentChapter);
+        const chapter = chapterById(g.chapter);
+        return (
+          <Pressable
+            key={g.id}
+            disabled={!unlocked}
+            onPress={() =>
+              navigation.navigate('TriggerDetail', { triggerId: g.id })
+            }
+            style={{ marginBottom: 12 }}
+          >
+            <View
+              style={[
+                styles.card,
+                shadows.sm,
+                !unlocked && styles.cardLocked,
+              ]}
+            >
+              <View style={styles.cardRow}>
+                <View style={styles.cardLeft}>
+                  <Text
+                    style={[
+                      styles.triggerWhen,
+                      !unlocked && styles.lockedText,
+                    ]}
+                  >
+                    {g.trigger}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.cardTitle,
+                      !unlocked && styles.lockedText,
+                    ]}
+                  >
+                    {g.title}
+                  </Text>
+                </View>
+                {unlocked ? (
+                  <Ionicons
+                    name="chevron-forward"
+                    size={22}
+                    color={colors.inkFaint}
+                  />
+                ) : (
+                  <Ionicons
+                    name="lock-closed"
+                    size={18}
+                    color={colors.inkFaint}
+                  />
+                )}
+              </View>
+              <View style={styles.metaRow}>
+                <View style={styles.pill}>
+                  <Ionicons
+                    name="time-outline"
+                    size={12}
+                    color={colors.clayDeep}
+                  />
+                  <Text style={styles.pillText}>{g.durationMin} min</Text>
+                </View>
+                <View style={[styles.pill, styles.chapterPill]}>
+                  <Ionicons
+                    name="book-outline"
+                    size={12}
+                    color={colors.inkSoft}
+                  />
+                  <Text style={styles.chapterPillText}>
+                    {unlocked
+                      ? `${chapter?.shortTitle ?? 'Ch.'} · ${g.theme}`
+                      : `Unlocks with ${chapter?.shortTitle ?? 'Ch.'}`}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </Pressable>
+        );
+      })}
+    </>
   );
 }
 
@@ -150,7 +278,10 @@ function SegmentButton({
       <Text style={[styles.segLabel, active && styles.segLabelActive]}>
         {label}
       </Text>
-      <Text style={[styles.segDesc, active && styles.segDescActive]}>
+      <Text
+        style={[styles.segDesc, active && styles.segDescActive]}
+        numberOfLines={1}
+      >
         {description}
       </Text>
     </Pressable>
@@ -171,12 +302,13 @@ const styles = StyleSheet.create({
   },
   segment: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 8,
     marginBottom: 18,
   },
   segBtn: {
     flex: 1,
-    padding: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.line,
@@ -188,7 +320,7 @@ const styles = StyleSheet.create({
   },
   segLabel: {
     fontFamily: fonts.sansBold,
-    fontSize: 16,
+    fontSize: 14,
     letterSpacing: 2,
     color: colors.inkSoft,
   },
@@ -197,11 +329,23 @@ const styles = StyleSheet.create({
   },
   segDesc: {
     fontFamily: fonts.sans,
-    fontSize: 11,
+    fontSize: 10,
     color: colors.inkFaint,
     marginTop: 4,
   },
   segDescActive: {
+    color: colors.clayDeep,
+  },
+  whenIntro: {
+    marginBottom: 14,
+    paddingHorizontal: 2,
+  },
+  whenIntroText: {
+    ...text.body,
+  },
+  whenIntroHint: {
+    ...text.caption,
+    marginTop: 6,
     color: colors.clayDeep,
   },
   card: {
@@ -212,6 +356,13 @@ const styles = StyleSheet.create({
   cardDone: {
     backgroundColor: colors.doneSoft,
   },
+  cardLocked: {
+    backgroundColor: colors.surfaceSoft,
+    opacity: 0.72,
+  },
+  lockedText: {
+    color: colors.inkFaint,
+  },
   cardRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -219,6 +370,12 @@ const styles = StyleSheet.create({
   cardLeft: {
     flex: 1,
     paddingRight: 12,
+  },
+  triggerWhen: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 14,
+    color: colors.inkSoft,
+    marginBottom: 4,
   },
   cardTitle: {
     fontFamily: fonts.serifBold,
@@ -234,6 +391,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 14,
     gap: 10,
+    flexWrap: 'wrap',
   },
   pill: {
     flexDirection: 'row',

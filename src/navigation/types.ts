@@ -3,7 +3,7 @@ import { FocusArea, PracticeKind } from '../types';
 
 export type TabsParamList = {
   Today: undefined;
-  Practice: { initialKind?: PracticeKind } | undefined;
+  Practice: { initialKind?: PracticeKind | 'WHEN' } | undefined;
   Journal: undefined;
   History: undefined;
   Settings: undefined;
@@ -15,6 +15,7 @@ export type RootStackParamList = {
   Tabs: NavigatorScreenParams<TabsParamList>;
   Belief: undefined;
   PracticeDetail: { practiceId: string };
+  TriggerDetail: { triggerId: string };
   Tracker: undefined;
   FocusArea: { focusArea: FocusArea };
   Account: undefined;

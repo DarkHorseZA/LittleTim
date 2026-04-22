@@ -7,6 +7,7 @@ import { RootStackParamList, TabsParamList } from './types';
 import { HomeScreen } from '../screens/HomeScreen';
 import { PracticeScreen } from '../screens/PracticeScreen';
 import { PracticeDetailScreen } from '../screens/PracticeDetailScreen';
+import { TriggerDetailScreen } from '../screens/TriggerDetailScreen';
 import { BeliefScreen } from '../screens/BeliefScreen';
 import { TrackerScreen } from '../screens/TrackerScreen';
 import { FocusAreaScreen } from '../screens/FocusAreaScreen';
@@ -127,6 +128,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="PracticeDetail"
           component={PracticeDetailScreen}
+          options={{ presentation: 'modal' }}
+        />
+        <Stack.Screen
+          name="TriggerDetail"
+          component={TriggerDetailScreen}
           options={{ presentation: 'modal' }}
         />
         <Stack.Screen

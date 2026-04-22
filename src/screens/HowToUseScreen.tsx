@@ -75,7 +75,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
             </Body>
           </Section>
 
-          <Section eyebrow="Two soul technologies">
+          <Section eyebrow="Three soul technologies">
             <View style={styles.techRow}>
               <View style={styles.techCircle}>
                 <Text style={styles.techLetter}>M</Text>
@@ -106,6 +106,26 @@ export function HowToUseScreen({ navigation, route }: Props) {
                 <Body>
                   Simple sensual exercises, using sight, touch, smell, sound,
                   taste, to discover hidden belief and feel it shift.
+                </Body>
+              </View>
+            </View>
+
+            <View style={{ height: 14 }} />
+
+            <View style={styles.techRow}>
+              <View
+                style={[styles.techCircle, { backgroundColor: colors.clayDeep }]}
+              >
+                <Text style={styles.techLetter}>W</Text>
+              </View>
+              <View style={styles.techText}>
+                <Text style={styles.techTitle}>
+                  WHEN · Trigger-specific gestures
+                </Text>
+                <Body>
+                  For the moment the old thread pulls. Twenty-one gestures,
+                  one for each kind of ache, unlocking as you move through
+                  the book.
                 </Body>
               </View>
             </View>
