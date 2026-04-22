@@ -21,4 +21,5 @@ export type RootStackParamList = {
   Account: undefined;
   MorningRitual: undefined;
   Glossary: undefined;
+  Connect: undefined;
 };

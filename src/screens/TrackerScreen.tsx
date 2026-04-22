@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,6 +11,7 @@ import { ScoreSlider } from '../components/ScoreSlider';
 import { focusAreaOrder, focusAreas } from '../data/focusAreas';
 import { FocusArea, TrackerScores } from '../types';
 import { useDay } from '../store/DayContext';
+import { todayKey } from '../store/storage';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Tracker'>;
 
@@ -22,15 +23,21 @@ const defaultScores: TrackerScores = {
   relationships: 5,
 };
 
-type Step = 'scores' | 'chooseArea';
+type Step = 'scores' | 'chooseArea' | 'doneToday';
 
 const tintFor = (area: FocusArea) => colors[area];
 const tintSoftFor = (area: FocusArea) =>
   colors[(area + 'Soft') as keyof typeof colors] as string;
 
 export function TrackerScreen({ navigation }: Props) {
-  const { today, updateToday } = useDay();
-  const [step, setStep] = useState<Step>('scores');
+  const { today, settings, updateToday, updateSettings } = useDay();
+  const today3 = todayKey();
+  const alreadyDoneToday =
+    settings.lastCheckInDate === today3 && !!today.tracker?.scores;
+
+  const [step, setStep] = useState<Step>(
+    alreadyDoneToday ? 'doneToday' : 'scores'
+  );
   const [scores, setScores] = useState<TrackerScores>(
     today.tracker?.scores ?? defaultScores
   );
@@ -39,20 +46,52 @@ export function TrackerScreen({ navigation }: Props) {
     setScores((s) => ({ ...s, [area]: v }));
 
   const next = async () => {
+    const completedAt = new Date().toISOString();
     await updateToday({
-      tracker: { scores, focusArea: today.tracker?.focusArea },
+      tracker: {
+        scores,
+        focusArea: today.tracker?.focusArea,
+        reflection: today.tracker?.reflection,
+        completedAt,
+      },
     });
+
+    const patch: Parameters<typeof updateSettings>[0] = {
+      lastCheckInDate: today3,
+    };
+    if (!settings.baseline) {
+      patch.baseline = { scores, capturedOn: today3 };
+    }
+    await updateSettings(patch);
+
     setStep('chooseArea');
   };
 
   const chooseArea = async (area: FocusArea) => {
     await updateToday({
-      tracker: { scores, focusArea: area },
+      tracker: {
+        scores,
+        focusArea: area,
+        reflection: today.tracker?.reflection,
+        completedAt: today.tracker?.completedAt ?? new Date().toISOString(),
+      },
     });
     navigation.replace('FocusArea', { focusArea: area });
   };
 
-  if (step === 'scores') {
+  const deltas = useMemo(() => {
+    if (!settings.baseline) return null;
+    const base = settings.baseline.scores;
+    const current = today.tracker?.scores ?? scores;
+    return focusAreaOrder.map((area) => ({
+      area,
+      delta: current[area] - base[area],
+      current: current[area],
+      base: base[area],
+    }));
+  }, [settings.baseline, today.tracker?.scores, scores]);
+
+  if (step === 'doneToday') {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.topRow}>
@@ -65,10 +104,100 @@ export function TrackerScreen({ navigation }: Props) {
           </Pressable>
         </View>
         <ScrollView contentContainerStyle={styles.container}>
-          <Text style={text.eyebrow}>Check-in</Text>
-          <Text style={styles.title}>Rate where you are today</Text>
+          <Text style={text.eyebrow}>Today's check-in</Text>
+          <Text style={styles.title}>You've checked in today</Text>
           <Text style={styles.body}>
-            No need to think hard. First number, gently.
+            One reading per day is enough. Come back tomorrow, the thread
+            moves slowly.
+          </Text>
+
+          {deltas ? (
+            <View style={styles.card}>
+              <View style={styles.cardHead}>
+                <Ionicons
+                  name="pulse-outline"
+                  size={16}
+                  color={colors.clayDeep}
+                />
+                <Text style={styles.cardTitle}>Since your baseline</Text>
+              </View>
+              <Text style={styles.baselineMeta}>
+                Baseline captured {settings.baseline?.capturedOn}
+              </Text>
+
+              <View style={{ height: 8 }} />
+
+              {deltas.map(({ area, delta, current, base }) => {
+                const fa = focusAreas[area];
+                const sign = delta > 0 ? '+' : '';
+                const deltaColor =
+                  delta > 0
+                    ? colors.done
+                    : delta < 0
+                    ? colors.danger
+                    : colors.inkFaint;
+                return (
+                  <View key={area} style={styles.deltaRow}>
+                    <Text style={styles.deltaEmoji}>{fa.emoji}</Text>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.deltaLabel}>{fa.label}</Text>
+                      <Text style={styles.deltaNums}>
+                        {base}/10  →  {current}/10
+                      </Text>
+                    </View>
+                    <Text style={[styles.deltaValue, { color: deltaColor }]}>
+                      {sign}
+                      {delta}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          ) : null}
+
+          <View style={{ height: 16 }} />
+          <Button
+            title="Pick a focus area"
+            icon="compass-outline"
+            onPress={() => setStep('chooseArea')}
+          />
+          <View style={{ height: 10 }} />
+          <Button
+            title="Close"
+            variant="ghost"
+            onPress={() => navigation.goBack()}
+          />
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  if (step === 'scores') {
+    const isBaseline = !settings.baseline;
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.topRow}>
+          <Pressable
+            hitSlop={16}
+            onPress={() => navigation.goBack()}
+            style={styles.closeBtn}
+          >
+            <Ionicons name="close" size={22} color={colors.ink} />
+          </Pressable>
+        </View>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Text style={text.eyebrow}>
+            {isBaseline ? 'Baseline check-in' : 'Today\u2019s check-in'}
+          </Text>
+          <Text style={styles.title}>
+            {isBaseline
+              ? 'Where are you starting from?'
+              : 'Rate where you are today'}
+          </Text>
+          <Text style={styles.body}>
+            {isBaseline
+              ? 'This first reading becomes your baseline. Every future check-in is measured against it.'
+              : 'No need to think hard. First number, gently. Once a day is enough.'}
           </Text>
 
           <View style={styles.card}>
@@ -89,7 +218,12 @@ export function TrackerScreen({ navigation }: Props) {
           </View>
 
           <View style={{ height: 20 }} />
-          <Button title="Continue" onPress={next} trailingIcon="arrow-forward" size="lg" />
+          <Button
+            title={isBaseline ? 'Set baseline' : 'Continue'}
+            onPress={next}
+            trailingIcon="arrow-forward"
+            size="lg"
+          />
         </ScrollView>
       </SafeAreaView>
     );
@@ -187,6 +321,50 @@ const styles = StyleSheet.create({
     padding: 18,
     paddingBottom: 12,
     ...shadows.sm,
+  },
+  cardHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+    gap: 8,
+  },
+  cardTitle: {
+    fontFamily: fonts.serifBold,
+    fontSize: 16,
+    color: colors.ink,
+  },
+  baselineMeta: {
+    fontFamily: fonts.sans,
+    fontSize: 12,
+    color: colors.inkFaint,
+    marginBottom: 6,
+  },
+  deltaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lineSoft,
+  },
+  deltaEmoji: {
+    fontSize: 22,
+    marginRight: 12,
+  },
+  deltaLabel: {
+    fontFamily: fonts.serifBold,
+    fontSize: 15,
+    color: colors.ink,
+  },
+  deltaNums: {
+    fontFamily: fonts.sans,
+    fontSize: 12,
+    color: colors.inkSoft,
+    marginTop: 2,
+  },
+  deltaValue: {
+    fontFamily: fonts.sansSemi,
+    fontSize: 16,
+    marginLeft: 12,
   },
   areaRow: {
     borderRadius: radius.lg,

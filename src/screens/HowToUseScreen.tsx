@@ -155,10 +155,10 @@ export function HowToUseScreen({ navigation, route }: Props) {
             />
             <Rhythm
               icon="calendar-outline"
-              time="Weekly"
-              duration="3 min"
+              time="Daily"
+              duration="2 min"
               title="Wellness check-in"
-              body="Five sliders, happiness, loved, health, wealth, relationships, then a guiding question."
+              body="Five sliders, happiness, loved, health, wealth, relationships. One reading a day, measured against your baseline."
             />
           </Section>
 

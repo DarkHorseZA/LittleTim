@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  Alert,
-  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -16,13 +14,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
-import { Button } from '../components/Button';
-import {
-  APP_NAME,
-  ATTRIBUTION,
-  COACHING_URL,
-  hasCoachingUrl,
-} from '../config';
+import { APP_NAME, ATTRIBUTION } from '../config';
 import { useDay } from '../store/DayContext';
 import { chapters } from '../data/chapters';
 
@@ -43,17 +35,6 @@ export function SettingsScreen({ navigation }: Props) {
   const { settings, updateSettings } = useDay();
   const profile = settings.profile ?? {};
   const signedIn = !!profile.displayName;
-
-  const openCoaching = async () => {
-    if (!hasCoachingUrl()) {
-      Alert.alert(
-        'Coming soon',
-        'Coaching booking will open here once a link is added.'
-      );
-      return;
-    }
-    Linking.openURL(COACHING_URL);
-  };
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -232,31 +213,32 @@ export function SettingsScreen({ navigation }: Props) {
 
         <View style={{ height: 14 }} />
 
-        <View style={[styles.card, { backgroundColor: colors.clayWash }]}>
-          <View style={styles.cardHead}>
-            <View
-              style={[styles.iconCircle, { backgroundColor: colors.surface }]}
-            >
-              <Ionicons name="calendar-outline" size={16} color={colors.clay} />
+        <Pressable onPress={() => navigation.navigate('Connect')}>
+          <View style={[styles.card, { backgroundColor: colors.clayWash }]}>
+            <View style={styles.cardHead}>
+              <View
+                style={[styles.iconCircle, { backgroundColor: colors.surface }]}
+              >
+                <Ionicons
+                  name="heart-circle-outline"
+                  size={16}
+                  color={colors.clay}
+                />
+              </View>
+              <Text style={styles.cardTitle}>Connect with T</Text>
+              <View style={{ flex: 1 }} />
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={colors.inkFaint}
+              />
             </View>
-            <Text style={styles.cardTitle}>Working with a coach</Text>
+            <Text style={[styles.cardBody, { color: colors.ink }]}>
+              Book a session, invite T to speak, join the reader circle, get
+              the book in any format, or be notified when the next one lands.
+            </Text>
           </View>
-          <Text style={[styles.cardBody, { color: colors.ink }]}>
-            {hasCoachingUrl()
-              ? 'The check-in flow ends with an option to book a session. Edit the link any time in src/config.ts.'
-              : 'Placeholder for now. Add a COACHING_URL in src/config.ts and the check-in flow plus the button below will open it.'}
-          </Text>
-          <View style={{ height: 12 }} />
-          <Button
-            title={
-              hasCoachingUrl()
-                ? 'Open coaching link'
-                : 'Coaching link (coming soon)'
-            }
-            icon="open-outline"
-            onPress={openCoaching}
-          />
-        </View>
+        </Pressable>
 
         <View style={{ height: 24 }} />
         <Text style={styles.footer}>{ATTRIBUTION}</Text>

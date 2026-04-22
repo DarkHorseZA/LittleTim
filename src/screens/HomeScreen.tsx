@@ -57,7 +57,8 @@ export function HomeScreen({ navigation }: Props) {
   const msgDone = today.msgDone;
   const seeDone = today.seeDone;
   const ritualDone = !!today.morningRitualDone;
-  const trackerDone = !!today.tracker;
+  const trackerDoneToday = settings.lastCheckInDate === todayKey(now);
+  const hasBaseline = !!settings.baseline;
 
   return (
     <View style={styles.root}>
@@ -216,20 +217,63 @@ export function HomeScreen({ navigation }: Props) {
           <View style={styles.sectionHead}>
             <Text style={text.eyebrow}>Wellness tracker</Text>
             <Text style={styles.sectionTitle}>
-              {trackerDone ? 'Checked in today' : 'How are you, really?'}
+              {trackerDoneToday
+                ? 'Checked in today'
+                : hasBaseline
+                ? 'How are you, really?'
+                : 'Set your baseline'}
             </Text>
             <Text style={styles.sectionBody}>
-              {trackerDone
-                ? 'You can update your check-in any time.'
-                : 'Five quick sliders, then a reflection prompt.'}
+              {trackerDoneToday
+                ? 'One reading per day. See your change since baseline, or pick a focus area.'
+                : hasBaseline
+                ? 'Five quick sliders. Once a day is enough.'
+                : 'A single reading, so future check-ins have something to measure against.'}
             </Text>
           </View>
           <Button
-            title={trackerDone ? 'Update today’s check-in' : 'Start check-in'}
+            title={
+              trackerDoneToday
+                ? 'See today\u2019s reading'
+                : hasBaseline
+                ? 'Start check-in'
+                : 'Set baseline now'
+            }
             onPress={() => navigation.navigate('Tracker')}
             size="lg"
             trailingIcon="arrow-forward"
           />
+
+          <View style={styles.sectionHead}>
+            <Text style={text.eyebrow}>Connect</Text>
+            <Text style={styles.sectionTitle}>Stay with the thread</Text>
+            <Text style={styles.sectionBody}>
+              Work with T, find the book, or hear when the next one lands.
+            </Text>
+          </View>
+          <Pressable
+            onPress={() => navigation.navigate('Connect')}
+            style={styles.connectCard}
+          >
+            <View style={styles.connectIcon}>
+              <Ionicons
+                name="heart-circle-outline"
+                size={22}
+                color={colors.clay}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.connectTitle}>Connect with T</Text>
+              <Text style={styles.connectBody}>
+                Sessions, talks, reader circle, the book in every format.
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={colors.inkFaint}
+            />
+          </Pressable>
 
           <View style={{ height: 40 }} />
         </ScrollView>
@@ -309,6 +353,35 @@ function PracticeTile({
 }
 
 const styles = StyleSheet.create({
+  connectCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 16,
+    ...shadows.sm,
+  },
+  connectIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.clayWash,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  connectTitle: {
+    fontFamily: fonts.serifBold,
+    fontSize: 17,
+    color: colors.ink,
+  },
+  connectBody: {
+    fontFamily: fonts.sans,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.inkSoft,
+    marginTop: 2,
+  },
   root: {
     flex: 1,
     backgroundColor: colors.bg,

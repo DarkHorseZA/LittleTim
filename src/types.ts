@@ -13,6 +13,12 @@ export type TrackerEntry = {
   scores: TrackerScores;
   focusArea?: FocusArea;
   reflection?: string;
+  completedAt?: string; // ISO timestamp, set when the day's check-in is saved
+};
+
+export type BaselineRecord = {
+  scores: TrackerScores;
+  capturedOn: string; // YYYY-MM-DD of first measurement
 };
 
 export type JournalEntry = {

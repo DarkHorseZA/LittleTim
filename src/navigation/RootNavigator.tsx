@@ -19,6 +19,7 @@ import { HowToUseScreen } from '../screens/HowToUseScreen';
 import { MorningRitualScreen } from '../screens/MorningRitualScreen';
 import { JournalScreen } from '../screens/JournalScreen';
 import { GlossaryScreen } from '../screens/GlossaryScreen';
+import { ConnectScreen } from '../screens/ConnectScreen';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/type';
 
@@ -162,6 +163,11 @@ export function RootNavigator() {
           name="Glossary"
           component={GlossaryScreen}
           options={{ presentation: 'modal' }}
+        />
+        <Stack.Screen
+          name="Connect"
+          component={ConnectScreen}
+          options={{ presentation: 'modal', animation: 'fade_from_bottom' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

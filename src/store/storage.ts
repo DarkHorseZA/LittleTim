@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DailyEntry } from '../types';
+import { BaselineRecord, DailyEntry } from '../types';
 
 const KEY_ENTRIES = 'littletim:entries:v1';
 const KEY_SETTINGS = 'littletim:settings:v1';
@@ -16,6 +16,10 @@ export type Settings = {
   currentChapter?: number; // 0 = Introduction, 1-9 = chapters. Undefined = day-of-year rotation.
   hasSeenHowTo?: boolean; // true after the "How to use" screen has been shown once
   seenTours?: Record<string, boolean>; // which per-tab tour cards have been dismissed
+  baseline?: BaselineRecord; // first wellness reading, captured once for delta tracking
+  lastCheckInDate?: string; // YYYY-MM-DD of most recent tracker completion
+  notifyOnNewBook?: boolean; // user opted in for future book announcements
+  hasSeenNewBookPrompt?: boolean; // dismissed the "new book" card at least once
 };
 
 const defaultSettings: Settings = {
@@ -24,6 +28,10 @@ const defaultSettings: Settings = {
   currentChapter: undefined,
   hasSeenHowTo: false,
   seenTours: {},
+  baseline: undefined,
+  lastCheckInDate: undefined,
+  notifyOnNewBook: false,
+  hasSeenNewBookPrompt: false,
 };
 
 export function todayKey(d: Date = new Date()): string {
