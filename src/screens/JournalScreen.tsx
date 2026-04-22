@@ -105,7 +105,7 @@ export function JournalScreen() {
             tips={[
               'Each evening, write one stitch you sewed, and one moment the old thread pulled.',
               'You\'re not being graded. The body reads honesty, not eloquence.',
-              'Read a week of stitches aloud on a Sunday — the quilt begins to show.',
+              'Read a week of stitches aloud on a Sunday, the quilt begins to show.',
             ]}
           />
 
@@ -189,7 +189,7 @@ export function JournalScreen() {
           <Text style={styles.pastSub}>
             {pastEntries.length === 0
               ? 'Your previous entries will appear here.'
-              : 'Read them aloud at the end of the week — you will see the quilt.'}
+              : 'Read them aloud at the end of the week, you will see the quilt.'}
           </Text>
 
           {pastEntries.map((e) => (

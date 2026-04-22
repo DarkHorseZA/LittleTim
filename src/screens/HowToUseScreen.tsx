@@ -69,7 +69,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
 
           <Section eyebrow="What this is">
             <Body>
-              re-Genesis is a process — unravelling an inherited thread of
+              re-Genesis is a process, unravelling an inherited thread of
               Fear and resewing with Love, one small stitch at a time. The
               book holds the teaching. The app holds the daily rhythm.
             </Body>
@@ -104,8 +104,8 @@ export function HowToUseScreen({ navigation, route }: Props) {
                   SEE · Somatic Experiencing Exercise
                 </Text>
                 <Body>
-                  Simple sensual exercises — using sight, touch, smell, sound,
-                  taste — to discover hidden belief and feel it shift.
+                  Simple sensual exercises, using sight, touch, smell, sound,
+                  taste, to discover hidden belief and feel it shift.
                 </Body>
               </View>
             </View>
@@ -138,14 +138,14 @@ export function HowToUseScreen({ navigation, route }: Props) {
               time="Weekly"
               duration="3 min"
               title="Wellness check-in"
-              body="Five sliders — happiness, loved, health, wealth, relationships — then a guiding question."
+              body="Five sliders, happiness, loved, health, wealth, relationships, then a guiding question."
             />
           </Section>
 
           <Section eyebrow="Where are you in the book?">
             <Body>
               Each chapter has its own belief, MSG, and SEE. In Settings, tell
-              the app which chapter you're reading — Today will follow that
+              the app which chapter you're reading, Today will follow that
               chapter until you move on. Leave it on Auto to let the app
               rotate through all chapters.
             </Body>

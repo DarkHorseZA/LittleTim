@@ -1,6 +1,6 @@
 import { Practice } from '../types';
 
-// 10 MSGs and 10 SEEs — one of each per chapter (Introduction + Chapters 1-9).
+// 10 MSGs and 10 SEEs, one of each per chapter (Introduction + Chapters 1-9).
 // Titles and step copy are distilled from the manuscript's practice sections.
 // Short, app-sized cues. Attribution lives in Settings.
 
@@ -68,7 +68,7 @@ export const msgPractices: Practice[] = [
       'Breathe in through your nose, up to the space just behind your eyes. Hold there a moment, gaze gently in that direction.',
       'Release through your mouth, opening wide. Let the breath fall to the space between your hips.',
       'Keep this rhythm. Whisper: “I am willing to remember creating from Love.”',
-      'Each time the breath gathers behind your eyes — look. Notice a picture, a word, a colour, a texture.',
+      'Each time the breath gathers behind your eyes, look. Notice a picture, a word, a colour, a texture.',
       'Feel your body relax. If nothing comes, no worry. Repetition is how we resew.',
     ],
   },
@@ -81,9 +81,9 @@ export const msgPractices: Practice[] = [
     cue: 'Returning to earth is homecoming, not punishment.',
     steps: [
       'Sit comfortably. Close your eyes.',
-      'Both hands on your belly — where you were first held as earth. Breathe in through your nose, out through your mouth.',
+      'Both hands on your belly, where you were first held as earth. Breathe in through your nose, out through your mouth.',
       'Whisper: “I am earth.”',
-      'Feel the ground under you — floor, soil, foundation. Whisper: “I came from earth. I will return to earth. It is not a curse. It is home.”',
+      'Feel the ground under you, floor, soil, foundation. Whisper: “I came from earth. I will return to earth. It is not a curse. It is home.”',
       'One hand moves to your heart. Whisper: “The breath in me is the breath of lives. I have always been. I will always be.”',
       'Breathe once more. Whisper: “I am wrapped in light.” Stay for a few breaths.',
     ],
@@ -94,7 +94,7 @@ export const msgPractices: Practice[] = [
     kind: 'MSG',
     title: 'I Let Go. I Resew with Love.',
     durationMin: 3,
-    cue: 'One gesture, repeated — unraveling shame, guilt, blame.',
+    cue: 'One gesture, repeated, unraveling shame, guilt, blame.',
     steps: [
       'Sit. Close your eyes. Both hands on your heart.',
       'Open your arms out wide, as if letting something out. Whisper: “I let go of shame.”',
@@ -110,14 +110,14 @@ export const msgPractices: Practice[] = [
     kind: 'MSG',
     title: 'I Am Not Alone',
     durationMin: 2,
-    cue: 'The Aboriginal Blessing — received, not earned.',
+    cue: 'The Aboriginal Blessing, received, not earned.',
     steps: [
       'Sit. Close your eyes.',
       'Hands on your heart. Whisper: “I am not alone. I am from Love.”',
       'Hands on your belly. Whisper: “I am male and female, both, whole.”',
       'Hands on your face. Whisper: “I am blessed. I am very good.”',
       'Breathe. Stay. Remember.',
-      'Through your day, touch your face and let the cool of your hand remind you: “I am blessed — infused with permission and power.”',
+      'Through your day, touch your face and let the cool of your hand remind you: “I am blessed, infused with permission and power.”',
     ],
   },
   {
@@ -126,11 +126,11 @@ export const msgPractices: Practice[] = [
     kind: 'MSG',
     title: 'The Five Gestures',
     durationMin: 1,
-    cue: 'The re-Genesis daily practice — feel, whisper, touch, breathe, bless.',
+    cue: 'The re-Genesis daily practice, feel, whisper, touch, breathe, bless.',
     steps: [
       'Hand on heart. Feel what you feel.',
       'Whisper one “let there be…” for what you want to create today.',
-      'Touch your palms together — one small action to embody the intention.',
+      'Touch your palms together, one small action to embody the intention.',
       'Three breaths. Whisper: “I breathe the breath of lives.”',
       'Hand on heart. Whisper: “I am blessed. I may. I can.”',
       'Open your eyes. Go sew your day.',
@@ -148,7 +148,7 @@ export const msgPractices: Practice[] = [
       'Whisper: “I am safe. I am earth. I am wrapped in light.” Take one breath.',
       'Recall a moment today when fear, shame, or forgetting pulled at you. Don’t judge. Just let it be present.',
       'Whisper: “I am not that feeling. I am the one who feels it.” Take another breath.',
-      'Whisper: “I sew one stitch — right here, right now.”',
+      'Whisper: “I sew one stitch, right here, right now.”',
       'Other hand on your belly. A final breath. That was a stitch.',
     ],
   },
@@ -156,7 +156,7 @@ export const msgPractices: Practice[] = [
     id: 'msg-ch9',
     chapter: 9,
     kind: 'MSG',
-    title: 'I Am Love, Creating — Not Alone',
+    title: 'I Am Love, Creating, Not Alone',
     durationMin: 2,
     cue: 'The Divine Matrix is Someone, weaving with you.',
     steps: [
@@ -165,7 +165,7 @@ export const msgPractices: Practice[] = [
       'Hands on your belly. Whisper: “Earth is my mother. I am held.”',
       'Hands on your chest, over your lungs. Whisper: “Spirit breathes with me.”',
       'Reach one hand out beside you, as if touching Someone there. Whisper: “They are here. They are weaving with me.”',
-      'Both hands back to your heart. Whisper: “I am Love, creating — and I am not alone.”',
+      'Both hands back to your heart. Whisper: “I am Love, creating, and I am not alone.”',
     ],
   },
 ];
@@ -184,7 +184,7 @@ export const seePractices: Practice[] = [
       'Switch pens and hands. With your non-dominant hand, in the other colour, write whatever answer arrives. Nod your head. Acknowledge.',
       'Repeat: “Are we worthy?” Write, switch, answer, nod.',
       'Repeat: “Are we willing to unravel the coarse black thread?” Answer, nod.',
-      'If the answer was yes — write “thank you.” If no — write “I invite us. I want at-one-ment.” Allow a second reply.',
+      'If the answer was yes, write “thank you.” If no, write “I invite us. I want at-one-ment.” Allow a second reply.',
       'Jot down any sensations or emotions you noticed. Don’t analyse.',
     ],
   },
@@ -197,11 +197,11 @@ export const seePractices: Practice[] = [
     cue: 'Engage your five senses to wake your sixth.',
     steps: [
       'Gather: a box of matches, a candle, an uncut fruit, a facecloth, a bowl of cold water.',
-      'In private, pick up the matchbox. Feel its texture. Smell it. Shake it — listen. Slide it open slowly.',
+      'In private, pick up the matchbox. Feel its texture. Smell it. Shake it, listen. Slide it open slowly.',
       'Take a match. Feel the stick and head. Strike it. Watch the flame. Light the candle. Watch the wax pool.',
       'Put your hand on your heart. Say: “I am willing to feel.” Note what you felt.',
-      'Repeat with the uncut fruit — pick up, smell, touch, bite or peel, taste, hear.',
-      'Repeat with the facecloth and cold water — dunk, wring, wipe your face gently, repeat.',
+      'Repeat with the uncut fruit, pick up, smell, touch, bite or peel, taste, hear.',
+      'Repeat with the facecloth and cold water, dunk, wring, wipe your face gently, repeat.',
       'Note what you felt. What reactions arose. Any memories.',
     ],
   },
@@ -216,11 +216,11 @@ export const seePractices: Practice[] = [
       'Print two portraits of yourself: one recent, one from when you were 4–7 years old.',
       'Place them face-down side by side. Turn the childhood photo up. Look softly.',
       'Remember the clothes, sounds, smells, feelings of that time. Notice your body’s response.',
-      'Thank the little you — for keeping you, so you could be here now.',
+      'Thank the little you, for keeping you, so you could be here now.',
       'Turn that photo over. Turn the recent one up. Look at your own eyes. Ask: “What’s different? What do I long for?” Don’t filter.',
       'Turn both photos face up. Look between them slowly. Feel.',
       'Ask them: “What do we have in common?” If nothing arrives, whisper: “Earth. We have our earth in common.”',
-      'Thank both — for bringing you to this moment. Make notes.',
+      'Thank both, for bringing you to this moment. Make notes.',
     ],
   },
   {
@@ -232,7 +232,7 @@ export const seePractices: Practice[] = [
     cue: 'Simple, childlike, powerful.',
     steps: [
       'Gather a piece of white paper, a pencil, and a few coloured crayons.',
-      'In the middle, draw yourself — a stick figure is perfect.',
+      'In the middle, draw yourself, a stick figure is perfect.',
       'Look at the face you drew. Smiling or frowning? Ask softly: why?',
       'Choose a crayon. Draw a thick circle around yourself. Feel the texture and smell.',
       'At the bottom of the circle, in another colour, write SAFE. Say: “I am safe.” Smile.',
@@ -250,7 +250,7 @@ export const seePractices: Practice[] = [
     durationMin: 10,
     cue: '“You are earth, I am earth, we are earth, we are home.”',
     steps: [
-      'Set aside daytime — before work, a lunch break, or a weekend morning.',
+      'Set aside daytime, before work, a lunch break, or a weekend morning.',
       'Go outside: park, garden, forest. Take off your shoes and socks. Be willing to get your hands dirty.',
       'Feel the sun on your face. Say quietly to the sun: “You are earth. I am earth. We are home.”',
       'Feel the grass or soil under your feet. Wiggle your toes. Say it to the grass.',
@@ -284,10 +284,10 @@ export const seePractices: Practice[] = [
     durationMin: 6,
     cue: 'Permission and ability, given freely.',
     steps: [
-      'Choose a place where you feel at ease — your home, office, a park.',
-      'Move slowly through it. At every thing — phone, chair, cup, pet, person, this book — kneel or pause.',
+      'Choose a place where you feel at ease, your home, office, a park.',
+      'Move slowly through it. At every thing, phone, chair, cup, pet, person, this book, kneel or pause.',
       'Touch it gently. Say: “I am blessed. I bless you.”',
-      'Fill the words with permission and ability to be exactly who they are — like the waters in the beginning, like the sky.',
+      'Fill the words with permission and ability to be exactly who they are, like the waters in the beginning, like the sky.',
       'When you are done, note what you felt on your body and in your heart. Note any emotion shift.',
     ],
   },
@@ -301,7 +301,7 @@ export const seePractices: Practice[] = [
     steps: [
       'Each morning, after the Five Gestures, write one sentence: “Today I will sew with love when I…”',
       'Examples: “…speak kindly to myself”, “…listen without interrupting”, “…take a deep breath before I answer.”',
-      'At the end of the day, tick it if you did it. No judgement if you didn’t — just notice.',
+      'At the end of the day, tick it if you did it. No judgement if you didn’t, just notice.',
       'After seven days, look back. A new pattern will already be showing.',
     ],
   },
@@ -328,9 +328,9 @@ export const seePractices: Practice[] = [
     durationMin: 8,
     cue: 'You sew some squares. They sew the rest.',
     steps: [
-      'On paper, draw a simple patchwork quilt — a grid of squares.',
+      'On paper, draw a simple patchwork quilt, a grid of squares.',
       'In the centre squares (visible), write things you have consciously created with love this week.',
-      'Around the edges (out of sight), write things that have happened to you or for you — unexpected kindnesses, synchronicities, healings, doors that opened.',
+      'Around the edges (out of sight), write things that have happened to you or for you, unexpected kindnesses, synchronicities, healings, doors that opened.',
       'Look at the whole quilt. Notice how visible and invisible squares are woven together.',
       'Whisper: “I sewed some of these. They sewed the others. Together, we made this.” Thank Them.',
     ],

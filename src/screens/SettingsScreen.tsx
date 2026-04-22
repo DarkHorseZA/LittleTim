@@ -134,7 +134,7 @@ export function SettingsScreen({ navigation }: Props) {
             <View style={{ flex: 1 }}>
               <Text style={styles.cardTitle}>Glossary</Text>
               <Text style={styles.linkSub}>
-                Words from the book — MSG, SEE, bārak, ruach, and more.
+                Words from the book, MSG, SEE, bārak, ruach, and more.
               </Text>
             </View>
             <Ionicons

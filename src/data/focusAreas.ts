@@ -8,7 +8,7 @@ export const focusAreas: Record<FocusArea, FocusAreaPrompt> = {
     label: 'Happiness',
     emoji: '☀️',
     question:
-      'When you picture being happy, what belief is under the feeling — is it sewn with Fear, or with Love?',
+      'When you picture being happy, what belief is under the feeling, is it sewn with Fear, or with Love?',
     coachingTeaser:
       'A coach can help you trace that thread, unravel what does not belong, and resew with Love.',
   },

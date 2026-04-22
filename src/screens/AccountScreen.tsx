@@ -46,7 +46,7 @@ export function AccountScreen({ navigation }: Props) {
   const comingSoon = (method: string) =>
     Alert.alert(
       'Coming soon',
-      `${method} sign-in is on the roadmap. For now your progress is saved on this device — add a display name to personalize your experience.`
+      `${method} sign-in is on the roadmap. For now your progress is saved on this device, add a display name to personalize your experience.`
     );
 
   const signOut = () => {
@@ -154,7 +154,7 @@ export function AccountScreen({ navigation }: Props) {
           <View style={styles.soonRow}>
             <Ionicons name="lock-closed" size={12} color={colors.inkFaint} />
             <Text style={styles.soonText}>
-              Cloud sign-in coming soon — local for now.
+              Cloud sign-in coming soon, local for now.
             </Text>
           </View>
 

@@ -23,20 +23,20 @@ export const glossary: GlossaryTerm[] = [
     id: 'see',
     term: 'SEE · Somatic Experiencing Exercise',
     definition:
-      'A simple sensual exercise — engaging sight, touch, smell, sound, taste — to discover hidden belief and feel it shift.',
+      'A simple sensual exercise, engaging sight, touch, smell, sound, taste, to discover hidden belief and feel it shift.',
   },
   {
     id: 'five-gestures',
     term: 'The Five Gestures',
     definition:
-      'Feel · Whisper · Touch · Breathe · Bless. The creative gestures of The Divine — and ours to practice, every morning, under five minutes.',
+      'Feel · Whisper · Touch · Breathe · Bless. The creative gestures of The Divine, and ours to practice, every morning, under five minutes.',
   },
   {
     id: 'imagio-dei',
     term: 'Imagio Dei',
     origin: 'Latin',
     definition:
-      'Image of God. The picture of The Divine sewn into us through ancestors and childhood — often invisible, always influential.',
+      'Image of God. The picture of The Divine sewn into us through ancestors and childhood, often invisible, always influential.',
   },
   {
     id: 'imagio-animi',
@@ -49,7 +49,7 @@ export const glossary: GlossaryTerm[] = [
     id: 'aboriginal-i-am',
     term: 'Aboriginal I Am',
     definition:
-      'The original you — your essence, held in the Great Library of your atoms. Folded and stored for safekeeping. Waiting to unfold.',
+      'The original you, your essence, held in the Great Library of your atoms. Folded and stored for safekeeping. Waiting to unfold.',
   },
   {
     id: 'coarse-black-thread',
@@ -62,35 +62,35 @@ export const glossary: GlossaryTerm[] = [
     term: 'Bārak',
     origin: 'Hebrew (בָּרַךְ)',
     definition:
-      'Blessing. Not a wish. An infusion of permission and ability — empowerment, resources, flourishing. "I am blessed. I may. I can."',
+      'Blessing. Not a wish. An infusion of permission and ability, empowerment, resources, flourishing. "I am blessed. I may. I can."',
   },
   {
     id: 'ruach',
     term: 'Ruach',
     origin: 'Hebrew (רוּחַ)',
     definition:
-      'Spirit. Breath. In the beginning, Ruach hovered over the waters — leaning in, like a lover.',
+      'Spirit. Breath. In the beginning, Ruach hovered over the waters, leaning in, like a lover.',
   },
   {
     id: 'nephesh',
     term: 'Nephesh',
     origin: 'Hebrew (נֶפֶשׁ)',
     definition:
-      'Soul. Your living, breathing, emotional Life Force — spirit and earth woven together. Mind and body, at one.',
+      'Soul. Your living, breathing, emotional Life Force, spirit and earth woven together. Mind and body, at one.',
   },
   {
     id: 'nishmat-chayyim',
     term: 'Nishmat Chayyim',
     origin: 'Hebrew (נִשְׁמַ֣ת חַיִּ֑ים)',
     definition:
-      'The breath of lives — plural, eternal. What was breathed into you. You are not a candle burning once.',
+      'The breath of lives, plural, eternal. What was breathed into you. You are not a candle burning once.',
   },
   {
     id: 'tov-me-od',
     term: 'Tov me’od',
     origin: 'Hebrew (טוֹב מְאֹד)',
     definition:
-      'Exceedingly good. Pleasing. Delicious. What They say when They see you — every time.',
+      'Exceedingly good. Pleasing. Delicious. What They say when They see you, every time.',
   },
   {
     id: 'let-there-be',
@@ -108,12 +108,12 @@ export const glossary: GlossaryTerm[] = [
     id: 'patchwork-quilt',
     term: 'The patchwork quilt',
     definition:
-      'Your life, spread out on the black-wood table. Little fabric squares — the essence of you, held together by thread. Ours to unravel and resew.',
+      'Your life, spread out on the black-wood table. Little fabric squares, the essence of you, held together by thread. Ours to unravel and resew.',
   },
   {
     id: 'god-wound',
     term: 'The God-Wound',
     definition:
-      'Shame, abandonment, betrayal — experienced in association with The Divine and passed down through generations. The wound that holds other wounds in place.',
+      'Shame, abandonment, betrayal, experienced in association with The Divine and passed down through generations. The wound that holds other wounds in place.',
   },
 ];

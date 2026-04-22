@@ -46,7 +46,7 @@ export function PracticeScreen({ navigation, route }: Props) {
           storageKey="practice"
           title="Two soul technologies."
           tips={[
-            'MSG — gestures the body remembers. SEE — sensual exercises that surface hidden belief.',
+            'MSG, gestures the body remembers. SEE, sensual exercises that surface hidden belief.',
             'Each chapter has one of each. The pill on every card shows which chapter it lives in.',
             'Tap a card to open the step-by-step. Mark complete when you\'ve practiced.',
           ]}

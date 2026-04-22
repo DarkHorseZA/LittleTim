@@ -86,9 +86,9 @@ export function HomeScreen({ navigation }: Props) {
             storageKey="today"
             title="This is Today."
             tips={[
-              'Tap the Morning Ritual to begin the Five Gestures — under five minutes, the anchor of your day.',
+              'Tap the Morning Ritual to begin the Five Gestures, under five minutes, the anchor of your day.',
               'Your streak grows when you complete the ritual, an MSG, or an SEE.',
-              'Tap today\'s belief card for its somatic embedding — a small thing to do with your body.',
+              'Tap today\'s belief card for its somatic embedding, a small thing to do with your body.',
             ]}
           />
 

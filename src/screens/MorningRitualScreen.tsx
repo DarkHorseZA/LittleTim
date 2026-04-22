@@ -51,7 +51,7 @@ const STEPS: RitualStep[] = [
     icon: 'sparkles',
     tint: colors.clay,
     tintSoft: colors.claySoft,
-    body: 'Whisper your intention — a lover\'s whisper, not a shout. "Let there be ..." Let today\'s belief land as you say it.',
+    body: 'Whisper your intention, a lover\'s whisper, not a shout. "Let there be ..." Let today\'s belief land as you say it.',
   },
   {
     id: 'touch',

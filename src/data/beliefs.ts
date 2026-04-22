@@ -1,7 +1,7 @@
 import { Belief } from '../types';
 
 // One belief per chapter (Introduction + Chapters 1-9).
-// Statements and embeddings are distilled in the book's voice — paraphrased
+// Statements and embeddings are distilled in the book's voice, paraphrased
 // from the manuscript's "Chapter Takeaway" sections, never lifted verbatim.
 export const beliefs: Belief[] = [
   {
@@ -44,7 +44,7 @@ export const beliefs: Belief[] = [
     chapter: 5,
     statement: 'I am Love from Love.',
     embedding:
-      'Open your arms away from your body — “I let go of shame.” Bring them back to your heart — “I resew with Love.”',
+      'Open your arms away from your body, “I let go of shame.” Bring them back to your heart, “I resew with Love.”',
   },
   {
     id: 'b-ch6',
@@ -72,7 +72,7 @@ export const beliefs: Belief[] = [
     chapter: 9,
     statement: 'They are here. They are weaving with me.',
     embedding:
-      'Reach one hand out beside you. Whisper: “I am Love, creating — and I am not alone.”',
+      'Reach one hand out beside you. Whisper: “I am Love, creating, and I am not alone.”',
   },
 ];
 

@@ -82,9 +82,9 @@ export function HistoryScreen() {
           storageKey="history"
           title="Your quiet progress."
           tips={[
-            'The grid holds the last five weeks — each cell deepens as you practice more on that day.',
+            'The grid holds the last five weeks, each cell deepens as you practice more on that day.',
             'A day counts when the ritual, an MSG, or an SEE is complete.',
-            'Scroll below for day-by-day entries — a small gallery of your sewing.',
+            'Scroll below for day-by-day entries, a small gallery of your sewing.',
           ]}
         />
 

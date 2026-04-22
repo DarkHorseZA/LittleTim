@@ -21,7 +21,7 @@ type Props = {
 
 /**
  * A dismissible, once-only card shown the first time a user visits a tab.
- * A "gentle note" — not a modal, not a coachmark. Appears inline, can be
+ * A "gentle note", not a modal, not a coachmark. Appears inline, can be
  * dismissed with the small close button, and never shows again for that
  * storageKey.
  */
