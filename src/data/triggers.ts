@@ -277,6 +277,57 @@ export const triggerGestures: TriggerGesture[] = [
       'Palms together at the heart. Three soft claps. \u201CLet there be more of this.\u201D',
     ],
   },
+  {
+    id: 'tr-original-worth',
+    chapter: 6,
+    theme: 'Original Worth',
+    title: 'I Am Very Good',
+    trigger: 'When I feel defective',
+    durationMin: 2,
+    framing:
+      'Before the thread of Fear was sewn in, Love looked at you and said, very good. That stitch is still there. The defect is a story, not your design.',
+    steps: [
+      'Sit. Both hands over your heart, one on top of the other.',
+      'Breathe in slowly. On the exhale, whisper: \u201CI am not defective.\u201D',
+      'Move your hands to your belly. Whisper: \u201CI was made on purpose.\u201D',
+      'Hands on your face, gently. Whisper: \u201CVery good. Still very good.\u201D',
+      'Return hands to heart. One last breath. \u201CI am made in Love.\u201D',
+    ],
+  },
+  {
+    id: 'tr-belonging',
+    chapter: 6,
+    theme: 'Belonging',
+    title: 'I Am Welcome Here',
+    trigger: 'When I feel I do not belong',
+    durationMin: 2,
+    framing:
+      'The Aboriginal blessing is older than the room you are in. You carry it in. You are not an intruder, you are a guest Love already invited.',
+    steps: [
+      'Plant both feet. Feel the floor hold you.',
+      'Hand on belly. Whisper: \u201CI have permission to be here.\u201D',
+      'Hand on heart. Whisper: \u201CI have the ability to be me.\u201D',
+      'Open both palms, soft, at your sides. \u201CI am welcome. I welcome back.\u201D',
+      'One slow breath in. One slow breath out. Stay a moment.',
+    ],
+  },
+  {
+    id: 'tr-fill-not-conquer',
+    chapter: 6,
+    theme: 'Filling, not Conquering',
+    title: 'I Fill with Love',
+    trigger: 'When I want to dominate',
+    durationMin: 2,
+    framing:
+      'The old reading says subdue. The true reading says fill. Spirit and Earth do not fight, they pour into each other. You can do the same.',
+    steps: [
+      'Pause. Feel the push in your chest or jaw. Do not judge it.',
+      'Unclench your hands. Let the palms open upward on your thighs.',
+      'Inhale slowly: \u201CI fill.\u201D Exhale slowly: \u201CI do not force.\u201D',
+      'Hand on heart. Whisper: \u201CLove is stronger than pressure.\u201D',
+      'One more breath. Then speak, or act, from the softer place.',
+    ],
+  },
 
   // — Chapter 7: Sewing with Love —
   {
@@ -294,6 +345,40 @@ export const triggerGestures: TriggerGesture[] = [
       'Whisper: \u201CI soften. I do not break.\u201D',
       'Turn your head gently side to side, saying \u201CI am willing\u201D to one side, \u201Cto change\u201D to the other.',
       'Hand on heart. Whisper: \u201CI am a flowing stitch. I bend, I hold.\u201D',
+    ],
+  },
+  {
+    id: 'tr-return-to-ritual',
+    chapter: 7,
+    theme: 'Return to Ritual',
+    title: 'I Return to the Five',
+    trigger: 'When the day runs away',
+    durationMin: 2,
+    framing:
+      'The ritual did not leave you, you just stepped off it. The quilt is still on the table. Pick the needle up again, one small stitch is enough.',
+    steps: [
+      'Stop where you are. Hand on heart. Feel what is here.',
+      'Whisper: \u201CLet there be a softer next minute.\u201D',
+      'Press your palms together at the heart. Smile, even a tiny one.',
+      'One slow breath: \u201CI breathe the breath of lives.\u201D',
+      'Whisper: \u201CI am blessed. I begin again.\u201D',
+    ],
+  },
+  {
+    id: 'tr-remembering',
+    chapter: 7,
+    theme: 'Remembering',
+    title: 'I Am Love, Creating',
+    trigger: 'When I forget who I am',
+    durationMin: 2,
+    framing:
+      'You are not the role, not the hurry, not the old label. You are Love with hands, sewing today. Remembering is the shortest way home.',
+    steps: [
+      'Pause. Put both hands over your heart.',
+      'Whisper slowly: \u201CI am Love.\u201D Then: \u201CI am creating.\u201D',
+      'Move one hand to your belly. \u201CI am earth.\u201D Move it back. \u201CI am eternal.\u201D',
+      'Look at your hands. Whisper: \u201CThese are the hands that sew today.\u201D',
+      'One breath in, one breath out. Return to the moment, gently.',
     ],
   },
 

@@ -87,6 +87,9 @@ export function HomeScreen({ navigation }: Props) {
             {firstName ? `, ${firstName}` : ''}
           </Text>
           <Text style={styles.date}>{prettyDate(now)}</Text>
+          <Text style={styles.quiltLine}>
+            {'\u201C'}One stitch today. Small stitches make the quilt.{'\u201D'}
+          </Text>
 
           <TourCard
             storageKey="today"
@@ -442,7 +445,14 @@ const styles = StyleSheet.create({
     fontSize: 34,
     lineHeight: 40,
     marginTop: 2,
-    marginBottom: 24,
+    marginBottom: 10,
+  },
+  quiltLine: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.inkSoft,
+    marginBottom: 22,
   },
   ritualHero: {
     borderRadius: radius.xl,
