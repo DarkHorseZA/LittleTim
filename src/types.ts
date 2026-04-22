@@ -23,6 +23,7 @@ export type DailyEntry = {
   seePracticeId?: string;
   beliefId?: string;
   beliefAcknowledged?: boolean;
+  morningRitualDone?: boolean;
   tracker?: TrackerEntry;
 };
 

@@ -55,6 +55,7 @@ export function HomeScreen({ navigation }: Props) {
 
   const msgDone = today.msgDone;
   const seeDone = today.seeDone;
+  const ritualDone = !!today.morningRitualDone;
   const trackerDone = !!today.tracker;
 
   return (
@@ -80,6 +81,44 @@ export function HomeScreen({ navigation }: Props) {
           </Text>
           <Text style={styles.date}>{prettyDate(now)}</Text>
 
+          <Pressable onPress={() => navigation.navigate('MorningRitual')}>
+            <LinearGradient
+              colors={ritualDone ? gradients.sage : gradients.clay}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.ritualHero}
+            >
+              <View style={styles.ritualTop}>
+                <Text style={styles.ritualEyebrow}>
+                  {ritualDone ? 'Sewn today' : 'Morning ritual'}
+                </Text>
+                <View style={styles.ritualBadge}>
+                  <Ionicons
+                    name={ritualDone ? 'checkmark-circle' : 'sunny'}
+                    size={18}
+                    color="#FFFFFF"
+                  />
+                </View>
+              </View>
+              <Text style={styles.ritualTitle}>
+                {ritualDone ? 'One more stitch.' : 'The Five Gestures'}
+              </Text>
+              <Text style={styles.ritualBody}>
+                {ritualDone
+                  ? 'You met the day with love. Return any time to sew another stitch.'
+                  : 'Feel · whisper · touch · breathe · bless. Under five minutes.'}
+              </Text>
+              <View style={styles.ritualCta}>
+                <Text style={styles.ritualCtaText}>
+                  {ritualDone ? 'Practice again' : 'Begin'}
+                </Text>
+                <Ionicons name="arrow-forward" size={16} color="#FFFFFF" />
+              </View>
+            </LinearGradient>
+          </Pressable>
+
+          <View style={{ height: 16 }} />
+
           <View style={styles.streakCard}>
             <View style={styles.streakTop}>
               <View>
@@ -101,7 +140,7 @@ export function HomeScreen({ navigation }: Props) {
             </View>
             <StreakStrip entries={entries} />
             <Text style={styles.streakHint}>
-              A day counts when you complete MSG or SEE.
+              A day counts when you complete the ritual, MSG, or SEE.
             </Text>
           </View>
 
@@ -126,7 +165,7 @@ export function HomeScreen({ navigation }: Props) {
           </Pressable>
 
           <View style={styles.sectionHead}>
-            <Text style={text.eyebrow}>Daily practice</Text>
+            <Text style={text.eyebrow}>Go deeper</Text>
             <Text style={styles.sectionTitle}>Two soul technologies</Text>
             <Text style={styles.sectionBody}>
               Small and daily beats big and rare.
@@ -285,6 +324,59 @@ const styles = StyleSheet.create({
     lineHeight: 40,
     marginTop: 2,
     marginBottom: 24,
+  },
+  ritualHero: {
+    borderRadius: radius.xl,
+    padding: 22,
+    overflow: 'hidden',
+    ...shadows.md,
+  },
+  ritualTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  ritualEyebrow: {
+    fontFamily: fonts.sansBold,
+    fontSize: 11,
+    letterSpacing: 2.2,
+    color: 'rgba(255,255,255,0.85)',
+    textTransform: 'uppercase',
+  },
+  ritualBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: 'rgba(255,255,255,0.22)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ritualTitle: {
+    fontFamily: fonts.serifBold,
+    fontSize: 30,
+    lineHeight: 36,
+    color: '#FFFFFF',
+    marginTop: 12,
+  },
+  ritualBody: {
+    fontFamily: fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+    color: 'rgba(255,255,255,0.92)',
+    marginTop: 8,
+  },
+  ritualCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  ritualCtaText: {
+    fontFamily: fonts.sansBold,
+    fontSize: 13,
+    letterSpacing: 1.2,
+    color: '#FFFFFF',
+    marginRight: 6,
+    textTransform: 'uppercase',
   },
   streakCard: {
     backgroundColor: colors.surface,

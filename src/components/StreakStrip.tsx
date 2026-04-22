@@ -20,7 +20,8 @@ export function StreakStrip({ entries }: Props) {
     d.setDate(now.getDate() - i);
     const key = todayKey(d);
     const entry = entries[key];
-    const done = !!entry && (entry.msgDone || entry.seeDone);
+    const done =
+      !!entry && (entry.morningRitualDone || entry.msgDone || entry.seeDone);
     days.push({ key, date: d, done, isToday: i === 0 });
   }
   return (

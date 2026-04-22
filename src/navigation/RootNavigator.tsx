@@ -15,6 +15,7 @@ import { SettingsScreen } from '../screens/SettingsScreen';
 import { AccountScreen } from '../screens/AccountScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { HowToUseScreen } from '../screens/HowToUseScreen';
+import { MorningRitualScreen } from '../screens/MorningRitualScreen';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/type';
 
@@ -133,6 +134,14 @@ export function RootNavigator() {
           name="Account"
           component={AccountScreen}
           options={{ presentation: 'modal' }}
+        />
+        <Stack.Screen
+          name="MorningRitual"
+          component={MorningRitualScreen}
+          options={{
+            presentation: 'fullScreenModal',
+            animation: 'fade_from_bottom',
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

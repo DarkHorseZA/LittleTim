@@ -17,4 +17,5 @@ export type RootStackParamList = {
   Tracker: undefined;
   FocusArea: { focusArea: FocusArea };
   Account: undefined;
+  MorningRitual: undefined;
 };

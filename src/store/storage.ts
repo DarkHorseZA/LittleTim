@@ -84,7 +84,8 @@ export function computeStreak(entries: Record<string, DailyEntry>): number {
   while (true) {
     const key = todayKey(cursor);
     const e = entries[key];
-    const completed = !!e && (e.msgDone || e.seeDone);
+    const completed =
+      !!e && (e.morningRitualDone || e.msgDone || e.seeDone);
     if (!completed) break;
     streak += 1;
     cursor.setDate(cursor.getDate() - 1);
