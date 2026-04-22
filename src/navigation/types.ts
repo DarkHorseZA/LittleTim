@@ -4,6 +4,7 @@ import { FocusArea, PracticeKind } from '../types';
 export type TabsParamList = {
   Today: undefined;
   Practice: { initialKind?: PracticeKind } | undefined;
+  Journal: undefined;
   History: undefined;
   Settings: undefined;
 };
@@ -18,4 +19,5 @@ export type RootStackParamList = {
   FocusArea: { focusArea: FocusArea };
   Account: undefined;
   MorningRitual: undefined;
+  Glossary: undefined;
 };

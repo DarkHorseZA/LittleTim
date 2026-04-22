@@ -120,6 +120,31 @@ export function SettingsScreen({ navigation }: Props) {
           </View>
         </Pressable>
 
+        <View style={{ height: 10 }} />
+
+        <Pressable onPress={() => navigation.navigate('Glossary')}>
+          <View style={styles.linkCard}>
+            <View style={styles.iconCircle}>
+              <Ionicons
+                name="book-outline"
+                size={16}
+                color={colors.clay}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>Glossary</Text>
+              <Text style={styles.linkSub}>
+                Words from the book — MSG, SEE, bārak, ruach, and more.
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={colors.inkFaint}
+            />
+          </View>
+        </Pressable>
+
         <View style={{ height: 14 }} />
 
         <View style={styles.card}>

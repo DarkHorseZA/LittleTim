@@ -16,6 +16,8 @@ import { AccountScreen } from '../screens/AccountScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { HowToUseScreen } from '../screens/HowToUseScreen';
 import { MorningRitualScreen } from '../screens/MorningRitualScreen';
+import { JournalScreen } from '../screens/JournalScreen';
+import { GlossaryScreen } from '../screens/GlossaryScreen';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/type';
 
@@ -69,6 +71,13 @@ function TabsNavigator() {
         component={PracticeScreen as any}
         options={{
           tabBarIcon: tabIcon('leaf', 'leaf-outline'),
+        }}
+      />
+      <Tabs.Screen
+        name="Journal"
+        component={JournalScreen as any}
+        options={{
+          tabBarIcon: tabIcon('create', 'create-outline'),
         }}
       />
       <Tabs.Screen
@@ -142,6 +151,11 @@ export function RootNavigator() {
             presentation: 'fullScreenModal',
             animation: 'fade_from_bottom',
           }}
+        />
+        <Stack.Screen
+          name="Glossary"
+          component={GlossaryScreen}
+          options={{ presentation: 'modal' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -15,6 +15,7 @@ import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { msgPractices, seePractices } from '../data/practices';
+import { chapterById } from '../data/chapters';
 import { PracticeKind } from '../types';
 import { useDay } from '../store/DayContext';
 
@@ -93,6 +94,16 @@ export function PracticeScreen({ navigation, route }: Props) {
                       color={colors.clayDeep}
                     />
                     <Text style={styles.pillText}>{p.durationMin} min</Text>
+                  </View>
+                  <View style={[styles.pill, styles.chapterPill]}>
+                    <Ionicons
+                      name="book-outline"
+                      size={12}
+                      color={colors.inkSoft}
+                    />
+                    <Text style={styles.chapterPillText}>
+                      {chapterById(p.chapter)?.shortTitle ?? 'Ch.'}
+                    </Text>
                   </View>
                   {isDone ? (
                     <Text style={styles.doneTag}>Completed today</Text>
@@ -225,6 +236,15 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansSemi,
     fontSize: 12,
     color: colors.clayDeep,
+    marginLeft: 4,
+  },
+  chapterPill: {
+    backgroundColor: colors.lineSoft,
+  },
+  chapterPillText: {
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    color: colors.inkSoft,
     marginLeft: 4,
   },
   doneTag: {

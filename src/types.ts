@@ -15,6 +15,12 @@ export type TrackerEntry = {
   reflection?: string;
 };
 
+export type JournalEntry = {
+  sewedWith?: string; // "Today I sewed with love when I..."
+  threadPulled?: string; // "Today, when the old thread pulled, I..."
+  updatedAt?: string; // ISO timestamp
+};
+
 export type DailyEntry = {
   date: string; // YYYY-MM-DD
   msgDone: boolean;
@@ -25,6 +31,7 @@ export type DailyEntry = {
   beliefAcknowledged?: boolean;
   morningRitualDone?: boolean;
   tracker?: TrackerEntry;
+  journal?: JournalEntry;
 };
 
 export type Practice = {

@@ -46,6 +46,17 @@ export function BeliefScreen({ navigation }: Props) {
         <View style={styles.closeRow}>
           <Pressable
             hitSlop={16}
+            onPress={() => navigation.navigate('Glossary')}
+            style={styles.closeBtn}
+          >
+            <Ionicons
+              name="help-circle-outline"
+              size={22}
+              color={colors.ink}
+            />
+          </Pressable>
+          <Pressable
+            hitSlop={16}
             onPress={() => navigation.goBack()}
             style={styles.closeBtn}
           >
@@ -97,7 +108,7 @@ const styles = StyleSheet.create({
   },
   closeRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingTop: 10,
   },
