@@ -17,6 +17,7 @@ import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { StreakStrip } from '../components/StreakStrip';
+import { TourCard } from '../components/TourCard';
 import { APP_NAME_DISPLAY_CAPS } from '../config';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
@@ -80,6 +81,16 @@ export function HomeScreen({ navigation }: Props) {
             {firstName ? `, ${firstName}` : ''}
           </Text>
           <Text style={styles.date}>{prettyDate(now)}</Text>
+
+          <TourCard
+            storageKey="today"
+            title="This is Today."
+            tips={[
+              'Tap the Morning Ritual to begin the Five Gestures — under five minutes, the anchor of your day.',
+              'Your streak grows when you complete the ritual, an MSG, or an SEE.',
+              'Tap today\'s belief card for its somatic embedding — a small thing to do with your body.',
+            ]}
+          />
 
           <Pressable onPress={() => navigation.navigate('MorningRitual')}>
             <LinearGradient

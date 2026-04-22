@@ -21,6 +21,7 @@ import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { DailyEntry } from '../types';
+import { TourCard } from '../components/TourCard';
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, 'Journal'>,
@@ -97,6 +98,16 @@ export function JournalScreen() {
           <Text style={styles.body}>
             Two sentences. Don't try to be eloquent. Just be honest.
           </Text>
+
+          <TourCard
+            storageKey="journal"
+            title="The Patchwork Journal."
+            tips={[
+              'Each evening, write one stitch you sewed, and one moment the old thread pulled.',
+              'You\'re not being graded. The body reads honesty, not eloquence.',
+              'Read a week of stitches aloud on a Sunday — the quilt begins to show.',
+            ]}
+          />
 
           <View style={styles.card}>
             <View style={styles.promptHead}>

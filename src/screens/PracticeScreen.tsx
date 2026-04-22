@@ -18,6 +18,7 @@ import { msgPractices, seePractices } from '../data/practices';
 import { chapterById } from '../data/chapters';
 import { PracticeKind } from '../types';
 import { useDay } from '../store/DayContext';
+import { TourCard } from '../components/TourCard';
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, 'Practice'>,
@@ -40,6 +41,16 @@ export function PracticeScreen({ navigation, route }: Props) {
         <Text style={styles.body}>
           One gentle dose. You can always come back for more.
         </Text>
+
+        <TourCard
+          storageKey="practice"
+          title="Two soul technologies."
+          tips={[
+            'MSG — gestures the body remembers. SEE — sensual exercises that surface hidden belief.',
+            'Each chapter has one of each. The pill on every card shows which chapter it lives in.',
+            'Tap a card to open the step-by-step. Mark complete when you\'ve practiced.',
+          ]}
+        />
 
         <View style={styles.segment}>
           <SegmentButton

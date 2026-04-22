@@ -15,6 +15,7 @@ export type Settings = {
   profile?: Profile;
   currentChapter?: number; // 0 = Introduction, 1-9 = chapters. Undefined = day-of-year rotation.
   hasSeenHowTo?: boolean; // true after the "How to use" screen has been shown once
+  seenTours?: Record<string, boolean>; // which per-tab tour cards have been dismissed
 };
 
 const defaultSettings: Settings = {
@@ -22,6 +23,7 @@ const defaultSettings: Settings = {
   profile: {},
   currentChapter: undefined,
   hasSeenHowTo: false,
+  seenTours: {},
 };
 
 export function todayKey(d: Date = new Date()): string {

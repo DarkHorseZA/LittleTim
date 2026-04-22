@@ -7,6 +7,7 @@ import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { DailyEntry } from '../types';
 import { todayKey } from '../store/storage';
+import { TourCard } from '../components/TourCard';
 
 function prettyDate(key: string): string {
   const [y, m, d] = key.split('-').map(Number);
@@ -76,6 +77,16 @@ export function HistoryScreen() {
         <Text style={styles.body}>
           Every dot is a day you showed up. Softness compounds.
         </Text>
+
+        <TourCard
+          storageKey="history"
+          title="Your quiet progress."
+          tips={[
+            'The grid holds the last five weeks — each cell deepens as you practice more on that day.',
+            'A day counts when the ritual, an MSG, or an SEE is complete.',
+            'Scroll below for day-by-day entries — a small gallery of your sewing.',
+          ]}
+        />
 
         <View style={styles.statsRow}>
           <Stat label="Streak" value={String(streak)} suffix="d" icon="flame" />
