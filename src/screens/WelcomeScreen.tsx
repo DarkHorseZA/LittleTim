@@ -232,7 +232,13 @@ export function WelcomeScreen({ navigation }: Props) {
           >
             <Button
               title="Enter"
-              onPress={() => navigation.replace('Tabs')}
+              onPress={() => {
+                if (!settings.hasSeenHowTo) {
+                  navigation.replace('HowToUse', { firstRun: true });
+                } else {
+                  navigation.replace('Tabs');
+                }
+              }}
               size="lg"
               trailingIcon="arrow-forward"
             />

@@ -14,12 +14,14 @@ export type Settings = {
   lastBeliefSeenOn?: string; // YYYY-MM-DD
   profile?: Profile;
   currentChapter?: number; // 0 = Introduction, 1-9 = chapters. Undefined = day-of-year rotation.
+  hasSeenHowTo?: boolean; // true after the "How to use" screen has been shown once
 };
 
 const defaultSettings: Settings = {
   reminderHour: 8,
   profile: {},
   currentChapter: undefined,
+  hasSeenHowTo: false,
 };
 
 export function todayKey(d: Date = new Date()): string {

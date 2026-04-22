@@ -101,6 +101,27 @@ export function SettingsScreen({ navigation }: Props) {
 
         <View style={{ height: 14 }} />
 
+        <Pressable onPress={() => navigation.navigate('HowToUse')}>
+          <View style={styles.linkCard}>
+            <View style={styles.iconCircle}>
+              <Ionicons name="compass-outline" size={16} color={colors.clay} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>How to use re-Genesis</Text>
+              <Text style={styles.linkSub}>
+                The rhythm of a day in the practice.
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={colors.inkFaint}
+            />
+          </View>
+        </Pressable>
+
+        <View style={{ height: 14 }} />
+
         <View style={styles.card}>
           <View style={styles.cardHead}>
             <View style={styles.iconCircle}>
@@ -304,6 +325,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   hourTextOn: { color: '#fff' },
+  linkCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 16,
+    ...shadows.sm,
+  },
+  linkSub: {
+    ...text.caption,
+    marginTop: 2,
+  },
   chapters: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chapterChip: {
     paddingVertical: 8,

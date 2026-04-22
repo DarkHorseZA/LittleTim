@@ -10,6 +10,7 @@ export type TabsParamList = {
 
 export type RootStackParamList = {
   Welcome: undefined;
+  HowToUse: { firstRun?: boolean } | undefined;
   Tabs: NavigatorScreenParams<TabsParamList>;
   Belief: undefined;
   PracticeDetail: { practiceId: string };
