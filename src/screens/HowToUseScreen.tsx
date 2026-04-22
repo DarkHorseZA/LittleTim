@@ -21,12 +21,16 @@ type Props = NativeStackScreenProps<RootStackParamList, 'HowToUse'>;
 
 export function HowToUseScreen({ navigation, route }: Props) {
   const firstRun = route.params?.firstRun === true;
-  const { updateSettings } = useDay();
+  const { settings, updateSettings } = useDay();
 
   const done = async () => {
     await updateSettings({ hasSeenHowTo: true });
     if (firstRun) {
-      navigation.replace('Tabs', { screen: 'Today' });
+      if (!settings.baseline) {
+        navigation.replace('Baseline', { firstRun: true });
+      } else {
+        navigation.replace('Tabs', { screen: 'Today' });
+      }
     } else {
       navigation.goBack();
     }
@@ -92,7 +96,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
               </View>
             </View>
 
-            <View style={{ height: 14 }} />
+            <View style={{ height: 16 }} />
 
             <View style={styles.techRow}>
               <View
@@ -111,7 +115,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
               </View>
             </View>
 
-            <View style={{ height: 14 }} />
+            <View style={{ height: 16 }} />
 
             <View style={styles.techRow}>
               <View
@@ -291,14 +295,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.inkSoft,
     marginTop: 6,
-    marginBottom: 22,
+    marginBottom: 24,
   },
   lead: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: 20,
     ...shadows.sm,
-    marginBottom: 28,
+    marginBottom: 24,
   },
   leadText: {
     fontFamily: fonts.serifItalic,
@@ -307,11 +311,11 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   sectionEyebrow: {
     ...text.eyebrow,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   card: {
     backgroundColor: colors.surface,
@@ -403,7 +407,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: 20,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 0,
   },
   reminderText: {
     fontFamily: fonts.serifItalic,

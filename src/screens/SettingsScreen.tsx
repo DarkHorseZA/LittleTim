@@ -138,6 +138,39 @@ export function SettingsScreen({ navigation }: Props) {
           </View>
         </Pressable>
 
+        <View style={{ height: 10 }} />
+
+        <Pressable
+          onPress={() => navigation.navigate('Baseline', { firstRun: false })}
+          accessibilityRole="button"
+          accessibilityLabel={
+            settings.baseline
+              ? 'Retake your wellness baseline'
+              : 'Set your wellness baseline'
+          }
+        >
+          <View style={styles.linkCard}>
+            <View style={styles.iconCircle}>
+              <Ionicons name="pulse-outline" size={16} color={colors.clay} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardTitle}>
+                {settings.baseline ? 'Retake baseline' : 'Set baseline'}
+              </Text>
+              <Text style={styles.linkSub}>
+                {settings.baseline
+                  ? `Captured ${settings.baseline.capturedOn}. Update it any time.`
+                  : 'Five gentle readings that mark where you start.'}
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={colors.inkFaint}
+            />
+          </View>
+        </Pressable>
+
         <View style={{ height: 14 }} />
 
         <View style={styles.card}>

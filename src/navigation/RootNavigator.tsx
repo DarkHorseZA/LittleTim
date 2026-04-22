@@ -14,6 +14,7 @@ import { FocusAreaScreen } from '../screens/FocusAreaScreen';
 import { HistoryScreen } from '../screens/HistoryScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { AccountScreen } from '../screens/AccountScreen';
+import { BaselineScreen } from '../screens/BaselineScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { HowToUseScreen } from '../screens/HowToUseScreen';
 import { MorningRitualScreen } from '../screens/MorningRitualScreen';
@@ -123,6 +124,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="HowToUse"
           component={HowToUseScreen}
+          options={{ animation: 'slide_from_right' }}
+        />
+        <Stack.Screen
+          name="Baseline"
+          component={BaselineScreen}
           options={{ animation: 'slide_from_right' }}
         />
         <Stack.Screen name="Tabs" component={TabsNavigator} />

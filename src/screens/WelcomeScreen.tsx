@@ -235,6 +235,8 @@ export function WelcomeScreen({ navigation }: Props) {
               onPress={() => {
                 if (!settings.hasSeenHowTo) {
                   navigation.replace('HowToUse', { firstRun: true });
+                } else if (!settings.baseline) {
+                  navigation.replace('Baseline', { firstRun: true });
                 } else {
                   navigation.replace('Tabs', { screen: 'Today' });
                 }
