@@ -39,7 +39,7 @@ export function GlossaryScreen({ navigation }: Props) {
           </Pressable>
         </View>
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <Text style={text.eyebrow}>Glossary</Text>
           <Text style={styles.title}>Words from the book</Text>
           <Text style={styles.subtitle}>

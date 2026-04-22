@@ -38,7 +38,7 @@ export function SettingsScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <Text style={text.eyebrow}>Settings</Text>
         <Text style={styles.title}>{APP_NAME}</Text>
         <Text style={styles.body}>

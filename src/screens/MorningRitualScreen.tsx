@@ -231,6 +231,7 @@ export function MorningRitualScreen({ navigation }: Props) {
         </View>
 
         <ScrollView
+          style={{ flex: 1 }}
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}
         >

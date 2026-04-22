@@ -59,7 +59,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
           </View>
         ) : null}
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <Text style={styles.eyebrow}>How to use</Text>
           <Text style={styles.title}>re-Genesis</Text>
           <Text style={styles.attribution}>

@@ -36,7 +36,7 @@ export function PracticeScreen({ navigation, route }: Props) {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <Text style={text.eyebrow}>Practice</Text>
         <Text style={styles.title}>Choose your technology</Text>
         <Text style={styles.body}>

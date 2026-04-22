@@ -78,7 +78,7 @@ export function ConnectScreen({ navigation }: Props) {
           </Pressable>
         </View>
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <Text style={text.eyebrow}>Connect</Text>
           <Text style={styles.title}>Stay with the thread</Text>
           <Text style={styles.intro}>

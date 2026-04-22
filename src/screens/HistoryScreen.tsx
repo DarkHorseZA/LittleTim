@@ -71,7 +71,7 @@ export function HistoryScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <Text style={text.eyebrow}>History</Text>
         <Text style={styles.title}>Your quiet progress</Text>
         <Text style={styles.body}>

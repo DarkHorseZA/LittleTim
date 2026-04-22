@@ -105,7 +105,7 @@ export function TrackerScreen({ navigation }: Props) {
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
         </View>
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <Text style={text.eyebrow}>Today's check-in</Text>
           <Text style={styles.title}>You've checked in today</Text>
           <Text style={styles.body}>
@@ -189,7 +189,7 @@ export function TrackerScreen({ navigation }: Props) {
             <Ionicons name="close" size={22} color={colors.ink} />
           </Pressable>
         </View>
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <Text style={text.eyebrow}>
             {isBaseline ? 'Baseline check-in' : 'Today\u2019s check-in'}
           </Text>
@@ -246,7 +246,7 @@ export function TrackerScreen({ navigation }: Props) {
           <Ionicons name="close" size={22} color={colors.ink} />
         </Pressable>
       </View>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <Text style={text.eyebrow}>Focus</Text>
         <Text style={styles.title}>
           Which area is most important right now?

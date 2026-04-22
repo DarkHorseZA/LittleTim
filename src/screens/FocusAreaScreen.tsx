@@ -76,7 +76,7 @@ export function FocusAreaScreen({ navigation, route }: Props) {
           </Pressable>
         </View>
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={[styles.emojiCircle, { backgroundColor: tintSoft }]}>
             <Text style={styles.emoji}>{fa.emoji}</Text>
           </View>

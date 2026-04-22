@@ -69,7 +69,7 @@ export function HomeScreen({ navigation }: Props) {
         style={styles.hero}
       />
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.topRow}>
             <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
             <Pressable
@@ -560,8 +560,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   sectionHead: {
-    marginTop: 8,
-    marginBottom: 12,
+    marginTop: 32,
+    marginBottom: 16,
   },
   sectionTitle: {
     ...text.h2,

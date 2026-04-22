@@ -92,7 +92,7 @@ export function JournalScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
       >
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <Text style={text.eyebrow}>Patchwork Journal</Text>
           <Text style={styles.title}>Tonight's stitch</Text>
           <Text style={styles.body}>

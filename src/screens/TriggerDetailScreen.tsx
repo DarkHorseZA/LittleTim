@@ -41,7 +41,7 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
           <Ionicons name="close" size={22} color={colors.ink} />
         </Pressable>
       </View>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.kindPill}>
           <Text style={styles.kindPillText}>WHEN</Text>
         </View>
