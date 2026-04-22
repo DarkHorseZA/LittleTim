@@ -38,7 +38,10 @@ function prettyDate(d: Date): string {
 export function HomeScreen({ navigation }: Props) {
   const { today, streak, entries, settings, updateSettings } = useDay();
   const now = useMemo(() => new Date(), []);
-  const belief = useMemo(() => beliefForDate(now), [now]);
+  const belief = useMemo(
+    () => beliefForDate(now, settings.currentChapter),
+    [now, settings.currentChapter]
+  );
   const firstName = (settings.profile?.displayName ?? '').split(' ')[0];
 
   useEffect(() => {

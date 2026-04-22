@@ -15,8 +15,11 @@ import { useDay } from '../store/DayContext';
 type Props = NativeStackScreenProps<RootStackParamList, 'Belief'>;
 
 export function BeliefScreen({ navigation }: Props) {
-  const belief = useMemo(() => beliefForDate(new Date()), []);
-  const { today, updateToday } = useDay();
+  const { today, updateToday, settings } = useDay();
+  const belief = useMemo(
+    () => beliefForDate(new Date(), settings.currentChapter),
+    [settings.currentChapter]
+  );
 
   const acknowledge = async () => {
     try {

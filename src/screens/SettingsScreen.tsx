@@ -17,8 +17,14 @@ import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { APP_NAME, COACHING_URL, hasCoachingUrl } from '../config';
+import {
+  APP_NAME,
+  ATTRIBUTION,
+  COACHING_URL,
+  hasCoachingUrl,
+} from '../config';
 import { useDay } from '../store/DayContext';
+import { chapters } from '../data/chapters';
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, 'Settings'>,
@@ -98,6 +104,60 @@ export function SettingsScreen({ navigation }: Props) {
         <View style={styles.card}>
           <View style={styles.cardHead}>
             <View style={styles.iconCircle}>
+              <Ionicons name="book-outline" size={16} color={colors.clay} />
+            </View>
+            <Text style={styles.cardTitle}>Where are you in the book?</Text>
+          </View>
+          <Text style={styles.cardBody}>
+            When you set your chapter, today's belief and practice follow the
+            chapter. Leave it blank to let the app rotate a different one
+            each day.
+          </Text>
+          <View style={styles.chapters}>
+            <Pressable
+              onPress={() => updateSettings({ currentChapter: undefined })}
+              style={[
+                styles.chapterChip,
+                settings.currentChapter === undefined && styles.chapterChipOn,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.chapterChipText,
+                  settings.currentChapter === undefined &&
+                    styles.chapterChipTextOn,
+                ]}
+              >
+                Auto
+              </Text>
+            </Pressable>
+            {chapters.map((ch) => {
+              const on = settings.currentChapter === ch.id;
+              return (
+                <Pressable
+                  key={ch.id}
+                  onPress={() => updateSettings({ currentChapter: ch.id })}
+                  style={[styles.chapterChip, on && styles.chapterChipOn]}
+                >
+                  <Text
+                    style={[
+                      styles.chapterChipText,
+                      on && styles.chapterChipTextOn,
+                    ]}
+                  >
+                    {ch.shortTitle}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+
+        <View style={{ height: 14 }} />
+
+        <View style={styles.card}>
+          <View style={styles.cardHead}>
+            <View style={styles.iconCircle}>
               <Ionicons name="sparkles-outline" size={16} color={colors.clay} />
             </View>
             <Text style={styles.cardTitle}>Belief reminder hour</Text>
@@ -153,8 +213,9 @@ export function SettingsScreen({ navigation }: Props) {
         </View>
 
         <View style={{ height: 24 }} />
-        <Text style={styles.footer}>
-          v0.3 · Local-only. Your entries stay on this device.
+        <Text style={styles.footer}>{ATTRIBUTION}</Text>
+        <Text style={styles.footerFaint}>
+          v0.4 · Local-only. Your entries stay on this device.
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -243,7 +304,32 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   hourTextOn: { color: '#fff' },
+  chapters: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  chapterChip: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: radius.pill,
+    backgroundColor: colors.lineSoft,
+  },
+  chapterChipOn: {
+    backgroundColor: colors.clay,
+  },
+  chapterChipText: {
+    color: colors.inkSoft,
+    fontFamily: fonts.sansSemi,
+    fontSize: 13,
+  },
+  chapterChipTextOn: {
+    color: '#fff',
+  },
   footer: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 13,
+    color: colors.inkSoft,
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  footerFaint: {
     ...text.caption,
     textAlign: 'center',
   },

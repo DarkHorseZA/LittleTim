@@ -13,11 +13,13 @@ export type Settings = {
   reminderHour: number; // 0-23, when the daily belief pops up in-app
   lastBeliefSeenOn?: string; // YYYY-MM-DD
   profile?: Profile;
+  currentChapter?: number; // 0 = Introduction, 1-9 = chapters. Undefined = day-of-year rotation.
 };
 
 const defaultSettings: Settings = {
   reminderHour: 8,
   profile: {},
+  currentChapter: undefined,
 };
 
 export function todayKey(d: Date = new Date()): string {

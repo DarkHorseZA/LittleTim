@@ -28,6 +28,7 @@ export type DailyEntry = {
 
 export type Practice = {
   id: string;
+  chapter: number; // 0 = Introduction, 1-9 = chapters
   kind: PracticeKind;
   title: string;
   durationMin: number;
@@ -37,6 +38,7 @@ export type Practice = {
 
 export type Belief = {
   id: string;
+  chapter: number; // 0 = Introduction, 1-9 = chapters
   statement: string;
   embedding: string; // a somatic embedding suggestion
 };

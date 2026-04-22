@@ -13,19 +13,26 @@ import { RootStackParamList } from '../navigation/types';
 import { colors } from '../theme/colors';
 import { fonts } from '../theme/type';
 import { Button } from '../components/Button';
-import { APP_NAME, APP_NAME_DISPLAY_CAPS } from '../config';
+import {
+  APP_NAME,
+  APP_NAME_DISPLAY_CAPS,
+  AUTHOR_NAME,
+} from '../config';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
 
 const TAGLINES = [
-  'Small doses. Deep changes.',
+  'One stitch at a time.',
+  'The power is in the now.',
+  'Sew with Love.',
+  'Unravel. Resew.',
+  'I am earth, wrapped in light.',
+  'I am Love, creating.',
+  'Small stitches make the quilt.',
   'A breath, then a day.',
-  'The body remembers. Come back.',
-  'Softness, taken daily.',
-  'Your quiet homecoming.',
-  'One gentle practice, softly compounded.',
-  'Begin again, gently.',
+  'You are not alone.',
+  'Repetition unravels and resews.',
 ];
 
 function tagForToday(): string {
@@ -210,6 +217,9 @@ export function WelcomeScreen({ navigation }: Props) {
           <Text style={styles.breathHint}>
             Inhale.  Settle.  Begin{firstName ? `, ${firstName}` : ''}.
           </Text>
+          <Text style={styles.attribution}>
+            Companion to {APP_NAME} by {AUTHOR_NAME}
+          </Text>
 
           <View style={{ flex: 1, minHeight: 24 }} />
 
@@ -336,5 +346,12 @@ const styles = StyleSheet.create({
     color: colors.inkSoft,
     textTransform: 'uppercase',
     textAlign: 'center',
+  },
+  attribution: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 12,
+    color: colors.inkFaint,
+    textAlign: 'center',
+    marginTop: 16,
   },
 });

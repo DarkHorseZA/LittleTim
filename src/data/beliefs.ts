@@ -1,95 +1,101 @@
 import { Belief } from '../types';
 
+// One belief per chapter (Introduction + Chapters 1-9).
+// Statements and embeddings are distilled in the book's voice — paraphrased
+// from the manuscript's "Chapter Takeaway" sections, never lifted verbatim.
 export const beliefs: Belief[] = [
   {
-    id: 'b-01',
-    statement: 'I am safe inside my own body.',
+    id: 'b-intro',
+    chapter: 0,
+    statement: 'I am safe. I am worthy. I am Love. Let there be me.',
     embedding:
-      'Place both palms over your heart and belly. Take three long exhales, whispering “safe” on each one.',
+      'Hands on your knees, then belly, then heart. Whisper each word as your hands arrive.',
   },
   {
-    id: 'b-02',
-    statement: 'I am worthy of love, simply as I am.',
+    id: 'b-ch1',
+    chapter: 1,
+    statement: 'I can change the memory with an other experience.',
     embedding:
-      'Wrap your arms around yourself. Squeeze gently and rock side to side for one minute.',
+      'Notice what scent, sound, or face pulls at you today. Pause. Ask: is this mine, or passed to me?',
   },
   {
-    id: 'b-03',
-    statement: 'Abundance moves toward me when I relax.',
+    id: 'b-ch2',
+    chapter: 2,
+    statement: 'My immune function follows my emotional state.',
     embedding:
-      'Open your hands on your thighs, palms up. Soften your jaw and let your shoulders drop twice.',
+      'Hand on heart. Slow the breath. Whisper: “I feel safe, and my body listens.”',
   },
   {
-    id: 'b-04',
-    statement: 'My body knows the way home.',
+    id: 'b-ch3',
+    chapter: 3,
+    statement: 'Emotion filled belief is my creative power.',
     embedding:
-      'Feel the weight of your feet on the ground. Shift slowly side to side and notice what settles.',
+      'Remember one moment you created something from Love. Let the warmth return to your chest.',
   },
   {
-    id: 'b-05',
-    statement: 'I can trust what I feel.',
+    id: 'b-ch4',
+    chapter: 4,
+    statement: 'I am earth. Returning to earth is homecoming.',
     embedding:
-      'Place a hand on the part of your body that is asking for attention. Stay there for five breaths.',
+      'Rub your palms together until they feel warm. Whisper: “I am earth, wrapped in light.”',
   },
   {
-    id: 'b-06',
-    statement: 'I belong to this moment.',
+    id: 'b-ch5',
+    chapter: 5,
+    statement: 'I am Love from Love.',
     embedding:
-      'Name three things you can see, two you can hear, one you can touch. Smile softly on the last one.',
+      'Open your arms away from your body — “I let go of shame.” Bring them back to your heart — “I resew with Love.”',
   },
   {
-    id: 'b-07',
-    statement: 'Softness is a form of strength.',
+    id: 'b-ch6',
+    chapter: 6,
+    statement: 'I am blessed. I may. I can.',
     embedding:
-      'Unclench your fists. Let the breath out through loose lips, like a horse sighing.',
+      'Hands on heart, belly, face. Three soft whispers of “I am blessed.”',
   },
   {
-    id: 'b-08',
-    statement: 'I am allowed to take up space.',
+    id: 'b-ch7',
+    chapter: 7,
+    statement: 'I feel. I whisper. I touch. I breathe. I bless.',
     embedding:
-      'Stand tall, reach your arms wide, and breathe into the space around your ribs for four rounds.',
+      'Sixty seconds. One of each: feel a feeling, whisper a “let there be”, touch your palms, three breaths, bless yourself.',
   },
   {
-    id: 'b-09',
-    statement: 'Healing happens in small, gentle doses.',
+    id: 'b-ch8',
+    chapter: 8,
+    statement: 'The power is in the now.',
     embedding:
-      'Rest one hand on your chest. Tap slowly, left–right, like a lullaby, for a minute.',
+      'Hand on heart. Whisper: “I am not that feeling. I am the one who feels it.” Take one breath. Sew one stitch.',
   },
   {
-    id: 'b-10',
-    statement: 'I am connected to something larger than me.',
+    id: 'b-ch9',
+    chapter: 9,
+    statement: 'They are here. They are weaving with me.',
     embedding:
-      'Look up to the horizon or ceiling. Let the gaze soften and feel the back of your head grow heavy.',
-  },
-  {
-    id: 'b-11',
-    statement: 'My yes is clear. My no is holy.',
-    embedding:
-      'Press your palms together at heart-height. Push gently, notice the boundary of your own strength.',
-  },
-  {
-    id: 'b-12',
-    statement: 'Joy is my natural state, returning.',
-    embedding:
-      'Bounce gently on your heels for thirty seconds. Let a small smile arrive without forcing it.',
-  },
-  {
-    id: 'b-13',
-    statement: 'I can be with what is hard without becoming it.',
-    embedding:
-      'Place one hand on a difficult sensation, the other on a neutral or pleasant spot. Breathe between them.',
-  },
-  {
-    id: 'b-14',
-    statement: 'Every breath is a quiet homecoming.',
-    embedding:
-      'Inhale for 4, hold for 2, exhale for 6. Three rounds, eyes closed.',
+      'Reach one hand out beside you. Whisper: “I am Love, creating — and I am not alone.”',
   },
 ];
 
-export function beliefForDate(date: Date): Belief {
-  const dayOfYear = Math.floor(
-    (date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86_400_000
-  );
-  return beliefs[dayOfYear % beliefs.length];
+function dayOfYear(date: Date): number {
+  const start = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date.getTime() - start.getTime()) / 86_400_000);
+}
+
+export function beliefForDate(
+  date: Date,
+  currentChapter?: number | null
+): Belief {
+  if (
+    currentChapter !== undefined &&
+    currentChapter !== null &&
+    currentChapter >= 0 &&
+    currentChapter < beliefs.length
+  ) {
+    return beliefs[currentChapter];
+  }
+  return beliefs[dayOfYear(date) % beliefs.length];
+}
+
+export function beliefForChapter(chapter: number): Belief | undefined {
+  return beliefs.find((b) => b.chapter === chapter);
 }
