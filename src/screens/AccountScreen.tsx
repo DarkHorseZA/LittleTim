@@ -14,8 +14,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, layout, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { CloseButton } from '../components/CloseButton';
 import { PulsingMark } from '../components/PulsingMark';
 import { useDay } from '../store/DayContext';
 
@@ -82,15 +84,10 @@ export function AccountScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
+          <CloseButton
             onPress={() => navigation.goBack()}
-            style={styles.closeBtn}
-            accessibilityRole="button"
             accessibilityLabel="Close account"
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+          />
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
@@ -200,12 +197,13 @@ function ProviderButton({
 }) {
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => { tap(); onPress(); }}
       accessibilityRole="button"
       accessibilityLabel={`${label}, coming soon`}
-      style={({ pressed }) => [
+      style={({ pressed, focused }: any) => [
         styles.provider,
-        { opacity: pressed ? 0.85 : 1 },
+        pressed && pressScale,
+        focused && webFocus,
       ]}
     >
       <View style={styles.providerLeft}>
@@ -231,14 +229,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: layout.screen,
     paddingTop: 10,
-  },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.glass,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
     flexGrow: 1,

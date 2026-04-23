@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 
@@ -83,11 +84,15 @@ export function TourCard({
         </View>
         <Text style={styles.eyebrow}>{eyebrow}</Text>
         <Pressable
-          onPress={dismiss}
-          style={styles.closeBtn}
+          onPress={() => { tap(); dismiss(); }}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel="Dismiss this tip"
+          style={({ pressed, focused }: any) => [
+            styles.closeBtn,
+            pressed && pressScale,
+            focused && webFocus,
+          ]}
         >
           <Ionicons name="close" size={16} color={colors.inkSoft} />
         </Pressable>
@@ -103,10 +108,14 @@ export function TourCard({
       ))}
 
       <Pressable
-        onPress={dismiss}
-        style={styles.gotItBtn}
+        onPress={() => { tap(); dismiss(); }}
         accessibilityRole="button"
         accessibilityLabel="Got it, dismiss this tip"
+        style={({ pressed, focused }: any) => [
+          styles.gotItBtn,
+          pressed && pressScale,
+          focused && webFocus,
+        ]}
       >
         <Text style={styles.gotItText}>Got it</Text>
       </Pressable>

@@ -13,6 +13,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { msgPractices, seePractices } from '../data/practices';
 import { triggerGestures, isTriggerUnlocked } from '../data/triggers';
@@ -106,10 +107,17 @@ function renderPracticeList({
     return (
       <Pressable
         key={p.id}
-        onPress={() =>
-          navigation.navigate('PracticeDetail', { practiceId: p.id })
-        }
-        style={{ marginBottom: 12 }}
+        onPress={() => {
+          tap();
+          navigation.navigate('PracticeDetail', { practiceId: p.id });
+        }}
+        accessibilityRole="button"
+        accessibilityLabel={`Open practice: ${p.title}`}
+        style={({ pressed, focused }: any) => [
+          { marginBottom: 12 },
+          pressed && pressScale,
+          focused && webFocus,
+        ]}
       >
         <View style={[styles.card, shadows.sm, isDone && styles.cardDone]}>
           <View style={styles.cardRow}>
@@ -188,10 +196,22 @@ function renderTriggerList({
           <Pressable
             key={g.id}
             disabled={!unlocked}
-            onPress={() =>
-              navigation.navigate('TriggerDetail', { triggerId: g.id })
+            onPress={() => {
+              tap();
+              navigation.navigate('TriggerDetail', { triggerId: g.id });
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={
+              unlocked
+                ? `Open gesture: ${g.title}`
+                : `Locked gesture: ${g.title}`
             }
-            style={{ marginBottom: 12 }}
+            style={({ pressed, focused }: any) => [
+              { marginBottom: 12 },
+              // Locked cards should not scale or ring on focus.
+              unlocked && pressed && pressScale,
+              unlocked && focused && webFocus,
+            ]}
           >
             <View
               style={[
@@ -276,8 +296,19 @@ function SegmentButton({
 }) {
   return (
     <Pressable
-      onPress={onPress}
-      style={[styles.segBtn, active && styles.segBtnActive]}
+      onPress={() => {
+        tap();
+        onPress();
+      }}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: active }}
+      accessibilityLabel={`${label}: ${description}`}
+      style={({ pressed, focused }: any) => [
+        styles.segBtn,
+        active && styles.segBtnActive,
+        pressed && pressScale,
+        focused && webFocus,
+      ]}
     >
       <Text style={[styles.segLabel, active && styles.segLabelActive]}>
         {label}

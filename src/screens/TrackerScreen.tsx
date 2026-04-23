@@ -5,8 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { CloseButton } from '../components/CloseButton';
 import { PulsingMark } from '../components/PulsingMark';
 import { ScoreSlider } from '../components/ScoreSlider';
 import { focusAreaOrder, focusAreas } from '../data/focusAreas';
@@ -96,15 +98,11 @@ export function TrackerScreen({ navigation }: Props) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
+          <CloseButton
             onPress={() => navigation.goBack()}
-            style={styles.closeBtn}
-            accessibilityRole="button"
+            variant="solid"
             accessibilityLabel="Close check-in"
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+          />
         </View>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.headerRow}>
@@ -183,15 +181,11 @@ export function TrackerScreen({ navigation }: Props) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
+          <CloseButton
             onPress={() => navigation.goBack()}
-            style={styles.closeBtn}
-            accessibilityRole="button"
+            variant="solid"
             accessibilityLabel="Close check-in"
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+          />
         </View>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.headerRow}>
@@ -243,15 +237,11 @@ export function TrackerScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.topRow}>
-        <Pressable
-          hitSlop={16}
+        <CloseButton
           onPress={() => navigation.popToTop()}
-          style={styles.closeBtn}
-          accessibilityRole="button"
+          variant="solid"
           accessibilityLabel="Close and return to Today"
-        >
-          <Ionicons name="close" size={22} color={colors.ink} />
-        </Pressable>
+        />
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.headerRow}>
@@ -274,10 +264,14 @@ export function TrackerScreen({ navigation }: Props) {
           return (
             <Pressable
               key={area}
-              onPress={() => chooseArea(area)}
-              style={({ pressed }) => [
+              onPress={() => {
+                tap();
+                chooseArea(area);
+              }}
+              style={({ pressed, focused }: any) => [
                 { marginBottom: 10 },
-                pressed && { opacity: 0.92 },
+                pressed && pressScale,
+                focused && webFocus,
               ]}
               accessibilityRole="button"
               accessibilityLabel={`Focus on ${fa.label}, currently ${scores[area]} out of 10`}
@@ -316,15 +310,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingTop: 10,
-  },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadows.sm,
   },
   container: { flexGrow: 1, padding: 20, paddingTop: 8, paddingBottom: 40 },
   headerRow: {

@@ -14,6 +14,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { PulsingMark } from '../components/PulsingMark';
@@ -74,10 +75,17 @@ export function HomeScreen({ navigation }: Props) {
           <View style={styles.topRow}>
             <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
             <Pressable
-              onPress={() => navigation.navigate('Belief')}
+              onPress={() => {
+                tap();
+                navigation.navigate('Belief');
+              }}
               hitSlop={12}
               accessibilityRole="button"
               accessibilityLabel="Open today's belief reminder"
+              style={({ pressed, focused }: any) => [
+                pressed && pressScale,
+                focused && webFocus,
+              ]}
             >
               <PulsingMark size={26} accessibilityLabel="re-Genesis mark, today's belief" />
             </Pressable>
@@ -103,10 +111,16 @@ export function HomeScreen({ navigation }: Props) {
           />
 
           <Pressable
-            onPress={() => navigation.navigate('MorningRitual')}
+            onPress={() => {
+              tap();
+              navigation.navigate('MorningRitual');
+            }}
             accessibilityRole="button"
             accessibilityLabel={ritualDone ? 'Practice the morning ritual again' : 'Begin the morning ritual, the Five Gestures'}
-            style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.96 }}
+            style={({ pressed, focused }: any) => [
+              pressed && pressScale,
+              focused && webFocus,
+            ]}
           >
             <LinearGradient
               colors={ritualDone ? gradients.sage : gradients.clay}
@@ -171,10 +185,16 @@ export function HomeScreen({ navigation }: Props) {
           </View>
 
           <Pressable
-            onPress={() => navigation.navigate('Belief')}
+            onPress={() => {
+              tap();
+              navigation.navigate('Belief');
+            }}
             accessibilityRole="button"
             accessibilityLabel={`Open belief reminder: ${belief.statement}`}
-            style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.96 }}
+            style={({ pressed, focused }: any) => [
+              pressed && pressScale,
+              focused && webFocus,
+            ]}
           >
             <LinearGradient
               colors={gradients.heart}
@@ -271,10 +291,14 @@ export function HomeScreen({ navigation }: Props) {
             </Text>
           </View>
           <Pressable
-            onPress={() => navigation.navigate('Connect')}
-            style={({ pressed }) => [
+            onPress={() => {
+              tap();
+              navigation.navigate('Connect');
+            }}
+            style={({ pressed, focused }: any) => [
               styles.connectCard,
-              pressed && { opacity: 0.92, transform: [{ scale: 0.99 }] },
+              pressed && pressScale,
+              focused && webFocus,
             ]}
             accessibilityRole="button"
             accessibilityLabel="Connect with T: sessions, talks, reader circle, and the book"
@@ -330,8 +354,14 @@ function PracticeTile({
 }) {
   return (
     <Pressable
-      onPress={onPress}
-      style={({ pressed }) => pressed && { opacity: 0.9, transform: [{ scale: 0.99 }] }}
+      onPress={() => {
+        tap();
+        onPress();
+      }}
+      style={({ pressed, focused }: any) => [
+        pressed && pressScale,
+        focused && webFocus,
+      ]}
       accessibilityRole="button"
       accessibilityLabel={`${kind}: ${title}. ${done ? 'Complete for today.' : 'Tap to begin.'}`}
       accessibilityHint={`${body}`}

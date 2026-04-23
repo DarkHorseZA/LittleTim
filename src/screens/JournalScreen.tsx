@@ -18,6 +18,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
+import { webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { DailyEntry } from '../types';
@@ -163,7 +164,7 @@ export function JournalScreen() {
               savedJustNow ? 'Stitch saved' : canSave ? 'Save stitch' : 'Nothing to save yet'
             }
             accessibilityState={{ disabled: !canSave && !savedJustNow }}
-            style={({ pressed }) => [
+            style={({ pressed, focused }: any) => [
               styles.saveBtn,
               {
                 backgroundColor: savedJustNow
@@ -173,6 +174,7 @@ export function JournalScreen() {
                   : colors.lineSoft,
                 opacity: pressed ? 0.92 : 1,
               },
+              focused && canSave && webFocus,
             ]}
           >
             <Ionicons

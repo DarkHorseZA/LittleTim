@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Alert,
   Linking,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,6 +16,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { CloseButton } from '../components/CloseButton';
 import { focusAreas } from '../data/focusAreas';
 import { COACHING_URL, hasCoachingUrl } from '../config';
 import { useDay } from '../store/DayContext';
@@ -65,15 +65,10 @@ export function FocusAreaScreen({ navigation, route }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
+          <CloseButton
             onPress={() => navigation.popToTop()}
-            style={styles.closeBtn}
-            accessibilityRole="button"
             accessibilityLabel="Close and return to Today"
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+          />
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
@@ -141,14 +136,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingTop: 10,
-  },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.glass,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: { flexGrow: 1, padding: 28, paddingTop: 12, paddingBottom: 40 },
   emojiCircle: {

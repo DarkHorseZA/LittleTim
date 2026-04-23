@@ -14,6 +14,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, layout, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { APP_NAME, ATTRIBUTION } from '../config';
 import { useDay } from '../store/DayContext';
@@ -45,11 +46,15 @@ function ChapterChip({
 }) {
   return (
     <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [
+      onPress={() => {
+        tap();
+        onPress();
+      }}
+      style={({ pressed, focused }: any) => [
         styles.chapterChip,
         selected && styles.chapterChipOn,
         pressed && { transform: [{ scale: 0.97 }] },
+        focused && webFocus,
       ]}
       accessibilityRole="button"
       accessibilityState={{ selected }}
@@ -85,10 +90,16 @@ export function SettingsScreen({ navigation }: Props) {
         </Text>
 
         <Pressable
-          onPress={() => navigation.navigate('Account')}
+          onPress={() => {
+            tap();
+            navigation.navigate('Account');
+          }}
           accessibilityRole="button"
           accessibilityLabel={signedIn ? `Account: ${profile.displayName}` : 'Open account to sign in or set a display name'}
-          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
+          style={({ pressed, focused }: any) => [
+            pressed && pressScale,
+            focused && webFocus,
+          ]}
         >
           <View style={styles.accountCard}>
             <View
@@ -135,10 +146,16 @@ export function SettingsScreen({ navigation }: Props) {
         <View style={{ height: 14 }} />
 
         <Pressable
-          onPress={() => navigation.navigate('HowToUse')}
+          onPress={() => {
+            tap();
+            navigation.navigate('HowToUse');
+          }}
           accessibilityRole="button"
           accessibilityLabel="How to use re-Genesis: the rhythm of a day in the practice"
-          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
+          style={({ pressed, focused }: any) => [
+            pressed && pressScale,
+            focused && webFocus,
+          ]}
         >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
@@ -161,10 +178,16 @@ export function SettingsScreen({ navigation }: Props) {
         <View style={{ height: 10 }} />
 
         <Pressable
-          onPress={() => navigation.navigate('Glossary')}
+          onPress={() => {
+            tap();
+            navigation.navigate('Glossary');
+          }}
           accessibilityRole="button"
           accessibilityLabel="Open glossary of terms from the book"
-          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
+          style={({ pressed, focused }: any) => [
+            pressed && pressScale,
+            focused && webFocus,
+          ]}
         >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
@@ -191,14 +214,20 @@ export function SettingsScreen({ navigation }: Props) {
         <View style={{ height: 10 }} />
 
         <Pressable
-          onPress={() => navigation.navigate('Baseline', { firstRun: false })}
+          onPress={() => {
+            tap();
+            navigation.navigate('Baseline', { firstRun: false });
+          }}
           accessibilityRole="button"
           accessibilityLabel={
             settings.baseline
               ? 'Retake your wellness baseline'
               : 'Set your wellness baseline'
           }
-          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
+          style={({ pressed, focused }: any) => [
+            pressed && pressScale,
+            focused && webFocus,
+          ]}
         >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
@@ -239,11 +268,15 @@ export function SettingsScreen({ navigation }: Props) {
           {/* Top-level: Auto + Introduction. These two are always visible. */}
           <View style={styles.chapters}>
             <Pressable
-              onPress={() => updateSettings({ currentChapter: undefined })}
-              style={({ pressed }) => [
+              onPress={() => {
+                tap();
+                updateSettings({ currentChapter: undefined });
+              }}
+              style={({ pressed, focused }: any) => [
                 styles.chapterChip,
                 settings.currentChapter === undefined && styles.chapterChipOn,
                 pressed && { transform: [{ scale: 0.97 }] },
+                focused && webFocus,
               ]}
               accessibilityRole="button"
               accessibilityState={{ selected: settings.currentChapter === undefined }}
@@ -319,11 +352,15 @@ export function SettingsScreen({ navigation }: Props) {
               return (
                 <Pressable
                   key={h}
-                  onPress={() => updateSettings({ reminderHour: h })}
-                  style={({ pressed }) => [
+                  onPress={() => {
+                    tap();
+                    updateSettings({ reminderHour: h });
+                  }}
+                  style={({ pressed, focused }: any) => [
                     styles.hour,
                     on && styles.hourOn,
                     pressed && { transform: [{ scale: 0.97 }] },
+                    focused && webFocus,
                   ]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: on }}
@@ -341,10 +378,16 @@ export function SettingsScreen({ navigation }: Props) {
         <View style={{ height: 14 }} />
 
         <Pressable
-          onPress={() => navigation.navigate('Connect')}
+          onPress={() => {
+            tap();
+            navigation.navigate('Connect');
+          }}
           accessibilityRole="button"
           accessibilityLabel="Connect with T: sessions, talks, reader circle, and the book"
-          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
+          style={({ pressed, focused }: any) => [
+            pressed && pressScale,
+            focused && webFocus,
+          ]}
         >
           <View style={[styles.card, { backgroundColor: colors.clayWash }]}>
             <View style={styles.cardHead}>

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -7,6 +7,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { CloseButton } from '../components/CloseButton';
 import { findPractice } from '../data/practices';
 import { useDay } from '../store/DayContext';
 
@@ -45,15 +46,11 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.topRow}>
-        <Pressable
-          hitSlop={16}
+        <CloseButton
           onPress={() => navigation.goBack()}
-          style={styles.closeBtn}
-          accessibilityRole="button"
+          variant="solid"
           accessibilityLabel="Close practice"
-        >
-          <Ionicons name="close" size={22} color={colors.ink} />
-        </Pressable>
+        />
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.kindPill}>
@@ -107,15 +104,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingTop: 10,
-  },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...shadows.sm,
   },
   container: {
     flexGrow: 1,

@@ -14,6 +14,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { glossary } from '../data/glossary';
+import { CloseButton } from '../components/CloseButton';
 import { PulsingMark } from '../components/PulsingMark';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Glossary'>;
@@ -29,15 +30,10 @@ export function GlossaryScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
+          <CloseButton
             onPress={() => navigation.goBack()}
-            style={styles.closeBtn}
-            accessibilityRole="button"
             accessibilityLabel="Close glossary"
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+          />
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
@@ -84,14 +80,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingTop: 10,
-  },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.glass,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
     flexGrow: 1,

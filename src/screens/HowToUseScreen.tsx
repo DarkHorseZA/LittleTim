@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,6 +8,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { CloseButton } from '../components/CloseButton';
 import { AUTHOR_NAME, BOOK_TITLE } from '../config';
 import { useDay } from '../store/DayContext';
 
@@ -48,15 +42,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         {!firstRun ? (
           <View style={styles.topRow}>
-            <Pressable
-              hitSlop={16}
-              onPress={() => navigation.goBack()}
-              style={styles.closeBtn}
-              accessibilityRole="button"
-              accessibilityLabel="Close"
-            >
-              <Ionicons name="close" size={22} color={colors.ink} />
-            </Pressable>
+            <CloseButton onPress={() => navigation.goBack()} />
           </View>
         ) : null}
 
@@ -277,14 +263,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingTop: 10,
-  },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.glass,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
     flexGrow: 1,

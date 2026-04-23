@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +15,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { CloseButton } from '../components/CloseButton';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
@@ -227,15 +227,7 @@ export function MorningRitualScreen({ navigation }: Props) {
               />
             ))}
           </View>
-          <Pressable
-            hitSlop={16}
-            onPress={close}
-            style={styles.closeBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Close ritual"
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+          <CloseButton onPress={close} accessibilityLabel="Close ritual" />
         </View>
 
         <ScrollView
@@ -463,14 +455,6 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: colors.line,
-  },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.glass,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
     flexGrow: 1,

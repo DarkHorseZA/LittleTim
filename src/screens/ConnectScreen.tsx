@@ -15,8 +15,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, layout, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { CloseButton } from '../components/CloseButton';
 import { PulsingMark } from '../components/PulsingMark';
 import {
   AUTHOR_NAME,
@@ -68,15 +70,7 @@ export function ConnectScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
-            onPress={() => navigation.goBack()}
-            style={styles.closeBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Close"
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+          <CloseButton onPress={() => navigation.goBack()} />
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
@@ -250,12 +244,17 @@ function ActionCard({
 }) {
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => {
+        if (disabled) return;
+        tap();
+        onPress();
+      }}
       disabled={disabled}
-      style={({ pressed }) => [
+      style={({ pressed, focused }: any) => [
         styles.actionCard,
         disabled && styles.actionCardDisabled,
-        pressed && !disabled && { opacity: 0.92 },
+        pressed && !disabled && pressScale,
+        focused && !disabled && webFocus,
       ]}
       accessibilityRole="button"
       accessibilityLabel={`${title}. ${cta}`}
@@ -323,12 +322,17 @@ function BookFormatRow({
 }) {
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => {
+        if (!hasLink) return;
+        tap();
+        onPress();
+      }}
       disabled={!hasLink}
-      style={({ pressed }) => [
+      style={({ pressed, focused }: any) => [
         styles.formatRow,
         !last && styles.formatRowDivider,
-        pressed && hasLink && { opacity: 0.92 },
+        pressed && hasLink && pressScale,
+        focused && hasLink && webFocus,
       ]}
       accessibilityRole="button"
       accessibilityLabel={`${label}: ${sub}. ${hasLink ? 'Open' : 'Coming soon'}`}
@@ -371,14 +375,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: layout.screen,
     paddingTop: 10,
-  },
-  closeBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.glass,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container: {
     flexGrow: 1,
