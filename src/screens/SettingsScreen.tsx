@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -353,7 +354,13 @@ export function SettingsScreen({ navigation }: Props) {
           </View>
         </Pressable>
 
-        <View style={{ height: 24 }} />
+        <View style={{ height: 28 }} />
+        <Image
+          source={require('../../assets/brand/logo-landscape.png')}
+          style={styles.brandMark}
+          resizeMode="contain"
+          accessibilityLabel="re-Genesis wordmark"
+        />
         <Text style={styles.footer}>{ATTRIBUTION}</Text>
         <Text style={styles.footerFaint}>
           v0.4 · Local-only. Your entries stay on this device.
@@ -479,6 +486,13 @@ const styles = StyleSheet.create({
   },
   chapterChipTextOn: {
     color: '#fff',
+  },
+  brandMark: {
+    width: 180,
+    height: 72,
+    alignSelf: 'center',
+    marginBottom: 14,
+    opacity: 0.9,
   },
   footer: {
     fontFamily: fonts.serifItalic,

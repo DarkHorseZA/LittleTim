@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Image,
   Linking,
   Pressable,
   ScrollView,
@@ -117,12 +118,22 @@ export function ConnectScreen({ navigation }: Props) {
           <SectionLabel>Get the book</SectionLabel>
 
           <View style={styles.bookCard}>
-            <Text style={styles.bookTitle}>{BOOK_TITLE}</Text>
-            <Text style={styles.bookAuthor}>by {AUTHOR_NAME}</Text>
-            <Text style={styles.bookBlurb}>
-              The thread this app is the needle for. Pick the format that fits
-              your rhythm.
-            </Text>
+            <View style={styles.bookHead}>
+              <Image
+                source={require('../../assets/brand/logo-portrait.png')}
+                style={styles.bookCover}
+                resizeMode="contain"
+                accessibilityLabel={`${BOOK_TITLE} book cover`}
+              />
+              <View style={styles.bookMeta}>
+                <Text style={styles.bookTitle}>{BOOK_TITLE}</Text>
+                <Text style={styles.bookAuthor}>by {AUTHOR_NAME}</Text>
+                <Text style={styles.bookBlurb}>
+                  The thread this app is the needle for. Pick the format
+                  that fits your rhythm.
+                </Text>
+              </View>
+            </View>
 
             <View style={{ height: 14 }} />
 
@@ -464,6 +475,20 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: 20,
     ...shadows.sm,
+  },
+  bookHead: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 16,
+  },
+  bookCover: {
+    width: 88,
+    height: 132, // 1024x1536 ratio (2:3) kept
+    borderRadius: radius.sm,
+    backgroundColor: colors.bg,
+  },
+  bookMeta: {
+    flex: 1,
   },
   bookTitle: {
     fontFamily: fonts.serifBold,
