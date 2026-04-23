@@ -18,6 +18,7 @@ import { fonts, text } from '../theme/type';
 import { APP_NAME, ATTRIBUTION } from '../config';
 import { useDay } from '../store/DayContext';
 import { chapters } from '../data/chapters';
+import { PulsingMark } from '../components/PulsingMark';
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, 'Settings'>,
@@ -70,7 +71,10 @@ export function SettingsScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-        <Text style={text.eyebrow}>Settings</Text>
+        <View style={styles.topRow}>
+          <Text style={text.eyebrow}>Settings</Text>
+          <PulsingMark size={28} />
+        </View>
         <Text style={styles.title}>{APP_NAME}</Text>
         <Text style={styles.body}>
           Calibrate the quiet rhythm of your day.
@@ -373,6 +377,11 @@ export function SettingsScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   container: { flexGrow: 1, padding: layout.screen, paddingBottom: 40 },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: { ...text.h1, marginTop: 8, marginBottom: 6 },
   body: { ...text.body, marginBottom: 20 },
   accountCard: {

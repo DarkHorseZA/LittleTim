@@ -16,6 +16,7 @@ import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { PulsingMark } from '../components/PulsingMark';
 import { StreakStrip } from '../components/StreakStrip';
 import { TourCard } from '../components/TourCard';
 import { APP_NAME_DISPLAY_CAPS } from '../config';
@@ -78,7 +79,7 @@ export function HomeScreen({ navigation }: Props) {
               accessibilityRole="button"
               accessibilityLabel="Open today's belief reminder"
             >
-              <Ionicons name="sparkles-outline" size={20} color={colors.clayDeep} />
+              <PulsingMark size={26} accessibilityLabel="re-Genesis mark, today's belief" />
             </Pressable>
           </View>
 
