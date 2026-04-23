@@ -13,7 +13,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
-import { pressScale, tap, webFocus } from '../theme/interactions';
+import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { msgPractices, seePractices } from '../data/practices';
 import { triggerGestures, isTriggerUnlocked } from '../data/triggers';
@@ -41,7 +41,7 @@ export function PracticeScreen({ navigation, route }: Props) {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.topRow}>
           <Text style={text.eyebrow}>Practice</Text>
-          <PulsingMark size={26} />
+          <PulsingMark size={56} />
         </View>
         <Text style={styles.title}>Choose your technology</Text>
         <Text style={styles.body}>
@@ -108,7 +108,7 @@ function renderPracticeList({
       <Pressable
         key={p.id}
         onPress={() => {
-          tap();
+          nav();
           navigation.navigate('PracticeDetail', { practiceId: p.id });
         }}
         accessibilityRole="button"
@@ -197,7 +197,7 @@ function renderTriggerList({
             key={g.id}
             disabled={!unlocked}
             onPress={() => {
-              tap();
+              nav();
               navigation.navigate('TriggerDetail', { triggerId: g.id });
             }}
             accessibilityRole="button"

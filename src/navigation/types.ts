@@ -23,4 +23,5 @@ export type RootStackParamList = {
   MorningRitual: undefined;
   Glossary: undefined;
   Connect: undefined;
+  NotFound: undefined;
 };

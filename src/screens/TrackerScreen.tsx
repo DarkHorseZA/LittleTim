@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
-import { pressScale, tap, webFocus } from '../theme/interactions';
+import { nav, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { CloseButton } from '../components/CloseButton';
@@ -107,7 +107,7 @@ export function TrackerScreen({ navigation }: Props) {
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.headerRow}>
             <Text style={text.eyebrow}>Today's check-in</Text>
-            <PulsingMark size={26} />
+            <PulsingMark size={56} />
           </View>
           <Text style={styles.title}>You've checked in today</Text>
           <Text style={styles.body}>
@@ -192,7 +192,7 @@ export function TrackerScreen({ navigation }: Props) {
             <Text style={text.eyebrow}>
               {isBaseline ? 'Baseline check-in' : 'Today\u2019s check-in'}
             </Text>
-            <PulsingMark size={26} />
+            <PulsingMark size={56} />
           </View>
           <Text style={styles.title}>
             {isBaseline
@@ -246,7 +246,7 @@ export function TrackerScreen({ navigation }: Props) {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.headerRow}>
           <Text style={text.eyebrow}>Focus</Text>
-          <PulsingMark size={26} />
+          <PulsingMark size={56} />
         </View>
         <Text style={styles.title}>
           Which area is most important right now?
@@ -265,7 +265,7 @@ export function TrackerScreen({ navigation }: Props) {
             <Pressable
               key={area}
               onPress={() => {
-                tap();
+                nav();
                 chooseArea(area);
               }}
               style={({ pressed, focused }: any) => [

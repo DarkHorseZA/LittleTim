@@ -14,7 +14,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
-import { pressScale, tap, webFocus } from '../theme/interactions';
+import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { PulsingMark } from '../components/PulsingMark';
@@ -76,7 +76,7 @@ export function HomeScreen({ navigation }: Props) {
             <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
             <Pressable
               onPress={() => {
-                tap();
+                nav();
                 navigation.navigate('Belief');
               }}
               hitSlop={12}
@@ -87,7 +87,7 @@ export function HomeScreen({ navigation }: Props) {
                 focused && webFocus,
               ]}
             >
-              <PulsingMark size={26} accessibilityLabel="re-Genesis mark, today's belief" />
+              <PulsingMark size={56} accessibilityLabel="re-Genesis mark, today's belief" />
             </Pressable>
           </View>
 
@@ -112,7 +112,7 @@ export function HomeScreen({ navigation }: Props) {
 
           <Pressable
             onPress={() => {
-              tap();
+              nav();
               navigation.navigate('MorningRitual');
             }}
             accessibilityRole="button"
@@ -186,7 +186,7 @@ export function HomeScreen({ navigation }: Props) {
 
           <Pressable
             onPress={() => {
-              tap();
+              nav();
               navigation.navigate('Belief');
             }}
             accessibilityRole="button"
@@ -292,7 +292,7 @@ export function HomeScreen({ navigation }: Props) {
           </View>
           <Pressable
             onPress={() => {
-              tap();
+              nav();
               navigation.navigate('Connect');
             }}
             style={({ pressed, focused }: any) => [
@@ -355,7 +355,7 @@ function PracticeTile({
   return (
     <Pressable
       onPress={() => {
-        tap();
+        nav();
         onPress();
       }}
       style={({ pressed, focused }: any) => [

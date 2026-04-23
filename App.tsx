@@ -18,6 +18,7 @@ import {
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { DayProvider } from './src/store/DayContext';
 import { colors } from './src/theme/colors';
+import { ToastHost } from './src/components/Toast';
 
 export default function App() {
   const [loaded] = useFraunces({
@@ -51,6 +52,7 @@ export default function App() {
       <DayProvider>
         <StatusBar style="dark" />
         <RootNavigator />
+        <ToastHost />
       </DayProvider>
     </SafeAreaProvider>
   );

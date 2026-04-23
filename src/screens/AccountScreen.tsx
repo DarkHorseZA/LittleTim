@@ -96,7 +96,7 @@ export function AccountScreen({ navigation }: Props) {
               {initials(name) ? (
                 <Text style={styles.avatarText}>{initials(name)}</Text>
               ) : (
-                <PulsingMark size={44} accessibilityLabel="re-Genesis mark" />
+                <PulsingMark size={72} accessibilityLabel="re-Genesis mark" />
               )}
             </View>
           </View>

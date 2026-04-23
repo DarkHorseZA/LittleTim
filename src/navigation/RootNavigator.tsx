@@ -22,6 +22,7 @@ import { MorningRitualScreen } from '../screens/MorningRitualScreen';
 import { JournalScreen } from '../screens/JournalScreen';
 import { GlossaryScreen } from '../screens/GlossaryScreen';
 import { ConnectScreen } from '../screens/ConnectScreen';
+import { NotFoundScreen } from '../screens/NotFoundScreen';
 import { colors, layout } from '../theme/colors';
 import { fonts } from '../theme/type';
 
@@ -56,6 +57,9 @@ const linking: LinkingOptions<RootStackParamList> = {
       MorningRitual: 'ritual',
       Glossary: 'glossary',
       Connect: 'connect',
+      // Catchall: any URL that does not match the above paths lands here.
+      // React Navigation matches '*' last, so real routes still win.
+      NotFound: '*',
     },
   },
 };
@@ -212,6 +216,11 @@ export function RootNavigator() {
           name="Connect"
           component={ConnectScreen}
           options={{ presentation: 'modal', animation: 'fade_from_bottom' }}
+        />
+        <Stack.Screen
+          name="NotFound"
+          component={NotFoundScreen}
+          options={{ animation: 'fade' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

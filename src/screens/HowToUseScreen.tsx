@@ -58,7 +58,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
               <Text style={styles.eyebrow}>How to use</Text>
               <Text style={styles.title}>re-Genesis</Text>
               <Text style={styles.attribution}>
-                Companion to {BOOK_TITLE} by {AUTHOR_NAME}
+                {`Companion to ${BOOK_TITLE} by ${AUTHOR_NAME}`}
               </Text>
             </View>
           </View>
@@ -271,34 +271,37 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   masthead: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 14,
-    marginBottom: 24,
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 28,
+    marginTop: 4,
   },
   mark: {
-    width: 88,
-    height: 88,
-    marginLeft: -8,
+    width: 180,
+    height: 180,
+    marginBottom: 12,
   },
   mastheadText: {
-    flex: 1,
+    alignItems: 'center',
   },
   eyebrow: {
     ...text.eyebrow,
     marginBottom: 4,
+    textAlign: 'center',
   },
   title: {
     fontFamily: fonts.serifBold,
     fontSize: 44,
     lineHeight: 52,
     color: colors.ink,
+    textAlign: 'center',
   },
   attribution: {
     fontFamily: fonts.serifItalic,
     fontSize: 14,
     color: colors.inkSoft,
-    marginTop: 6,
+    marginTop: 8,
+    textAlign: 'center',
   },
   lead: {
     backgroundColor: colors.surface,

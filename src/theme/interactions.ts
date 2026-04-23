@@ -21,11 +21,25 @@ import { colors } from './colors';
 //
 //   <Pressable onPress={tapThen(doThing)} ... />
 
-// Fire a subtle selection tick. Native-only; on web Haptics no-ops, and we
-// swallow any device/permission errors so a tap never throws up to the user.
+// Fire a subtle selection tick. Use for toggles, chips, segment buttons,
+// anything where the tap changes a value within the current screen.
+// Native-only; on web Haptics no-ops, and we swallow any device/permission
+// errors so a tap never throws up to the user.
 export function tap() {
   try {
     Haptics.selectionAsync();
+  } catch {
+    /* no haptic engine on this device, swallow */
+  }
+}
+
+// Fire a gentle impact. Use for taps that navigate (open a modal, push a
+// screen, dive into a tile). Slightly more substantial than `tap()` so the
+// body reads "something is happening" vs "I toggled a thing". Light by
+// default to stay inside re-Genesis' calm tone.
+export function nav() {
+  try {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   } catch {
     /* no haptic engine on this device, swallow */
   }

@@ -14,7 +14,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, layout, radius, shadows } from '../theme/colors';
-import { pressScale, tap, webFocus } from '../theme/interactions';
+import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { APP_NAME, ATTRIBUTION } from '../config';
 import { useDay } from '../store/DayContext';
@@ -82,7 +82,7 @@ export function SettingsScreen({ navigation }: Props) {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.topRow}>
           <Text style={text.eyebrow}>Settings</Text>
-          <PulsingMark size={28} />
+          <PulsingMark size={56} />
         </View>
         <Text style={styles.title}>{APP_NAME}</Text>
         <Text style={styles.body}>
@@ -91,7 +91,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         <Pressable
           onPress={() => {
-            tap();
+            nav();
             navigation.navigate('Account');
           }}
           accessibilityRole="button"
@@ -147,7 +147,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         <Pressable
           onPress={() => {
-            tap();
+            nav();
             navigation.navigate('HowToUse');
           }}
           accessibilityRole="button"
@@ -179,7 +179,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         <Pressable
           onPress={() => {
-            tap();
+            nav();
             navigation.navigate('Glossary');
           }}
           accessibilityRole="button"
@@ -215,7 +215,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         <Pressable
           onPress={() => {
-            tap();
+            nav();
             navigation.navigate('Baseline', { firstRun: false });
           }}
           accessibilityRole="button"
@@ -379,7 +379,7 @@ export function SettingsScreen({ navigation }: Props) {
 
         <Pressable
           onPress={() => {
-            tap();
+            nav();
             navigation.navigate('Connect');
           }}
           accessibilityRole="button"

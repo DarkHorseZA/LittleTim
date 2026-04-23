@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, layout, radius, shadows } from '../theme/colors';
-import { pressScale, tap, webFocus } from '../theme/interactions';
+import { nav, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { CloseButton } from '../components/CloseButton';
@@ -76,7 +76,7 @@ export function ConnectScreen({ navigation }: Props) {
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.headerRow}>
             <Text style={text.eyebrow}>Connect</Text>
-            <PulsingMark size={26} />
+            <PulsingMark size={56} />
           </View>
           <Text style={styles.title}>Stay with the thread</Text>
           <Text style={styles.intro}>
@@ -246,7 +246,7 @@ function ActionCard({
     <Pressable
       onPress={() => {
         if (disabled) return;
-        tap();
+        nav();
         onPress();
       }}
       disabled={disabled}
@@ -324,7 +324,7 @@ function BookFormatRow({
     <Pressable
       onPress={() => {
         if (!hasLink) return;
-        tap();
+        nav();
         onPress();
       }}
       disabled={!hasLink}

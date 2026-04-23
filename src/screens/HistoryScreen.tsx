@@ -77,7 +77,7 @@ export function HistoryScreen() {
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.topRow}>
           <Text style={text.eyebrow}>History</Text>
-          <PulsingMark size={26} />
+          <PulsingMark size={56} />
         </View>
         <Text style={styles.title}>Your quiet progress</Text>
         <Text style={styles.body}>

@@ -17,6 +17,7 @@ import {
   todayKey,
   upsertEntry,
 } from './storage';
+import { toast } from '../components/Toast';
 
 type DayContextValue = {
   ready: boolean;
@@ -59,9 +60,16 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
   const updateToday = useCallback(
     async (patch: Partial<DailyEntry>) => {
       const next = { ...today, ...patch, date: todayKey() };
-      await upsertEntry(next);
-      setToday(next);
-      setEntries((prev) => ({ ...prev, [next.date]: next }));
+      try {
+        await upsertEntry(next);
+        setToday(next);
+        setEntries((prev) => ({ ...prev, [next.date]: next }));
+      } catch {
+        // AsyncStorage can throw on quota exhaustion, corrupted data, or web
+        // storage being disabled (incognito, iframe sandbox). Surface a
+        // soft toast instead of crashing or silently dropping the write.
+        toast("Couldn't save your entry. Your device storage may be full.", 'error');
+      }
     },
     [today]
   );
@@ -69,8 +77,12 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
   const updateSettings = useCallback(
     async (patch: Partial<Settings>) => {
       const next = { ...settings, ...patch };
-      await saveSettings(next);
-      setSettings(next);
+      try {
+        await saveSettings(next);
+        setSettings(next);
+      } catch {
+        toast("Couldn't save your settings. Your device storage may be full.", 'error');
+      }
     },
     [settings]
   );

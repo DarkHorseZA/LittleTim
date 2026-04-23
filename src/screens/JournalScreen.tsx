@@ -98,7 +98,7 @@ export function JournalScreen() {
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.topRow}>
             <Text style={text.eyebrow}>Patchwork Journal</Text>
-            <PulsingMark size={26} />
+            <PulsingMark size={56} />
           </View>
           <Text style={styles.title}>Tonight's stitch</Text>
           <Text style={styles.body}>
@@ -189,11 +189,7 @@ export function JournalScreen() {
                 { color: savedJustNow || canSave ? colors.white : colors.inkFaint },
               ]}
             >
-              {savedJustNow
-                ? 'Stitched'
-                : canSave
-                ? 'Save stitch'
-                : 'Saved'}
+              {savedJustNow ? 'Stitched' : 'Save stitch'}
             </Text>
           </Pressable>
 
