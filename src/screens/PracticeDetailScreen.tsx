@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
@@ -34,9 +33,7 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
       : today.seeDone && today.seePracticeId === practice.id;
 
   const complete = async () => {
-    try {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch {}
+    // Completion haptic is fired by the Button (haptic="success"). No manual call.
     if (practice.kind === 'MSG') {
       await updateToday({ msgDone: true, msgPracticeId: practice.id });
     } else {
@@ -90,6 +87,7 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
           onPress={complete}
           disabled={isDone}
           size="lg"
+          haptic="success"
         />
         <View style={{ height: 10 }} />
         <Button

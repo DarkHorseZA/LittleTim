@@ -54,6 +54,15 @@ export const colors = {
   // for pure white so we never hardcode #FFFFFF in components.
   white: '#FFFFFF',
   onClay: '#FFFFFF',
+
+  // Translucent surface tokens. Use these instead of raw rgba() literals so
+  // the alpha ramp is consistent across the app and survives a dark-mode pass.
+  // `glass` sits over dawn gradients (close buttons on modal heroes).
+  // `onClay*` variants sit on clay gradients (Today hero chips, subhead text).
+  glass: 'rgba(255,255,255,0.70)',
+  onClaySoft: 'rgba(255,255,255,0.85)',
+  onClayStrong: 'rgba(255,255,255,0.92)',
+  onClayChip: 'rgba(255,255,255,0.22)',
 };
 
 export type AreaColor =

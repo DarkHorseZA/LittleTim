@@ -8,9 +8,38 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius } from '../theme/colors';
 import { fonts } from '../theme/type';
+
+// Haptic vocabulary, mapped to Expo Haptics primitives. Expo Haptics on web
+// is a no-op, so these calls are safe to fire unconditionally.
+export type ButtonHaptic = 'selection' | 'light' | 'success' | 'warning' | 'none';
+
+async function fireHaptic(kind: ButtonHaptic) {
+  try {
+    switch (kind) {
+      case 'selection':
+        await Haptics.selectionAsync();
+        return;
+      case 'light':
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+        return;
+      case 'success':
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        return;
+      case 'warning':
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+        return;
+      case 'none':
+      default:
+        return;
+    }
+  } catch {
+    // Haptics can reject on unsupported hardware. Swallow and move on.
+  }
+}
 
 // Web-only focus ring. On native, Pressable ignores unknown style props,
 // but we keep the object gated to Platform.OS === 'web' to be explicit.
@@ -38,6 +67,10 @@ type Props = {
   size?: 'md' | 'lg';
   accessibilityLabel?: string;
   accessibilityHint?: string;
+  // Tactile feedback fired on press. Defaults: ghost = none (dismissal should
+  // be silent), all other variants = selection (a gentle tap). Pass `success`
+  // for completion CTAs (mark-as-done, save baseline). Pass `none` to opt out.
+  haptic?: ButtonHaptic;
 };
 
 export function Button({
@@ -52,11 +85,19 @@ export function Button({
   size = 'md',
   accessibilityLabel,
   accessibilityHint,
+  haptic,
 }: Props) {
   const palette = palettes[variant];
+  const resolvedHaptic: ButtonHaptic =
+    haptic ?? (variant === 'ghost' ? 'none' : 'selection');
+  const handlePress = () => {
+    // Fire haptic before handler so it overlaps with the state transition.
+    fireHaptic(resolvedHaptic);
+    onPress();
+  };
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       disabled={disabled || loading}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}

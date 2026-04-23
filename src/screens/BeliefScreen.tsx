@@ -3,7 +3,6 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
@@ -22,9 +21,7 @@ export function BeliefScreen({ navigation }: Props) {
   );
 
   const acknowledge = async () => {
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-    } catch {}
+    // Completion haptic fired by the Button (haptic="success"). No manual call.
     await updateToday({
       beliefId: belief.id,
       beliefAcknowledged: true,
@@ -92,6 +89,7 @@ export function BeliefScreen({ navigation }: Props) {
             icon={already ? 'checkmark-circle' : 'heart'}
             onPress={acknowledge}
             size="lg"
+            haptic="success"
           />
           <View style={{ height: 10 }} />
           <Button
@@ -120,7 +118,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.65)',
+    backgroundColor: colors.glass,
     alignItems: 'center',
     justifyContent: 'center',
   },

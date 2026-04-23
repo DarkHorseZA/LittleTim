@@ -11,7 +11,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
@@ -190,15 +189,11 @@ export function MorningRitualScreen({ navigation }: Props) {
   });
 
   const next = async () => {
-    try {
-      await Haptics.selectionAsync();
-    } catch {}
+    // Haptic is fired by the Button (selection for step advance, success for
+    // completion). No manual call needed here.
     if (idx < STEPS.length - 1) {
       setIdx(idx + 1);
     } else {
-      try {
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      } catch {}
       await updateToday({ morningRitualDone: true });
       setDone(true);
     }
@@ -331,6 +326,7 @@ export function MorningRitualScreen({ navigation }: Props) {
             trailingIcon={idx < STEPS.length - 1 ? 'arrow-forward' : 'checkmark'}
             onPress={next}
             size="lg"
+            haptic={idx < STEPS.length - 1 ? 'selection' : 'success'}
           />
         </View>
       </SafeAreaView>
@@ -472,7 +468,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: colors.glass,
     alignItems: 'center',
     justifyContent: 'center',
   },

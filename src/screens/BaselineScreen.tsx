@@ -9,7 +9,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
@@ -46,9 +45,7 @@ export function BaselineScreen({ navigation, route }: Props) {
   const save = async () => {
     if (saving) return;
     setSaving(true);
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-    } catch {}
+    // Completion haptic is fired by the Button (haptic="success"). No manual call.
     await updateSettings({
       baseline: {
         scores,
@@ -156,6 +153,7 @@ export function BaselineScreen({ navigation, route }: Props) {
             onPress={save}
             size="lg"
             loading={saving}
+            haptic="success"
             accessibilityHint="Saves these five readings as your starting point"
           />
           <View style={{ height: 40 }} />
@@ -185,7 +183,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: colors.glass,
     alignItems: 'center',
     justifyContent: 'center',
   },

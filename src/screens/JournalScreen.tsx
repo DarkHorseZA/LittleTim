@@ -69,7 +69,8 @@ export function JournalScreen() {
   const save = async () => {
     Keyboard.dismiss();
     try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+      // Completion feel, parallel to Baseline/Belief/Practice save flows.
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch {}
     await updateToday({
       journal: {
