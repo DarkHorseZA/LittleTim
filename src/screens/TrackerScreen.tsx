@@ -7,6 +7,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { PulsingMark } from '../components/PulsingMark';
 import { ScoreSlider } from '../components/ScoreSlider';
 import { focusAreaOrder, focusAreas } from '../data/focusAreas';
 import { FocusArea, TrackerScores } from '../types';
@@ -106,7 +107,10 @@ export function TrackerScreen({ navigation }: Props) {
           </Pressable>
         </View>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-          <Text style={text.eyebrow}>Today's check-in</Text>
+          <View style={styles.headerRow}>
+            <Text style={text.eyebrow}>Today's check-in</Text>
+            <PulsingMark size={26} />
+          </View>
           <Text style={styles.title}>You've checked in today</Text>
           <Text style={styles.body}>
             One reading per day is enough. Come back tomorrow, the thread
@@ -190,9 +194,12 @@ export function TrackerScreen({ navigation }: Props) {
           </Pressable>
         </View>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-          <Text style={text.eyebrow}>
-            {isBaseline ? 'Baseline check-in' : 'Today\u2019s check-in'}
-          </Text>
+          <View style={styles.headerRow}>
+            <Text style={text.eyebrow}>
+              {isBaseline ? 'Baseline check-in' : 'Today\u2019s check-in'}
+            </Text>
+            <PulsingMark size={26} />
+          </View>
           <Text style={styles.title}>
             {isBaseline
               ? 'Where are you starting from?'
@@ -247,7 +254,10 @@ export function TrackerScreen({ navigation }: Props) {
         </Pressable>
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-        <Text style={text.eyebrow}>Focus</Text>
+        <View style={styles.headerRow}>
+          <Text style={text.eyebrow}>Focus</Text>
+          <PulsingMark size={26} />
+        </View>
         <Text style={styles.title}>
           Which area is most important right now?
         </Text>
@@ -317,6 +327,11 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   container: { flexGrow: 1, padding: 20, paddingTop: 8, paddingBottom: 40 },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: {
     ...text.h1,
     marginTop: 8,

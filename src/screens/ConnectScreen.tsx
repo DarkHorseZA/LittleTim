@@ -17,6 +17,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { PulsingMark } from '../components/PulsingMark';
 import {
   AUTHOR_NAME,
   BOOK_AUDIOBOOK_URL,
@@ -79,7 +80,10 @@ export function ConnectScreen({ navigation }: Props) {
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-          <Text style={text.eyebrow}>Connect</Text>
+          <View style={styles.headerRow}>
+            <Text style={text.eyebrow}>Connect</Text>
+            <PulsingMark size={26} />
+          </View>
           <Text style={styles.title}>Stay with the thread</Text>
           <Text style={styles.intro}>
             A quiet way to work with {AUTHOR_NAME}, find the book, and hear
@@ -381,6 +385,11 @@ const styles = StyleSheet.create({
     padding: layout.screenLoose,
     paddingTop: 10,
     paddingBottom: 40,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
     fontFamily: fonts.serifBold,
