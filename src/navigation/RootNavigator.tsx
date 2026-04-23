@@ -1,5 +1,6 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { Platform, StyleSheet, View } from 'react-native';
+import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,11 +22,43 @@ import { MorningRitualScreen } from '../screens/MorningRitualScreen';
 import { JournalScreen } from '../screens/JournalScreen';
 import { GlossaryScreen } from '../screens/GlossaryScreen';
 import { ConnectScreen } from '../screens/ConnectScreen';
-import { colors } from '../theme/colors';
+import { colors, layout } from '../theme/colors';
 import { fonts } from '../theme/type';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tabs = createBottomTabNavigator<TabsParamList>();
+
+// Deep-link config. Paths mirror the in-app IA so screens are shareable via URL
+// on the web deploy at /LittleTim/v2/.
+const linking: LinkingOptions<RootStackParamList> = {
+  prefixes: ['littletim://', 'https://darkhorseza.github.io/LittleTim/v2/'],
+  config: {
+    screens: {
+      Welcome: '',
+      HowToUse: 'how-to-use',
+      Baseline: 'baseline',
+      Tabs: {
+        path: 'app',
+        screens: {
+          Today: 'today',
+          Practice: 'practice',
+          Journal: 'journal',
+          History: 'history',
+          Settings: 'settings',
+        },
+      },
+      Belief: 'belief',
+      PracticeDetail: 'practice/:practiceId',
+      TriggerDetail: 'when/:triggerId',
+      Tracker: 'tracker',
+      FocusArea: 'focus/:focusArea',
+      Account: 'account',
+      MorningRitual: 'ritual',
+      Glossary: 'glossary',
+      Connect: 'connect',
+    },
+  },
+};
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -107,8 +140,8 @@ function TabsNavigator() {
 }
 
 export function RootNavigator() {
-  return (
-    <NavigationContainer>
+  const content = (
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName="Welcome"
         screenOptions={{
@@ -183,4 +216,34 @@ export function RootNavigator() {
       </Stack.Navigator>
     </NavigationContainer>
   );
+
+  // On web, center a phone-sized viewport so the app feels like an app, not a
+  // stretched web page. On native, this wrapper is transparent.
+  if (Platform.OS === 'web') {
+    return (
+      <View style={webStyles.outer}>
+        <View style={webStyles.inner}>{content}</View>
+      </View>
+    );
+  }
+  return content;
 }
+
+const webStyles = StyleSheet.create({
+  outer: {
+    flex: 1,
+    backgroundColor: colors.bgDeep,
+    alignItems: 'center',
+  },
+  inner: {
+    flex: 1,
+    width: '100%',
+    maxWidth: layout.maxWidth,
+    backgroundColor: colors.bg,
+    // Soft vertical edge so the phone viewport sits on the oat background.
+    shadowColor: '#2B1F0F',
+    shadowOpacity: 0.08,
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 0 },
+  },
+});

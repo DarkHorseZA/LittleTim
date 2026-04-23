@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { DailyEntry } from '../types';
@@ -37,12 +37,14 @@ function intensity(entry?: DailyEntry): number {
   return n; // 0..4
 }
 
+// Five steps from "no activity" to "full". Values live in theme/colors.ts
+// so the heatmap respects brand tokens if the palette ever shifts.
 const INTENSITY_BG = [
-  colors.lineSoft,
-  '#F4D6C2',
-  '#EDBB99',
-  '#D99C6E',
-  colors.clay,
+  colors.heat0,
+  colors.heat1,
+  colors.heat2,
+  colors.heat3,
+  colors.heat4,
 ];
 
 export function HistoryScreen() {
@@ -224,7 +226,7 @@ function Badge({ on, label }: { on: boolean; label: string }) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  container: { flexGrow: 1, padding: 20, paddingBottom: 40 },
+  container: { flexGrow: 1, padding: layout.screen, paddingBottom: 40 },
   title: { ...text.h1, marginTop: 8, marginBottom: 6 },
   body: { ...text.body, marginBottom: 20 },
   statsRow: {

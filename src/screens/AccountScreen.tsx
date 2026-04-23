@@ -13,17 +13,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, gradients, radius, shadows } from '../theme/colors';
+import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Account'>;
 
-function initials(name?: string): string {
-  if (!name) return '✴︎';
+// Returns initials or null. Callers render a neutral icon when null to avoid
+// ever showing a glyph fallback (no emojis in product chrome).
+function initials(name?: string): string | null {
+  if (!name) return null;
   const parts = name.trim().split(/\s+/).slice(0, 2);
-  return parts.map((p) => p[0]?.toUpperCase() ?? '').join('') || '✴︎';
+  const joined = parts.map((p) => p[0]?.toUpperCase() ?? '').join('');
+  return joined.length > 0 ? joined : null;
 }
 
 export function AccountScreen({ navigation }: Props) {
@@ -92,7 +95,11 @@ export function AccountScreen({ navigation }: Props) {
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.avatarWrap}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>{initials(name)}</Text>
+              {initials(name) ? (
+                <Text style={styles.avatarText}>{initials(name)}</Text>
+              ) : (
+                <Ionicons name="person" size={38} color="#FFFFFF" />
+              )}
             </View>
           </View>
 
@@ -221,7 +228,7 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingHorizontal: 20,
+    paddingHorizontal: layout.screen,
     paddingTop: 10,
   },
   closeBtn: {
@@ -232,7 +239,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  container: { flexGrow: 1, padding: 24, paddingTop: 10, paddingBottom: 40 },
+  container: {
+    flexGrow: 1,
+    padding: layout.screenLoose,
+    paddingTop: 10,
+    paddingBottom: 40,
+  },
   avatarWrap: {
     alignItems: 'center',
     marginBottom: 18,

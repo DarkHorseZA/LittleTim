@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Alert,
   Linking,
   Pressable,
   ScrollView,
@@ -14,7 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, gradients, radius, shadows } from '../theme/colors';
+import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import {
@@ -40,11 +39,11 @@ export function ConnectScreen({ navigation }: Props) {
   const notify = settings.notifyOnNewBook === true;
   const [saving, setSaving] = useState(false);
 
-  const open = async (url: string, fallbackMsg: string) => {
-    if (!hasUrl(url)) {
-      Alert.alert('Coming soon', fallbackMsg);
-      return;
-    }
+  // When a destination URL isn't wired yet, the button is already visually
+  // disabled (persistent "Coming soon" / "Soon" label), so tapping is a no-op.
+  // No alert, no dead-end.
+  const open = (url: string) => {
+    if (!hasUrl(url)) return;
     Linking.openURL(url);
   };
 
@@ -94,12 +93,7 @@ export function ConnectScreen({ navigation }: Props) {
             body="One-on-one work. A session to sit with what the book opens."
             cta={hasUrl(COACHING_URL) ? 'Book a session' : 'Coming soon'}
             disabled={!hasUrl(COACHING_URL)}
-            onPress={() =>
-              open(
-                COACHING_URL,
-                'Coaching booking will open here once a link is added.'
-              )
-            }
+            onPress={() => open(COACHING_URL)}
           />
 
           <ActionCard
@@ -108,12 +102,7 @@ export function ConnectScreen({ navigation }: Props) {
             body="Bring re-Genesis to your group, retreat, or event."
             cta={hasUrl(TALK_BOOKING_URL) ? 'Enquire' : 'Coming soon'}
             disabled={!hasUrl(TALK_BOOKING_URL)}
-            onPress={() =>
-              open(
-                TALK_BOOKING_URL,
-                'The talk enquiry form will open here once a link is added.'
-              )
-            }
+            onPress={() => open(TALK_BOOKING_URL)}
           />
 
           <ActionCard
@@ -122,12 +111,7 @@ export function ConnectScreen({ navigation }: Props) {
             body="Meet others walking the same thread. A gentle place to share stitches."
             cta={hasUrl(READER_COMMUNITY_URL) ? 'Join' : 'Coming soon'}
             disabled={!hasUrl(READER_COMMUNITY_URL)}
-            onPress={() =>
-              open(
-                READER_COMMUNITY_URL,
-                'The reader circle will open here once a link is added.'
-              )
-            }
+            onPress={() => open(READER_COMMUNITY_URL)}
           />
 
           <SectionLabel>Get the book</SectionLabel>
@@ -147,36 +131,21 @@ export function ConnectScreen({ navigation }: Props) {
               label="E-book"
               sub="Read on phone, tablet, or Kindle."
               hasLink={hasUrl(BOOK_EBOOK_URL)}
-              onPress={() =>
-                open(
-                  BOOK_EBOOK_URL,
-                  'The e-book link will open here once it is added.'
-                )
-              }
+              onPress={() => open(BOOK_EBOOK_URL)}
             />
             <BookFormatRow
               icon="headset-outline"
               label="Audiobook"
               sub="Listen in T's voice."
               hasLink={hasUrl(BOOK_AUDIOBOOK_URL)}
-              onPress={() =>
-                open(
-                  BOOK_AUDIOBOOK_URL,
-                  'The audiobook link will open here once it is added.'
-                )
-              }
+              onPress={() => open(BOOK_AUDIOBOOK_URL)}
             />
             <BookFormatRow
               icon="book-outline"
               label="Paperback"
               sub="The quilt you can hold."
               hasLink={hasUrl(BOOK_PAPERBACK_URL)}
-              onPress={() =>
-                open(
-                  BOOK_PAPERBACK_URL,
-                  'The paperback link will open here once it is added.'
-                )
-              }
+              onPress={() => open(BOOK_PAPERBACK_URL)}
               last
             />
           </View>
@@ -228,12 +197,7 @@ export function ConnectScreen({ navigation }: Props) {
                   title="Or join the newsletter"
                   variant="ghost"
                   icon="mail-outline"
-                  onPress={() =>
-                    open(
-                      NEWSLETTER_URL,
-                      'The newsletter link will open here once it is added.'
-                    )
-                  }
+                  onPress={() => open(NEWSLETTER_URL)}
                 />
               </View>
             ) : null}
@@ -272,29 +236,56 @@ function ActionCard({
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.actionCard,
-        pressed && { opacity: 0.92 },
+        disabled && styles.actionCardDisabled,
+        pressed && !disabled && { opacity: 0.92 },
       ]}
       accessibilityRole="button"
       accessibilityLabel={`${title}. ${cta}`}
       accessibilityHint={body}
       accessibilityState={{ disabled: !!disabled }}
     >
-      <View style={styles.iconCircle}>
-        <Ionicons name={icon} size={18} color={colors.clay} />
+      <View
+        style={[
+          styles.iconCircle,
+          disabled && { backgroundColor: colors.lineSoft },
+        ]}
+      >
+        <Ionicons
+          name={icon}
+          size={18}
+          color={disabled ? colors.inkFaint : colors.clay}
+        />
       </View>
       <View style={{ flex: 1 }}>
-        <Text style={styles.actionTitle}>{title}</Text>
-        <Text style={styles.actionBody}>{body}</Text>
         <Text
           style={[
-            styles.actionCta,
-            disabled && { color: colors.inkFaint },
+            styles.actionTitle,
+            disabled && { color: colors.inkSoft },
           ]}
         >
-          {cta} {disabled ? '' : '\u2192'}
+          {title}
         </Text>
+        <Text style={styles.actionBody}>{body}</Text>
+        <View style={styles.actionCtaRow}>
+          <Text
+            style={[
+              styles.actionCta,
+              disabled && { color: colors.inkFaint },
+            ]}
+          >
+            {cta}
+          </Text>
+          {!disabled ? (
+            <Text style={styles.actionCta}>{'\u2192'}</Text>
+          ) : (
+            <View style={styles.soonPill}>
+              <Text style={styles.soonPillText}>Soon</Text>
+            </View>
+          )}
+        </View>
       </View>
     </Pressable>
   );
@@ -318,10 +309,11 @@ function BookFormatRow({
   return (
     <Pressable
       onPress={onPress}
+      disabled={!hasLink}
       style={({ pressed }) => [
         styles.formatRow,
         !last && styles.formatRowDivider,
-        pressed && { opacity: 0.92 },
+        pressed && hasLink && { opacity: 0.92 },
       ]}
       accessibilityRole="button"
       accessibilityLabel={`${label}: ${sub}. ${hasLink ? 'Open' : 'Coming soon'}`}
@@ -362,7 +354,7 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingHorizontal: 20,
+    paddingHorizontal: layout.screen,
     paddingTop: 10,
   },
   closeBtn: {
@@ -373,7 +365,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  container: { flexGrow: 1, padding: 24, paddingTop: 10, paddingBottom: 40 },
+  container: {
+    flexGrow: 1,
+    padding: layout.screenLoose,
+    paddingTop: 10,
+    paddingBottom: 40,
+  },
   title: {
     fontFamily: fonts.serifBold,
     fontSize: 34,
@@ -402,6 +399,28 @@ const styles = StyleSheet.create({
     padding: 18,
     marginBottom: 10,
     ...shadows.sm,
+  },
+  actionCardDisabled: {
+    backgroundColor: colors.surfaceSoft,
+    opacity: 0.9,
+  },
+  actionCtaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  soonPill: {
+    backgroundColor: colors.lineSoft,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: radius.pill,
+  },
+  soonPillText: {
+    fontFamily: fonts.sansSemi,
+    fontSize: 10,
+    color: colors.inkFaint,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
   iconCircle: {
     width: 34,

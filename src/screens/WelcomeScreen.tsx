@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import {
   Animated,
   Easing,
@@ -51,6 +52,8 @@ export function WelcomeScreen({ navigation }: Props) {
   const { settings } = useDay();
   const firstName = (settings.profile?.displayName ?? '').split(' ')[0];
 
+  const reducedMotion = useReducedMotion();
+
   const breath = useRef(new Animated.Value(0)).current;
   const rotate = useRef(new Animated.Value(0)).current;
   const fade = useRef(new Animated.Value(0)).current;
@@ -59,20 +62,29 @@ export function WelcomeScreen({ navigation }: Props) {
   const tagline = useMemo(() => tagForToday(), []);
 
   useEffect(() => {
+    // Entrance fades still run, they are one-shot and brief.
+    // Reduced motion trims them even shorter.
     Animated.timing(fade, {
       toValue: 1,
-      duration: 900,
+      duration: reducedMotion ? 200 : 900,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
 
     Animated.timing(riseCta, {
       toValue: 1,
-      duration: 1200,
-      delay: 400,
+      duration: reducedMotion ? 200 : 1200,
+      delay: reducedMotion ? 0 : 400,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
+
+    if (reducedMotion) {
+      // Park the breath at its midpoint and the ring at zero. Static, calm.
+      breath.setValue(0.5);
+      rotate.setValue(0);
+      return;
+    }
 
     const breathLoop = Animated.loop(
       Animated.sequence([
@@ -106,7 +118,7 @@ export function WelcomeScreen({ navigation }: Props) {
       breathLoop.stop();
       spinLoop.stop();
     };
-  }, [breath, rotate, fade, riseCta]);
+  }, [breath, rotate, fade, riseCta, reducedMotion]);
 
   const outerScale = breath.interpolate({
     inputRange: [0, 1],

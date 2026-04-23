@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -10,6 +11,18 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius } from '../theme/colors';
 import { fonts } from '../theme/type';
+
+// Web-only focus ring. On native, Pressable ignores unknown style props,
+// but we keep the object gated to Platform.OS === 'web' to be explicit.
+const webFocusStyle: any =
+  Platform.OS === 'web'
+    ? {
+        outlineWidth: 2,
+        outlineStyle: 'solid',
+        outlineColor: colors.clayDeep,
+        outlineOffset: 2,
+      }
+    : {};
 
 type Variant = 'primary' | 'soft' | 'ghost' | 'dark';
 
@@ -49,7 +62,7 @@ export function Button({
       accessibilityLabel={accessibilityLabel ?? title}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: !!(disabled || loading), busy: !!loading }}
-      style={({ pressed }) => [
+      style={({ pressed, focused }: any) => [
         styles.btn,
         size === 'lg' && styles.btnLg,
         {
@@ -58,6 +71,7 @@ export function Button({
           opacity: disabled ? 0.5 : pressed ? 0.88 : 1,
           transform: [{ scale: pressed ? 0.99 : 1 }],
         },
+        focused && webFocusStyle,
         style,
       ]}
     >

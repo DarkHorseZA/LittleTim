@@ -19,6 +19,7 @@ import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MorningRitual'>;
 
@@ -86,6 +87,7 @@ export function MorningRitualScreen({ navigation }: Props) {
   const [idx, setIdx] = useState(0);
   const [done, setDone] = useState(false);
   const { updateToday, settings } = useDay();
+  const reducedMotion = useReducedMotion();
   const step = STEPS[idx];
 
   const belief = useMemo(
@@ -97,20 +99,26 @@ export function MorningRitualScreen({ navigation }: Props) {
   const pulse = useRef(new Animated.Value(0)).current;
   const breath = useRef(new Animated.Value(0)).current;
 
-  // Step entrance fade
+  // Step entrance fade. Shorter under reduced motion, but never snapped,
+  // so the text still feels intentional when you land on a step.
   useEffect(() => {
     fade.setValue(0);
     Animated.timing(fade, {
       toValue: 1,
-      duration: 500,
+      duration: reducedMotion ? 180 : 500,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
-  }, [idx, fade]);
+  }, [idx, fade, reducedMotion]);
 
-  // Gentle icon pulse (all steps except breathe, which has its own cycle)
+  // Gentle icon pulse (all steps except breathe, which has its own cycle).
+  // Skipped entirely under reduced motion.
   useEffect(() => {
     if (step.id === 'breathe') return;
+    if (reducedMotion) {
+      pulse.setValue(0);
+      return;
+    }
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, {
@@ -129,11 +137,16 @@ export function MorningRitualScreen({ navigation }: Props) {
     );
     loop.start();
     return () => loop.stop();
-  }, [step.id, pulse]);
+  }, [step.id, pulse, reducedMotion]);
 
-  // Breath pacer (4s inhale / 4s exhale)
+  // Breath pacer (4s inhale / 4s exhale). Reduced motion parks it mid-breath
+  // so the visual stays, but nothing moves.
   useEffect(() => {
     if (step.id !== 'breathe') return;
+    if (reducedMotion) {
+      breath.setValue(0.5);
+      return;
+    }
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(breath, {
@@ -152,7 +165,7 @@ export function MorningRitualScreen({ navigation }: Props) {
     );
     loop.start();
     return () => loop.stop();
-  }, [step.id, breath]);
+  }, [step.id, breath, reducedMotion]);
 
   const pulseScale = pulse.interpolate({
     inputRange: [0, 1],
@@ -332,17 +345,24 @@ function CompletionView({
   onClose: () => void;
   beliefStatement: string;
 }) {
+  const reducedMotion = useReducedMotion();
   const glow = useRef(new Animated.Value(0)).current;
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fade, {
       toValue: 1,
-      duration: 700,
+      duration: reducedMotion ? 200 : 700,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
-    Animated.loop(
+
+    if (reducedMotion) {
+      glow.setValue(0.6);
+      return;
+    }
+
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(glow, {
           toValue: 1,
@@ -357,8 +377,10 @@ function CompletionView({
           useNativeDriver: true,
         }),
       ])
-    ).start();
-  }, [glow, fade]);
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [glow, fade, reducedMotion]);
 
   const glowScale = glow.interpolate({
     inputRange: [0, 1],

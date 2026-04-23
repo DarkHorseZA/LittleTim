@@ -38,6 +38,13 @@ export const colors = {
   relationships: '#6E7FAE',
   relationshipsSoft: '#D7DEEB',
 
+  // Heatmap intensities (History grid). 5 steps, on-brand clay ramp.
+  heat0: '#F1E8D9', // same as lineSoft, for "no activity"
+  heat1: '#F4D6C2',
+  heat2: '#EDBB99',
+  heat3: '#D99C6E',
+  heat4: '#B7572E', // same as clay, full intensity
+
   // Misc
   amber: '#E0B872',
   danger: '#B5524C',
@@ -58,7 +65,26 @@ export const radius = {
   pill: 999,
 };
 
+// 4pt spacing function (existing).
 export const spacing = (n: number) => n * 4;
+
+// Layout tokens. Keep screen padding consistent across every SafeAreaView container.
+export const layout = {
+  screen: 20, // horizontal/vertical padding on the scroll container
+  screenTight: 16, // for dense pages
+  screenLoose: 24, // for editorial / modal hero blocks
+  maxWidth: 520, // cap content width on desktop/tablet web
+};
+
+// Icon circle sizes (avatar, list-item icon, hero icon, etc.).
+// Use these any time you draw a round icon-in-a-disc.
+export const iconSize = {
+  xs: 24,
+  sm: 30,
+  md: 40,
+  lg: 52,
+  xl: 88,
+};
 
 export const shadows = {
   sm: {

@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { APP_NAME, ATTRIBUTION } from '../config';
 import { useDay } from '../store/DayContext';
@@ -25,10 +25,40 @@ type Props = CompositeScreenProps<
 
 const HOURS = [6, 7, 8, 9, 10, 12, 18, 20];
 
-function initials(name?: string): string {
-  if (!name) return '✴︎';
+function initials(name?: string): string | null {
+  if (!name) return null;
   const parts = name.trim().split(/\s+/).slice(0, 2);
-  return parts.map((p) => p[0]?.toUpperCase() ?? '').join('') || '✴︎';
+  const joined = parts.map((p) => p[0]?.toUpperCase() ?? '').join('');
+  return joined.length > 0 ? joined : null;
+}
+
+function ChapterChip({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.chapterChip, selected && styles.chapterChipOn]}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      accessibilityLabel={`Chapter: ${label}`}
+    >
+      <Text
+        style={[
+          styles.chapterChipText,
+          selected && styles.chapterChipTextOn,
+        ]}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
 }
 
 export function SettingsScreen({ navigation }: Props) {
@@ -57,14 +87,22 @@ export function SettingsScreen({ navigation }: Props) {
                 !signedIn && { backgroundColor: colors.clayWash },
               ]}
             >
-              <Text
-                style={[
-                  styles.avatarText,
-                  !signedIn && { color: colors.clay },
-                ]}
-              >
-                {initials(profile.displayName)}
-              </Text>
+              {initials(profile.displayName) ? (
+                <Text
+                  style={[
+                    styles.avatarText,
+                    !signedIn && { color: colors.clay },
+                  ]}
+                >
+                  {initials(profile.displayName)}
+                </Text>
+              ) : (
+                <Ionicons
+                  name="person"
+                  size={22}
+                  color={signedIn ? '#FFFFFF' : colors.clay}
+                />
+              )}
             </View>
             <View style={styles.accountText}>
               <Text style={styles.accountName}>
@@ -185,6 +223,7 @@ export function SettingsScreen({ navigation }: Props) {
             chapter. Leave it blank to let the app rotate a different one
             each day.
           </Text>
+          {/* Top-level: Auto + Introduction. These two are always visible. */}
           <View style={styles.chapters}>
             <Pressable
               onPress={() => updateSettings({ currentChapter: undefined })}
@@ -206,28 +245,44 @@ export function SettingsScreen({ navigation }: Props) {
                 Auto
               </Text>
             </Pressable>
-            {chapters.map((ch) => {
-              const on = settings.currentChapter === ch.id;
-              return (
-                <Pressable
+            {chapters
+              .filter((ch) => ch.part === undefined)
+              .map((ch) => (
+                <ChapterChip
                   key={ch.id}
+                  label={ch.shortTitle}
+                  selected={settings.currentChapter === ch.id}
                   onPress={() => updateSettings({ currentChapter: ch.id })}
-                  style={[styles.chapterChip, on && styles.chapterChipOn]}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: on }}
-                  accessibilityLabel={`Chapter: ${ch.shortTitle}`}
-                >
-                  <Text
-                    style={[
-                      styles.chapterChipText,
-                      on && styles.chapterChipTextOn,
-                    ]}
-                  >
-                    {ch.shortTitle}
-                  </Text>
-                </Pressable>
-              );
-            })}
+                />
+              ))}
+          </View>
+
+          <Text style={styles.partLabel}>Part One</Text>
+          <View style={styles.chapters}>
+            {chapters
+              .filter((ch) => ch.part === 'One')
+              .map((ch) => (
+                <ChapterChip
+                  key={ch.id}
+                  label={ch.shortTitle}
+                  selected={settings.currentChapter === ch.id}
+                  onPress={() => updateSettings({ currentChapter: ch.id })}
+                />
+              ))}
+          </View>
+
+          <Text style={styles.partLabel}>Part Two</Text>
+          <View style={styles.chapters}>
+            {chapters
+              .filter((ch) => ch.part === 'Two')
+              .map((ch) => (
+                <ChapterChip
+                  key={ch.id}
+                  label={ch.shortTitle}
+                  selected={settings.currentChapter === ch.id}
+                  onPress={() => updateSettings({ currentChapter: ch.id })}
+                />
+              ))}
           </View>
         </View>
 
@@ -310,7 +365,7 @@ export function SettingsScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  container: { flexGrow: 1, padding: 20, paddingBottom: 40 },
+  container: { flexGrow: 1, padding: layout.screen, paddingBottom: 40 },
   title: { ...text.h1, marginTop: 8, marginBottom: 6 },
   body: { ...text.body, marginBottom: 20 },
   accountCard: {
@@ -403,6 +458,11 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   chapters: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  partLabel: {
+    ...text.eyebrow,
+    marginTop: 14,
+    marginBottom: 10,
+  },
   chapterChip: {
     paddingVertical: 8,
     paddingHorizontal: 14,
