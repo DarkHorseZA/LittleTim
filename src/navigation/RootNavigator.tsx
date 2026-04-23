@@ -57,9 +57,10 @@ const linking: LinkingOptions<RootStackParamList> = {
       MorningRitual: 'ritual',
       Glossary: 'glossary',
       Connect: 'connect',
-      // Catchall: any URL that does not match the above paths lands here.
-      // React Navigation matches '*' last, so real routes still win.
-      NotFound: '*',
+      // NotFound is programmatically navigable (no public path). Leaving
+      // it unwired from the URL map keeps the root path '' reserved for
+      // Welcome. Unrecognised URLs fall back to Welcome via initialRouteName.
+      NotFound: 'not-found',
     },
   },
 };
