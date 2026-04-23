@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontFamily: fonts.sansSemi,
     fontSize: 11,
-    letterSpacing: 2.4,
+    letterSpacing: 2.2,
     color: colors.inkFaint,
     textTransform: 'uppercase',
     marginBottom: 16,

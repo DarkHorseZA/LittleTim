@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
   },
   baselineMeta: {
     fontFamily: fonts.sans,
-    fontSize: 12,
+    fontSize: 13,
     color: colors.inkFaint,
     marginBottom: 6,
   },

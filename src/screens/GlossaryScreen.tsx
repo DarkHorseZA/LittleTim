@@ -14,6 +14,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { glossary } from '../data/glossary';
+import { PulsingMark } from '../components/PulsingMark';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Glossary'>;
 
@@ -40,7 +41,10 @@ export function GlossaryScreen({ navigation }: Props) {
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-          <Text style={text.eyebrow}>Glossary</Text>
+          <View style={styles.headerRow}>
+            <Text style={text.eyebrow}>Glossary</Text>
+            <PulsingMark size={26} />
+          </View>
           <Text style={styles.title}>Words from the book</Text>
           <Text style={styles.subtitle}>
             Short definitions, in T's voice. Tap away anytime you need a
@@ -95,6 +99,11 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 40,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: {
     ...text.h1,
     marginTop: 8,
@@ -131,7 +140,7 @@ const styles = StyleSheet.create({
   },
   originText: {
     fontFamily: fonts.sansSemi,
-    fontSize: 10,
+    fontSize: 12,
     letterSpacing: 1,
     color: colors.clayDeep,
     textTransform: 'uppercase',

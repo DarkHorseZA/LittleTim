@@ -105,7 +105,7 @@ export function Button({
 const palettes = {
   primary: {
     bg: colors.clay,
-    fg: '#FFFFFF',
+    fg: colors.white,
     border: 'transparent',
   },
   soft: {
@@ -120,7 +120,7 @@ const palettes = {
   },
   dark: {
     bg: colors.ink,
-    fg: '#FFFFFF',
+    fg: colors.white,
     border: 'transparent',
   },
 } as const;

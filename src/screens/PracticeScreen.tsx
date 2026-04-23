@@ -20,6 +20,7 @@ import { chapterById } from '../data/chapters';
 import { PracticeKind } from '../types';
 import { useDay } from '../store/DayContext';
 import { TourCard } from '../components/TourCard';
+import { PulsingMark } from '../components/PulsingMark';
 
 type Kind = PracticeKind | 'WHEN';
 
@@ -37,7 +38,10 @@ export function PracticeScreen({ navigation, route }: Props) {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-        <Text style={text.eyebrow}>Practice</Text>
+        <View style={styles.topRow}>
+          <Text style={text.eyebrow}>Practice</Text>
+          <PulsingMark size={26} />
+        </View>
         <Text style={styles.title}>Choose your technology</Text>
         <Text style={styles.body}>
           One gentle dose. You can always come back for more.
@@ -291,6 +295,11 @@ function SegmentButton({
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   container: { flexGrow: 1, padding: 20, paddingBottom: 40 },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: {
     ...text.h1,
     marginTop: 8,

@@ -22,6 +22,7 @@ import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { DailyEntry } from '../types';
 import { TourCard } from '../components/TourCard';
+import { PulsingMark } from '../components/PulsingMark';
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, 'Journal'>,
@@ -93,7 +94,10 @@ export function JournalScreen() {
         style={{ flex: 1 }}
       >
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-          <Text style={text.eyebrow}>Patchwork Journal</Text>
+          <View style={styles.topRow}>
+            <Text style={text.eyebrow}>Patchwork Journal</Text>
+            <PulsingMark size={26} />
+          </View>
           <Text style={styles.title}>Tonight's stitch</Text>
           <Text style={styles.body}>
             Two sentences. Don't try to be eloquent. Just be honest.
@@ -173,13 +177,13 @@ export function JournalScreen() {
             <Ionicons
               name={savedJustNow ? 'checkmark' : 'save-outline'}
               size={16}
-              color={savedJustNow || canSave ? '#FFFFFF' : colors.inkFaint}
+              color={savedJustNow || canSave ? colors.white : colors.inkFaint}
               style={{ marginRight: 6 }}
             />
             <Text
               style={[
                 styles.saveText,
-                { color: savedJustNow || canSave ? '#FFFFFF' : colors.inkFaint },
+                { color: savedJustNow || canSave ? colors.white : colors.inkFaint },
               ]}
             >
               {savedJustNow
@@ -239,6 +243,11 @@ function PastStitch({ entry }: { entry: DailyEntry }) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   container: { flexGrow: 1, padding: 20, paddingBottom: 40 },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: { ...text.h1, marginTop: 8, marginBottom: 6 },
   body: { ...text.body, marginBottom: 18 },
   card: {

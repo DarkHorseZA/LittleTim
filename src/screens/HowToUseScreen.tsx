@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   },
   masthead: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: 14,
     marginBottom: 24,
   },
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   },
   techLetter: {
     fontFamily: fonts.serifBold,
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 20,
   },
   techText: {

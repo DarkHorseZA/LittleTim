@@ -26,13 +26,13 @@ export function PulsingMark({
       Animated.sequence([
         Animated.timing(breath, {
           toValue: 1,
-          duration: 2400,
+          duration: 4200,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
         Animated.timing(breath, {
           toValue: 0,
-          duration: 2400,
+          duration: 4200,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),

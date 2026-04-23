@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   stepNum: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontFamily: fonts.sansBold,
     fontSize: 13,
   },

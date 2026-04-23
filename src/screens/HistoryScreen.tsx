@@ -8,6 +8,7 @@ import { useDay } from '../store/DayContext';
 import { DailyEntry } from '../types';
 import { todayKey } from '../store/storage';
 import { TourCard } from '../components/TourCard';
+import { PulsingMark } from '../components/PulsingMark';
 
 function prettyDate(key: string): string {
   const [y, m, d] = key.split('-').map(Number);
@@ -74,7 +75,10 @@ export function HistoryScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-        <Text style={text.eyebrow}>History</Text>
+        <View style={styles.topRow}>
+          <Text style={text.eyebrow}>History</Text>
+          <PulsingMark size={26} />
+        </View>
         <Text style={styles.title}>Your quiet progress</Text>
         <Text style={styles.body}>
           Every dot is a day you showed up. Softness compounds.
@@ -227,6 +231,11 @@ function Badge({ on, label }: { on: boolean; label: string }) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   container: { flexGrow: 1, padding: layout.screen, paddingBottom: 40 },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: { ...text.h1, marginTop: 8, marginBottom: 6 },
   body: { ...text.body, marginBottom: 20 },
   statsRow: {

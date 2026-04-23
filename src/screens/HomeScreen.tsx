@@ -106,6 +106,7 @@ export function HomeScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('MorningRitual')}
             accessibilityRole="button"
             accessibilityLabel={ritualDone ? 'Practice the morning ritual again' : 'Begin the morning ritual, the Five Gestures'}
+            style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.96 }}
           >
             <LinearGradient
               colors={ritualDone ? gradients.sage : gradients.clay}
@@ -121,7 +122,7 @@ export function HomeScreen({ navigation }: Props) {
                   <Ionicons
                     name={ritualDone ? 'checkmark-circle' : 'sunny'}
                     size={18}
-                    color="#FFFFFF"
+                    color={colors.white}
                   />
                 </View>
               </View>
@@ -173,6 +174,7 @@ export function HomeScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('Belief')}
             accessibilityRole="button"
             accessibilityLabel={`Open belief reminder: ${belief.statement}`}
+            style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.96 }}
           >
             <LinearGradient
               colors={gradients.heart}
@@ -272,7 +274,7 @@ export function HomeScreen({ navigation }: Props) {
             onPress={() => navigation.navigate('Connect')}
             style={({ pressed }) => [
               styles.connectCard,
-              pressed && { opacity: 0.92 },
+              pressed && { opacity: 0.92, transform: [{ scale: 0.99 }] },
             ]}
             accessibilityRole="button"
             accessibilityLabel="Connect with T: sessions, talks, reader circle, and the book"
@@ -329,7 +331,7 @@ function PracticeTile({
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => pressed && { opacity: 0.9 }}
+      style={({ pressed }) => pressed && { opacity: 0.9, transform: [{ scale: 0.99 }] }}
       accessibilityRole="button"
       accessibilityLabel={`${kind}: ${title}. ${done ? 'Complete for today.' : 'Tap to begin.'}`}
       accessibilityHint={`${body}`}

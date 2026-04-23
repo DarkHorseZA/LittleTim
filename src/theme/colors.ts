@@ -48,6 +48,12 @@ export const colors = {
   // Misc
   amber: '#E0B872',
   danger: '#B5524C',
+
+  // Semantic neutrals for on-brand foregrounds. Use `onClay` for text/icons
+  // sitting on clay or gradient clay buttons. `white` is the universal alias
+  // for pure white so we never hardcode #FFFFFF in components.
+  white: '#FFFFFF',
+  onClay: '#FFFFFF',
 };
 
 export type AreaColor =

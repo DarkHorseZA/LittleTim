@@ -16,6 +16,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { PulsingMark } from '../components/PulsingMark';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Account'>;
@@ -98,7 +99,7 @@ export function AccountScreen({ navigation }: Props) {
               {initials(name) ? (
                 <Text style={styles.avatarText}>{initials(name)}</Text>
               ) : (
-                <Ionicons name="person" size={38} color="#FFFFFF" />
+                <PulsingMark size={44} accessibilityLabel="re-Genesis mark" />
               )}
             </View>
           </View>
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
-    padding: layout.screenLoose,
+    padding: layout.screen,
     paddingTop: 10,
     paddingBottom: 40,
   },
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
   avatarText: {
     fontFamily: fonts.serifBold,
     fontSize: 36,
-    color: '#FFFFFF',
+    color: colors.white,
   },
   eyebrow: {
     ...text.eyebrow,
@@ -336,7 +337,7 @@ const styles = StyleSheet.create({
   },
   soonPillText: {
     fontFamily: fonts.sansSemi,
-    fontSize: 10,
+    fontSize: 12,
     color: colors.inkFaint,
     letterSpacing: 1,
     textTransform: 'uppercase',

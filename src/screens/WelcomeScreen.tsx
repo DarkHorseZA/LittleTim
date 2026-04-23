@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     width: 220,
     height: 220,
     shadowColor: colors.clayDeep,
-    shadowOpacity: 0.18,
+    shadowOpacity: 0.24,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 6 },
     elevation: 8,

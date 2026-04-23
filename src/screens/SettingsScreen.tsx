@@ -46,7 +46,11 @@ function ChapterChip({
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.chapterChip, selected && styles.chapterChipOn]}
+      style={({ pressed }) => [
+        styles.chapterChip,
+        selected && styles.chapterChipOn,
+        pressed && { transform: [{ scale: 0.97 }] },
+      ]}
       accessibilityRole="button"
       accessibilityState={{ selected }}
       accessibilityLabel={`Chapter: ${label}`}
@@ -84,6 +88,7 @@ export function SettingsScreen({ navigation }: Props) {
           onPress={() => navigation.navigate('Account')}
           accessibilityRole="button"
           accessibilityLabel={signedIn ? `Account: ${profile.displayName}` : 'Open account to sign in or set a display name'}
+          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
         >
           <View style={styles.accountCard}>
             <View
@@ -105,7 +110,7 @@ export function SettingsScreen({ navigation }: Props) {
                 <Ionicons
                   name="person"
                   size={22}
-                  color={signedIn ? '#FFFFFF' : colors.clay}
+                  color={signedIn ? colors.white : colors.clay}
                 />
               )}
             </View>
@@ -133,6 +138,7 @@ export function SettingsScreen({ navigation }: Props) {
           onPress={() => navigation.navigate('HowToUse')}
           accessibilityRole="button"
           accessibilityLabel="How to use re-Genesis: the rhythm of a day in the practice"
+          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
         >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
@@ -158,6 +164,7 @@ export function SettingsScreen({ navigation }: Props) {
           onPress={() => navigation.navigate('Glossary')}
           accessibilityRole="button"
           accessibilityLabel="Open glossary of terms from the book"
+          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
         >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
@@ -191,6 +198,7 @@ export function SettingsScreen({ navigation }: Props) {
               ? 'Retake your wellness baseline'
               : 'Set your wellness baseline'
           }
+          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
         >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
@@ -232,9 +240,10 @@ export function SettingsScreen({ navigation }: Props) {
           <View style={styles.chapters}>
             <Pressable
               onPress={() => updateSettings({ currentChapter: undefined })}
-              style={[
+              style={({ pressed }) => [
                 styles.chapterChip,
                 settings.currentChapter === undefined && styles.chapterChipOn,
+                pressed && { transform: [{ scale: 0.97 }] },
               ]}
               accessibilityRole="button"
               accessibilityState={{ selected: settings.currentChapter === undefined }}
@@ -311,7 +320,11 @@ export function SettingsScreen({ navigation }: Props) {
                 <Pressable
                   key={h}
                   onPress={() => updateSettings({ reminderHour: h })}
-                  style={[styles.hour, on && styles.hourOn]}
+                  style={({ pressed }) => [
+                    styles.hour,
+                    on && styles.hourOn,
+                    pressed && { transform: [{ scale: 0.97 }] },
+                  ]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: on }}
                   accessibilityLabel={`Reminder at ${h} o'clock`}
@@ -331,6 +344,7 @@ export function SettingsScreen({ navigation }: Props) {
           onPress={() => navigation.navigate('Connect')}
           accessibilityRole="button"
           accessibilityLabel="Connect with T: sessions, talks, reader circle, and the book"
+          style={({ pressed }) => pressed && { transform: [{ scale: 0.99 }], opacity: 0.95 }}
         >
           <View style={[styles.card, { backgroundColor: colors.clayWash }]}>
             <View style={styles.cardHead}>
@@ -404,7 +418,7 @@ const styles = StyleSheet.create({
   avatarText: {
     fontFamily: fonts.serifBold,
     fontSize: 22,
-    color: '#FFFFFF',
+    color: colors.white,
   },
   accountText: {
     flex: 1,
@@ -460,7 +474,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansSemi,
     fontSize: 13,
   },
-  hourTextOn: { color: '#fff' },
+  hourTextOn: { color: colors.white },
   linkCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -494,7 +508,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   chapterChipTextOn: {
-    color: '#fff',
+    color: colors.white,
   },
   brandMark: {
     width: 180,
