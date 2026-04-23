@@ -3,6 +3,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 import {
   Animated,
   Easing,
+  Image,
   StyleSheet,
   Text,
   View,
@@ -45,8 +46,6 @@ function tagForToday(): string {
   return TAGLINES[dayOfYear % TAGLINES.length];
 }
 
-const RING_DOTS = 12;
-const RING_RADIUS = 118;
 
 export function WelcomeScreen({ navigation }: Props) {
   const { settings } = useDay();
@@ -55,7 +54,6 @@ export function WelcomeScreen({ navigation }: Props) {
   const reducedMotion = useReducedMotion();
 
   const breath = useRef(new Animated.Value(0)).current;
-  const rotate = useRef(new Animated.Value(0)).current;
   const fade = useRef(new Animated.Value(0)).current;
   const riseCta = useRef(new Animated.Value(0)).current;
 
@@ -80,9 +78,8 @@ export function WelcomeScreen({ navigation }: Props) {
     }).start();
 
     if (reducedMotion) {
-      // Park the breath at its midpoint and the ring at zero. Static, calm.
+      // Park the breath at its midpoint. Static, calm.
       breath.setValue(0.5);
-      rotate.setValue(0);
       return;
     }
 
@@ -104,41 +101,22 @@ export function WelcomeScreen({ navigation }: Props) {
     );
     breathLoop.start();
 
-    const spinLoop = Animated.loop(
-      Animated.timing(rotate, {
-        toValue: 1,
-        duration: 42000,
-        easing: Easing.linear,
-        useNativeDriver: true,
-      })
-    );
-    spinLoop.start();
-
     return () => {
       breathLoop.stop();
-      spinLoop.stop();
     };
-  }, [breath, rotate, fade, riseCta, reducedMotion]);
+  }, [breath, fade, riseCta, reducedMotion]);
 
-  const outerScale = breath.interpolate({
+  const haloScale = breath.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.88, 1.16],
+    outputRange: [0.9, 1.12],
   });
-  const outerOpacity = breath.interpolate({
+  const haloOpacity = breath.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.45, 0.9],
+    outputRange: [0.35, 0.7],
   });
-  const innerScale = breath.interpolate({
+  const iconScale = breath.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.92, 1.08],
-  });
-  const coreOpacity = breath.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.85, 1],
-  });
-  const ringSpin = rotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
+    outputRange: [0.96, 1.03],
   });
   const ctaRise = riseCta.interpolate({
     inputRange: [0, 1],
@@ -165,63 +143,26 @@ export function WelcomeScreen({ navigation }: Props) {
           <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
 
           <View style={styles.symbolWrap}>
-            {/* Slow-rotating ring of breath markers */}
-            <Animated.View
-              style={[
-                styles.ringLayer,
-                { transform: [{ rotate: ringSpin }] },
-              ]}
-            >
-              {Array.from({ length: RING_DOTS }).map((_, i) => {
-                const angle = (i * 360) / RING_DOTS;
-                const emphasized = i % 3 === 0;
-                return (
-                  <View
-                    key={i}
-                    style={[
-                      styles.dot,
-                      emphasized && styles.dotStrong,
-                      {
-                        transform: [
-                          { rotate: `${angle}deg` },
-                          { translateY: -RING_RADIUS },
-                        ],
-                      },
-                    ]}
-                  />
-                );
-              })}
-            </Animated.View>
-
-            {/* Outer breathing halo */}
+            {/* Soft breathing halo behind the mark */}
             <Animated.View
               style={[
                 styles.halo,
                 {
-                  transform: [{ scale: outerScale }],
-                  opacity: outerOpacity,
+                  transform: [{ scale: haloScale }],
+                  opacity: haloOpacity,
                 },
               ]}
             />
 
-            {/* Inner breathing disc */}
-            <Animated.View
+            {/* The re-Genesis mark: needle, circle, sprout */}
+            <Animated.Image
+              source={require('../../assets/brand/icon.png')}
               style={[
-                styles.inner,
-                {
-                  transform: [{ scale: innerScale }],
-                },
+                styles.iconImage,
+                { transform: [{ scale: iconScale }] },
               ]}
-            />
-
-            {/* Core */}
-            <Animated.View
-              style={[
-                styles.core,
-                {
-                  opacity: coreOpacity,
-                },
-              ]}
+              resizeMode="contain"
+              accessibilityLabel="re-Genesis mark"
             />
           </View>
 
@@ -300,54 +241,20 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 36,
   },
-  ringLayer: {
-    position: 'absolute',
-    width: SYMBOL,
-    height: SYMBOL,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dot: {
-    position: 'absolute',
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.clay,
-    opacity: 0.45,
-  },
-  dotStrong: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: colors.clayDeep,
-    opacity: 0.85,
-  },
   halo: {
     position: 'absolute',
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    width: 240,
+    height: 240,
+    borderRadius: 120,
     backgroundColor: colors.claySoft,
   },
-  inner: {
-    position: 'absolute',
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.claySoft,
-  },
-  core: {
-    position: 'absolute',
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.clay,
+  iconImage: {
+    width: 220,
+    height: 220,
     shadowColor: colors.clayDeep,
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    shadowOffset: { width: 0, height: 6 },
     elevation: 8,
   },
   tagline: {

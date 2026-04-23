@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -60,6 +61,12 @@ export function HowToUseScreen({ navigation, route }: Props) {
         ) : null}
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+          <Image
+            source={require('../../assets/brand/icon.png')}
+            style={styles.mark}
+            resizeMode="contain"
+            accessibilityLabel="re-Genesis mark"
+          />
           <Text style={styles.eyebrow}>How to use</Text>
           <Text style={styles.title}>re-Genesis</Text>
           <Text style={styles.attribution}>
@@ -280,6 +287,12 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 16,
     paddingBottom: 40,
+  },
+  mark: {
+    width: 84,
+    height: 84,
+    marginBottom: 10,
+    marginLeft: -6,
   },
   eyebrow: {
     ...text.eyebrow,
