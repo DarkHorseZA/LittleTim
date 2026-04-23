@@ -61,17 +61,21 @@ export function HowToUseScreen({ navigation, route }: Props) {
         ) : null}
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-          <Image
-            source={require('../../assets/brand/icon.png')}
-            style={styles.mark}
-            resizeMode="contain"
-            accessibilityLabel="re-Genesis mark"
-          />
-          <Text style={styles.eyebrow}>How to use</Text>
-          <Text style={styles.title}>re-Genesis</Text>
-          <Text style={styles.attribution}>
-            Companion to {BOOK_TITLE} by {AUTHOR_NAME}
-          </Text>
+          <View style={styles.masthead}>
+            <Image
+              source={require('../../assets/brand/icon.png')}
+              style={styles.mark}
+              resizeMode="contain"
+              accessibilityLabel="re-Genesis mark"
+            />
+            <View style={styles.mastheadText}>
+              <Text style={styles.eyebrow}>How to use</Text>
+              <Text style={styles.title}>re-Genesis</Text>
+              <Text style={styles.attribution}>
+                Companion to {BOOK_TITLE} by {AUTHOR_NAME}
+              </Text>
+            </View>
+          </View>
 
           <View style={styles.lead}>
             <Text style={styles.leadText}>
@@ -288,11 +292,19 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 40,
   },
+  masthead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    marginBottom: 24,
+  },
   mark: {
-    width: 84,
-    height: 84,
-    marginBottom: 10,
-    marginLeft: -6,
+    width: 88,
+    height: 88,
+    marginLeft: -8,
+  },
+  mastheadText: {
+    flex: 1,
   },
   eyebrow: {
     ...text.eyebrow,
@@ -309,7 +321,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.inkSoft,
     marginTop: 6,
-    marginBottom: 24,
   },
   lead: {
     backgroundColor: colors.surface,
