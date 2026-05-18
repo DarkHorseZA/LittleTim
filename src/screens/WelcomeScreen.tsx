@@ -233,7 +233,9 @@ export function WelcomeScreen({ navigation }: Props) {
             <Button
               title="Enter"
               onPress={() => {
-                if (!settings.hasSeenHowTo) {
+                if (!settings.registeredEmail) {
+                  navigation.replace('EmailSignup', { firstRun: true });
+                } else if (!settings.hasSeenHowTo) {
                   navigation.replace('HowToUse', { firstRun: true });
                 } else {
                   navigation.replace('Tabs');

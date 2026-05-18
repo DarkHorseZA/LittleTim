@@ -14,6 +14,7 @@ import { HistoryScreen } from '../screens/HistoryScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { AccountScreen } from '../screens/AccountScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
+import { EmailSignupScreen } from '../screens/EmailSignupScreen';
 import { HowToUseScreen } from '../screens/HowToUseScreen';
 import { MorningRitualScreen } from '../screens/MorningRitualScreen';
 import { JournalScreen } from '../screens/JournalScreen';
@@ -112,6 +113,11 @@ export function RootNavigator() {
           name="Welcome"
           component={WelcomeScreen}
           options={{ animation: 'fade' }}
+        />
+        <Stack.Screen
+          name="EmailSignup"
+          component={EmailSignupScreen}
+          options={{ animation: 'slide_from_right' }}
         />
         <Stack.Screen
           name="HowToUse"
