@@ -4,7 +4,6 @@ import {
   Easing,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
