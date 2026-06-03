@@ -62,7 +62,7 @@ export const glossary: GlossaryTerm[] = [
     term: 'Bārak',
     origin: 'Hebrew (בָּרַךְ)',
     definition:
-      'Blessing. Not a wish. An infusion of permission and ability, empowerment, resources, flourishing. "I am blessed. I may. I can."',
+      'Blessing. Not a wish. An infusion of permission and ability, empowerment, resources, flourishing. \u201CI am blessed. I may. I can.\u201D',
   },
   {
     id: 'ruach',
@@ -94,13 +94,13 @@ export const glossary: GlossaryTerm[] = [
   },
   {
     id: 'let-there-be',
-    term: '"Let there be"',
+    term: '\u201CLet there be\u201D',
     definition:
       'A creative whisper. Not a shout. A lover\'s instruction to the field. The second of the Five Gestures.',
   },
   {
     id: 'i-am',
-    term: '"I am"',
+    term: '\u201CI am\u201D',
     definition:
       'A power-code. A declaration of the present moment that speaks your reality into being. Filled with emotion, it creates.',
   },

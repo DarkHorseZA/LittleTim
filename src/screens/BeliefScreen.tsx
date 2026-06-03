@@ -1,34 +1,34 @@
 import React, { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Belief'>;
 
 export function BeliefScreen({ navigation }: Props) {
-  const { today, updateToday, settings } = useDay();
+  const { today, updateToday, addQuiltEntry, settings } = useDay();
   const belief = useMemo(
     () => beliefForDate(new Date(), settings.currentChapter),
     [settings.currentChapter]
   );
 
   const acknowledge = async () => {
-    try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-    } catch {}
+    // Completion haptic fired by the Button (haptic="success"). No manual call.
     await updateToday({
       beliefId: belief.id,
       beliefAcknowledged: true,
     });
+    await addQuiltEntry({ type: 'belief' });
     navigation.goBack();
   };
 
@@ -44,32 +44,20 @@ export function BeliefScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.closeRow}>
-          <Pressable
-            hitSlop={16}
+          <BackButton onPress={() => navigation.goBack()} />
+          <CloseButton
             onPress={() => navigation.navigate('Glossary')}
-            style={styles.closeBtn}
-          >
-            <Ionicons
-              name="help-circle-outline"
-              size={22}
-              color={colors.ink}
-            />
-          </Pressable>
-          <Pressable
-            hitSlop={16}
-            onPress={() => navigation.goBack()}
-            style={styles.closeBtn}
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+            icon="help-circle-outline"
+            accessibilityLabel="Open glossary"
+          />
         </View>
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.mark}>
             <Ionicons name="sparkles" size={20} color={colors.clayDeep} />
           </View>
           <Text style={styles.eyebrow}>Belief reminder</Text>
-          <Text style={styles.statement}>"{belief.statement}"</Text>
+          <Text style={styles.statement}>{`\u201C${belief.statement}\u201D`}</Text>
 
           <View style={styles.card}>
             <View style={styles.cardHeaderRow}>
@@ -88,6 +76,7 @@ export function BeliefScreen({ navigation }: Props) {
             icon={already ? 'checkmark-circle' : 'heart'}
             onPress={acknowledge}
             size="lg"
+            haptic="success"
           />
           <View style={{ height: 10 }} />
           <Button
@@ -112,15 +101,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
   },
-  closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.65)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   container: {
+    flexGrow: 1,
     padding: 28,
     paddingTop: 16,
   },
@@ -136,7 +118,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontFamily: fonts.sansSemi,
     fontSize: 11,
-    letterSpacing: 2.4,
+    letterSpacing: 2.2,
     color: colors.inkFaint,
     textTransform: 'uppercase',
     marginBottom: 16,

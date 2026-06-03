@@ -8,42 +8,26 @@ import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
-import { findPractice } from '../data/practices';
-import { useDay } from '../store/DayContext';
+import { findTrigger } from '../data/triggers';
+import { chapterById } from '../data/chapters';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'PracticeDetail'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'TriggerDetail'>;
 
-export function PracticeDetailScreen({ navigation, route }: Props) {
-  const practice = useMemo(
-    () => findPractice(route.params.practiceId),
-    [route.params.practiceId]
+export function TriggerDetailScreen({ navigation, route }: Props) {
+  const gesture = useMemo(
+    () => findTrigger(route.params.triggerId),
+    [route.params.triggerId]
   );
-  const { today, updateToday, addQuiltEntry } = useDay();
 
-  if (!practice) {
+  if (!gesture) {
     return (
       <SafeAreaView style={styles.safe}>
-        <Text style={styles.missing}>Practice not found.</Text>
+        <Text style={styles.missing}>Gesture not found.</Text>
       </SafeAreaView>
     );
   }
 
-  const isDone =
-    practice.kind === 'MSG'
-      ? today.msgDone && today.msgPracticeId === practice.id
-      : today.seeDone && today.seePracticeId === practice.id;
-
-  const complete = async () => {
-    // Completion haptic is fired by the Button (haptic="success"). No manual call.
-    if (practice.kind === 'MSG') {
-      await updateToday({ msgDone: true, msgPracticeId: practice.id });
-      await addQuiltEntry({ type: 'msg' });
-    } else {
-      await updateToday({ seeDone: true, seePracticeId: practice.id });
-      await addQuiltEntry({ type: 'see' });
-    }
-    navigation.goBack();
-  };
+  const chapter = chapterById(gesture.chapter);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -56,20 +40,30 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.kindPill}>
-          <Text style={styles.kindPillText}>{practice.kind}</Text>
+          <Text style={styles.kindPillText}>WHEN</Text>
         </View>
-        <Text style={styles.title}>{practice.title}</Text>
+        <Text style={styles.trigger}>{gesture.trigger}</Text>
+        <Text style={styles.title}>{gesture.title}</Text>
         <View style={styles.metaRow}>
           <View style={styles.meta}>
             <Ionicons name="time-outline" size={14} color={colors.inkSoft} />
-            <Text style={styles.metaText}>{practice.durationMin} min</Text>
+            <Text style={styles.metaText}>{gesture.durationMin} min</Text>
           </View>
           <Text style={styles.metaSep}>·</Text>
-          <Text style={styles.cue}>{practice.cue}</Text>
+          <View style={styles.meta}>
+            <Ionicons name="book-outline" size={14} color={colors.inkSoft} />
+            <Text style={styles.metaText}>
+              {chapter?.shortTitle ?? 'Ch.'} · {gesture.theme}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.framingCard}>
+          <Text style={styles.framing}>{gesture.framing}</Text>
         </View>
 
         <View style={styles.stepsCard}>
-          {practice.steps.map((step, i) => (
+          {gesture.steps.map((step, i) => (
             <View key={i} style={styles.step}>
               <View style={styles.stepNumWrap}>
                 <Text style={styles.stepNum}>{i + 1}</Text>
@@ -81,18 +75,10 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
 
         <View style={{ height: 28 }} />
         <Button
-          title={isDone ? 'Marked done' : 'Mark practice complete'}
-          icon={isDone ? 'checkmark-circle' : undefined}
-          onPress={complete}
-          disabled={isDone}
-          size="lg"
-          haptic="success"
-        />
-        <View style={{ height: 10 }} />
-        <Button
           title="Close"
           variant="ghost"
           onPress={() => navigation.goBack()}
+          size="lg"
         />
       </ScrollView>
     </SafeAreaView>
@@ -128,17 +114,24 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     color: colors.clayDeep,
   },
+  trigger: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 17,
+    color: colors.inkSoft,
+    marginBottom: 6,
+  },
   title: {
     ...text.display,
-    fontSize: 34,
-    lineHeight: 42,
+    fontSize: 32,
+    lineHeight: 40,
   },
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 24,
+    marginTop: 12,
+    marginBottom: 22,
     flexWrap: 'wrap',
+    gap: 4,
   },
   meta: {
     flexDirection: 'row',
@@ -154,9 +147,17 @@ const styles = StyleSheet.create({
     color: colors.inkFaint,
     marginHorizontal: 8,
   },
-  cue: {
-    ...text.body,
-    flexShrink: 1,
+  framingCard: {
+    backgroundColor: colors.clayWash,
+    borderRadius: radius.lg,
+    padding: 20,
+    marginBottom: 16,
+  },
+  framing: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 16,
+    lineHeight: 24,
+    color: colors.clayDeep,
   },
   stepsCard: {
     backgroundColor: colors.surface,

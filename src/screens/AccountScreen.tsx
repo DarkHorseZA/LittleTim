@@ -13,17 +13,23 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, gradients, radius, shadows } from '../theme/colors';
+import { colors, gradients, layout, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { BackButton } from '../components/BackButton';
+import { PulsingMark } from '../components/PulsingMark';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Account'>;
 
-function initials(name?: string): string {
-  if (!name) return '✴︎';
+// Returns initials or null. Callers render a neutral icon when null to avoid
+// ever showing a glyph fallback (no emojis in product chrome).
+function initials(name?: string): string | null {
+  if (!name) return null;
   const parts = name.trim().split(/\s+/).slice(0, 2);
-  return parts.map((p) => p[0]?.toUpperCase() ?? '').join('') || '✴︎';
+  const joined = parts.map((p) => p[0]?.toUpperCase() ?? '').join('');
+  return joined.length > 0 ? joined : null;
 }
 
 export function AccountScreen({ navigation }: Props) {
@@ -78,19 +84,20 @@ export function AccountScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
+          <BackButton
             onPress={() => navigation.goBack()}
-            style={styles.closeBtn}
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+            accessibilityLabel="Go back"
+          />
         </View>
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.avatarWrap}>
             <View style={styles.avatar}>
-              <Text style={styles.avatarText}>{initials(name)}</Text>
+              {initials(name) ? (
+                <Text style={styles.avatarText}>{initials(name)}</Text>
+              ) : (
+                <PulsingMark size={72} accessibilityLabel="re-Genesis mark" />
+              )}
             </View>
           </View>
 
@@ -113,6 +120,7 @@ export function AccountScreen({ navigation }: Props) {
               style={styles.input}
               autoCapitalize="words"
               returnKeyType="next"
+              accessibilityLabel="Display name"
             />
 
             <View style={styles.divider} />
@@ -127,6 +135,7 @@ export function AccountScreen({ navigation }: Props) {
               autoCapitalize="none"
               keyboardType="email-address"
               autoCorrect={false}
+              accessibilityLabel="Email address, optional"
             />
             <Text style={styles.caption}>
               Saved locally only. We'll use it when cloud sync ships.
@@ -188,10 +197,13 @@ function ProviderButton({
 }) {
   return (
     <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [
+      onPress={() => { tap(); onPress(); }}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}, coming soon`}
+      style={({ pressed, focused }: any) => [
         styles.provider,
-        { opacity: pressed ? 0.85 : 1 },
+        pressed && pressScale,
+        focused && webFocus,
       ]}
     >
       <View style={styles.providerLeft}>
@@ -214,19 +226,16 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
+    justifyContent: 'flex-start',
+    paddingHorizontal: layout.screen,
     paddingTop: 10,
   },
-  closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  container: {
+    flexGrow: 1,
+    padding: layout.screen,
+    paddingTop: 10,
+    paddingBottom: 40,
   },
-  container: { padding: 24, paddingTop: 10, paddingBottom: 40 },
   avatarWrap: {
     alignItems: 'center',
     marginBottom: 18,
@@ -243,7 +252,7 @@ const styles = StyleSheet.create({
   avatarText: {
     fontFamily: fonts.serifBold,
     fontSize: 36,
-    color: '#FFFFFF',
+    color: colors.white,
   },
   eyebrow: {
     ...text.eyebrow,
@@ -318,7 +327,7 @@ const styles = StyleSheet.create({
   },
   soonPillText: {
     fontFamily: fonts.sansSemi,
-    fontSize: 10,
+    fontSize: 12,
     color: colors.inkFaint,
     letterSpacing: 1,
     textTransform: 'uppercase',

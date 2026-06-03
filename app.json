@@ -7,8 +7,11 @@
     "userInterfaceStyle": "light",
     "scheme": "littletim",
     "newArchEnabled": true,
+    "icon": "./assets/brand/icon.png",
     "splash": {
-      "backgroundColor": "#F7F3EE"
+      "image": "./assets/brand/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F5EFE6"
     },
     "ios": {
       "supportsTablet": true,
@@ -17,11 +20,13 @@
     "android": {
       "package": "com.littletim.app",
       "adaptiveIcon": {
-        "backgroundColor": "#F7F3EE"
+        "foregroundImage": "./assets/brand/icon.png",
+        "backgroundColor": "#F5EFE6"
       }
     },
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "favicon": "./assets/brand/icon.png"
     },
     "experiments": {
       "baseUrl": "/LittleTim"

@@ -9,8 +9,10 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadows } from '../theme/colors';
+import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 type Props = {
   storageKey: string;
@@ -32,6 +34,7 @@ export function TourCard({
   tips,
 }: Props) {
   const { settings, updateSettings, ready } = useDay();
+  const reducedMotion = useReducedMotion();
   const [dismissed, setDismissed] = useState(false);
   const fade = useRef(new Animated.Value(0)).current;
   const rise = useRef(new Animated.Value(12)).current;
@@ -40,23 +43,28 @@ export function TourCard({
   const shouldShow = ready && !seen && !dismissed;
 
   useEffect(() => {
-    if (shouldShow) {
-      Animated.parallel([
-        Animated.timing(fade, {
-          toValue: 1,
-          duration: 500,
-          easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
-        }),
-        Animated.timing(rise, {
-          toValue: 0,
-          duration: 500,
-          easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
-        }),
-      ]).start();
+    if (!shouldShow) return;
+    if (reducedMotion) {
+      // Respect WCAG 2.3.3: no rise, instant opacity, no decorative motion.
+      fade.setValue(1);
+      rise.setValue(0);
+      return;
     }
-  }, [shouldShow, fade, rise]);
+    Animated.parallel([
+      Animated.timing(fade, {
+        toValue: 1,
+        duration: 500,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(rise, {
+        toValue: 0,
+        duration: 500,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [shouldShow, reducedMotion, fade, rise]);
 
   if (!shouldShow) return null;
 
@@ -83,9 +91,15 @@ export function TourCard({
         </View>
         <Text style={styles.eyebrow}>{eyebrow}</Text>
         <Pressable
-          onPress={dismiss}
-          style={styles.closeBtn}
+          onPress={() => { tap(); dismiss(); }}
           hitSlop={12}
+          accessibilityRole="button"
+          accessibilityLabel="Dismiss this tip"
+          style={({ pressed, focused }: any) => [
+            styles.closeBtn,
+            pressed && pressScale,
+            focused && webFocus,
+          ]}
         >
           <Ionicons name="close" size={16} color={colors.inkSoft} />
         </Pressable>
@@ -100,7 +114,16 @@ export function TourCard({
         </View>
       ))}
 
-      <Pressable onPress={dismiss} style={styles.gotItBtn}>
+      <Pressable
+        onPress={() => { tap(); dismiss(); }}
+        accessibilityRole="button"
+        accessibilityLabel="Got it, dismiss this tip"
+        style={({ pressed, focused }: any) => [
+          styles.gotItBtn,
+          pressed && pressScale,
+          focused && webFocus,
+        ]}
+      >
         <Text style={styles.gotItText}>Got it</Text>
       </Pressable>
     </Animated.View>

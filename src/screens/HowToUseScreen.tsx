@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +8,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { BackButton } from '../components/BackButton';
 import { AUTHOR_NAME, BOOK_TITLE } from '../config';
 import { useDay } from '../store/DayContext';
 
@@ -21,12 +16,16 @@ type Props = NativeStackScreenProps<RootStackParamList, 'HowToUse'>;
 
 export function HowToUseScreen({ navigation, route }: Props) {
   const firstRun = route.params?.firstRun === true;
-  const { updateSettings } = useDay();
+  const { settings, updateSettings } = useDay();
 
   const done = async () => {
     await updateSettings({ hasSeenHowTo: true });
     if (firstRun) {
-      navigation.replace('Tabs', { screen: 'Today' });
+      if (!settings.lastCheckInDate) {
+        navigation.navigate('Tracker');
+      } else {
+        navigation.replace('Tabs', { screen: 'Today' });
+      }
     } else {
       navigation.goBack();
     }
@@ -43,27 +42,30 @@ export function HowToUseScreen({ navigation, route }: Props) {
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         {!firstRun ? (
           <View style={styles.topRow}>
-            <Pressable
-              hitSlop={16}
-              onPress={() => navigation.goBack()}
-              style={styles.closeBtn}
-            >
-              <Ionicons name="close" size={22} color={colors.ink} />
-            </Pressable>
+            <BackButton onPress={() => navigation.goBack()} />
           </View>
         ) : null}
 
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.eyebrow}>How to use</Text>
-          <Text style={styles.title}>re-Genesis</Text>
-          <Text style={styles.attribution}>
-            Companion to {BOOK_TITLE} by {AUTHOR_NAME}
-          </Text>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+          <View style={styles.masthead}>
+            <Image
+              source={require('../../assets/brand/icon.png')}
+              style={styles.mark}
+              resizeMode="contain"
+              accessibilityLabel="re-Genesis mark"
+            />
+            <View style={styles.mastheadText}>
+              <Text style={styles.eyebrow}>How to use</Text>
+              <Text style={styles.title}>re-Genesis</Text>
+              <Text style={styles.attribution}>
+                {`Companion to ${BOOK_TITLE} by ${AUTHOR_NAME}`}
+              </Text>
+            </View>
+          </View>
 
           <View style={styles.lead}>
             <Text style={styles.leadText}>
-              "The book is the thread. This app is the needle you pick up
-              each day."
+              {`\u201CThe book is the thread. This app is the needle you pick up each day.\u201D`}
             </Text>
           </View>
 
@@ -75,7 +77,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
             </Body>
           </Section>
 
-          <Section eyebrow="Two soul technologies">
+          <Section eyebrow="Three soul technologies">
             <View style={styles.techRow}>
               <View style={styles.techCircle}>
                 <Text style={styles.techLetter}>M</Text>
@@ -91,7 +93,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
               </View>
             </View>
 
-            <View style={{ height: 14 }} />
+            <View style={{ height: 16 }} />
 
             <View style={styles.techRow}>
               <View
@@ -106,6 +108,26 @@ export function HowToUseScreen({ navigation, route }: Props) {
                 <Body>
                   Simple sensual exercises, using sight, touch, smell, sound,
                   taste, to discover hidden belief and feel it shift.
+                </Body>
+              </View>
+            </View>
+
+            <View style={{ height: 16 }} />
+
+            <View style={styles.techRow}>
+              <View
+                style={[styles.techCircle, { backgroundColor: colors.clayDeep }]}
+              >
+                <Text style={styles.techLetter}>W</Text>
+              </View>
+              <View style={styles.techText}>
+                <Text style={styles.techTitle}>
+                  WHEN · Trigger-specific gestures
+                </Text>
+                <Body>
+                  For the moment the old thread pulls. Twenty-one gestures,
+                  one for each kind of ache, unlocking as you move through
+                  the book.
                 </Body>
               </View>
             </View>
@@ -135,10 +157,10 @@ export function HowToUseScreen({ navigation, route }: Props) {
             />
             <Rhythm
               icon="calendar-outline"
-              time="Weekly"
-              duration="3 min"
+              time="Daily"
+              duration="2 min"
               title="Wellness check-in"
-              body="Five sliders, happiness, loved, health, wealth, relationships, then a guiding question."
+              body="Five sliders, happiness, loved, health, wealth, relationships. One reading a day, measured against your baseline."
             />
           </Section>
 
@@ -159,7 +181,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
               style={{ marginBottom: 8 }}
             />
             <Text style={styles.reminderText}>
-              "Repetition unravels and resews. Small stitches make the quilt."
+              {`\u201CRepetition unravels and resews. Small stitches make the quilt.\u201D`}
             </Text>
           </View>
 
@@ -238,46 +260,55 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },
-  closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   container: {
+    flexGrow: 1,
     padding: 24,
     paddingTop: 16,
     paddingBottom: 40,
   },
+  masthead: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 28,
+    marginTop: 4,
+  },
+  mark: {
+    width: 180,
+    height: 180,
+    marginBottom: 12,
+  },
+  mastheadText: {
+    alignItems: 'center',
+  },
   eyebrow: {
     ...text.eyebrow,
     marginBottom: 4,
+    textAlign: 'center',
   },
   title: {
     fontFamily: fonts.serifBold,
     fontSize: 44,
     lineHeight: 52,
     color: colors.ink,
+    textAlign: 'center',
   },
   attribution: {
     fontFamily: fonts.serifItalic,
     fontSize: 14,
     color: colors.inkSoft,
-    marginTop: 6,
-    marginBottom: 22,
+    marginTop: 8,
+    textAlign: 'center',
   },
   lead: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: 20,
     ...shadows.sm,
-    marginBottom: 28,
+    marginBottom: 24,
   },
   leadText: {
     fontFamily: fonts.serifItalic,
@@ -286,11 +317,11 @@ const styles = StyleSheet.create({
     color: colors.ink,
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   sectionEyebrow: {
     ...text.eyebrow,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   card: {
     backgroundColor: colors.surface,
@@ -319,7 +350,7 @@ const styles = StyleSheet.create({
   },
   techLetter: {
     fontFamily: fonts.serifBold,
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 20,
   },
   techText: {
@@ -382,7 +413,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: 20,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 0,
   },
   reminderText: {
     fontFamily: fonts.serifItalic,

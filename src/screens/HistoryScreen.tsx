@@ -2,12 +2,14 @@ import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { DailyEntry } from '../types';
 import { todayKey } from '../store/storage';
 import { TourCard } from '../components/TourCard';
+import { PulsingMark } from '../components/PulsingMark';
+import { QuiltPreview } from '../components/QuiltPreview';
 
 function prettyDate(key: string): string {
   const [y, m, d] = key.split('-').map(Number);
@@ -26,110 +28,56 @@ function sumScores(entry: DailyEntry): number | null {
   );
 }
 
-// 0..4 intensity based on completion
-function intensity(entry?: DailyEntry): number {
-  if (!entry) return 0;
-  let n = 0;
-  if (entry.beliefAcknowledged) n++;
-  if (entry.msgDone) n++;
-  if (entry.seeDone) n++;
-  if (entry.tracker) n++;
-  return n; // 0..4
-}
-
-const INTENSITY_BG = [
-  colors.lineSoft,
-  '#F4D6C2',
-  '#EDBB99',
-  '#D99C6E',
-  colors.clay,
-];
-
-export function HistoryScreen() {
-  const { entries, streak } = useDay();
+export function HistoryContent() {
+  const { entries, quiltEntries } = useDay();
   const ordered = useMemo(
     () => Object.values(entries).sort((a, b) => (a.date < b.date ? 1 : -1)),
     [entries]
   );
 
-  // Build last 35 days (5 weeks) as a grid to feel like a breath rhythm.
-  const cells = useMemo(() => {
-    const now = new Date();
-    const arr: { key: string; intensity: number; date: Date }[] = [];
-    for (let i = 34; i >= 0; i--) {
-      const d = new Date(now);
-      d.setDate(now.getDate() - i);
-      const key = todayKey(d);
-      arr.push({ key, intensity: intensity(entries[key]), date: d });
-    }
-    return arr;
-  }, [entries]);
-
-  const completedDays = Object.values(entries).filter(
-    (e) => e.msgDone || e.seeDone
-  ).length;
+  const patchesSewn = useMemo(
+    () => new Set(quiltEntries.map((e) => e.date)).size,
+    [quiltEntries]
+  );
+  const stitchesTotal = quiltEntries.length;
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={text.eyebrow}>History</Text>
+    <SafeAreaView style={styles.safe} edges={[]}>
+
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <Text style={styles.title}>Your quiet progress</Text>
         <Text style={styles.body}>
-          Every dot is a day you showed up. Softness compounds.
+          Every patch is a day you showed up. Softness compounds.
         </Text>
 
         <TourCard
           storageKey="history"
           title="Your quiet progress."
           tips={[
-            'The grid holds the last five weeks, each cell deepens as you practice more on that day.',
-            'A day counts when the ritual, an MSG, or an SEE is complete.',
+            'The quilt holds every day you showed up, each patch deepens as you stitch more.',
+            'Tap any sewn patch to see which stitches you added that day.',
             'Scroll below for day-by-day entries, a small gallery of your sewing.',
           ]}
         />
 
         <View style={styles.statsRow}>
-          <Stat label="Streak" value={String(streak)} suffix="d" icon="flame" />
-          <Stat
-            label="Days active"
-            value={String(completedDays)}
-            icon="checkmark-done"
-          />
-          <Stat
-            label="Entries"
-            value={String(ordered.length)}
-            icon="book-outline"
-          />
+          <Stat label="Patches sewn" value={String(patchesSewn)} icon="grid-outline" />
+          <Stat label="Stitches" value={String(stitchesTotal)} icon="heart-outline" />
         </View>
 
-        <View style={styles.gridCard}>
-          <Text style={styles.gridTitle}>Last 5 weeks</Text>
-          <View style={styles.grid}>
-            {cells.map((c) => (
-              <View
-                key={c.key}
-                style={[
-                  styles.cell,
-                  { backgroundColor: INTENSITY_BG[c.intensity] },
-                ]}
-              />
-            ))}
-          </View>
-          <View style={styles.legend}>
-            <Text style={styles.legendText}>less</Text>
-            <View style={styles.legendRow}>
-              {INTENSITY_BG.map((c, i) => (
-                <View
-                  key={i}
-                  style={[styles.legendCell, { backgroundColor: c }]}
-                />
-              ))}
-            </View>
-            <Text style={styles.legendText}>more</Text>
-          </View>
+        {/* Quilt section */}
+        <View style={{ marginTop: 8, marginBottom: 4 }}>
+          <Text style={styles.quiltTitle}>Your Patchwork Quilt</Text>
+          <Text style={styles.quiltSubtitle}>
+            Each square a stitch. Every stitch a day you showed up.
+          </Text>
         </View>
 
-        <Text style={[text.eyebrow, { marginTop: 24, marginBottom: 12 }]}>
+        <View style={styles.quiltCard}>
+          <QuiltPreview entries={quiltEntries} size="full" />
+        </View>
+
+        <Text style={[text.eyebrow, { marginTop: 28, marginBottom: 12 }]}>
           Entries
         </Text>
 
@@ -179,12 +127,10 @@ export function HistoryScreen() {
 function Stat({
   label,
   value,
-  suffix,
   icon,
 }: {
   label: string;
   value: string;
-  suffix?: string;
   icon: keyof typeof Ionicons.glyphMap;
 }) {
   return (
@@ -192,7 +138,6 @@ function Stat({
       <Ionicons name={icon} size={16} color={colors.clayDeep} />
       <View style={styles.statNumRow}>
         <Text style={styles.statValue}>{value}</Text>
-        {suffix ? <Text style={styles.statSuffix}>{suffix}</Text> : null}
       </View>
       <Text style={styles.statLabel}>{label}</Text>
     </View>
@@ -224,7 +169,12 @@ function Badge({ on, label }: { on: boolean; label: string }) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  container: { padding: 20, paddingBottom: 40 },
+  container: { flexGrow: 1, padding: layout.screen, paddingBottom: 40 },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: { ...text.h1, marginTop: 8, marginBottom: 6 },
   body: { ...text.body, marginBottom: 20 },
   statsRow: {
@@ -249,53 +199,28 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: colors.ink,
   },
-  statSuffix: {
-    fontFamily: fonts.sansMed,
-    fontSize: 13,
-    color: colors.inkSoft,
-    marginLeft: 2,
-    marginBottom: 4,
-  },
   statLabel: {
     ...text.caption,
     marginTop: 2,
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
-  gridCard: {
+  quiltTitle: {
+    ...text.h2,
+    marginBottom: 4,
+  },
+  quiltSubtitle: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.inkSoft,
+    marginBottom: 14,
+  },
+  quiltCard: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: 18,
     ...shadows.sm,
-  },
-  gridTitle: {
-    ...text.eyebrow,
-    marginBottom: 12,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-  },
-  cell: {
-    width: `${(100 - 6 * 6) / 7}%`,
-    aspectRatio: 1,
-    borderRadius: 6,
-    minWidth: 14,
-  },
-  legend: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginTop: 14,
-    gap: 6,
-  },
-  legendText: { ...text.caption },
-  legendRow: { flexDirection: 'row', gap: 3 },
-  legendCell: {
-    width: 12,
-    height: 12,
-    borderRadius: 3,
   },
   empty: {
     backgroundColor: colors.surface,

@@ -14,6 +14,8 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { glossary } from '../data/glossary';
+import { BackButton } from '../components/BackButton';
+import { PulsingMark } from '../components/PulsingMark';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Glossary'>;
 
@@ -28,17 +30,17 @@ export function GlossaryScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
+          <BackButton
             onPress={() => navigation.goBack()}
-            style={styles.closeBtn}
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+            accessibilityLabel="Go back"
+          />
         </View>
 
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text style={text.eyebrow}>Glossary</Text>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+          <View style={styles.headerRow}>
+            <Text style={text.eyebrow}>Glossary</Text>
+            <PulsingMark size={56} />
+          </View>
           <Text style={styles.title}>Words from the book</Text>
           <Text style={styles.subtitle}>
             Short definitions, in T's voice. Tap away anytime you need a
@@ -75,22 +77,20 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },
-  closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   container: {
+    flexGrow: 1,
     padding: 24,
     paddingTop: 12,
     paddingBottom: 40,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
     ...text.h1,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   originText: {
     fontFamily: fonts.sansSemi,
-    fontSize: 10,
+    fontSize: 12,
     letterSpacing: 1,
     color: colors.clayDeep,
     textTransform: 'uppercase',
