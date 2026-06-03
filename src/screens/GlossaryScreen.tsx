@@ -14,7 +14,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { glossary } from '../data/glossary';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { PulsingMark } from '../components/PulsingMark';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Glossary'>;
@@ -30,9 +30,9 @@ export function GlossaryScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <CloseButton
+          <BackButton
             onPress={() => navigation.goBack()}
-            accessibilityLabel="Close glossary"
+            accessibilityLabel="Go back"
           />
         </View>
 
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },

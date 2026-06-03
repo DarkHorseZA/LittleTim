@@ -8,7 +8,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { AUTHOR_NAME, BOOK_TITLE } from '../config';
 import { useDay } from '../store/DayContext';
 
@@ -21,8 +21,8 @@ export function HowToUseScreen({ navigation, route }: Props) {
   const done = async () => {
     await updateSettings({ hasSeenHowTo: true });
     if (firstRun) {
-      if (!settings.baseline) {
-        navigation.replace('Baseline', { firstRun: true });
+      if (!settings.lastCheckInDate) {
+        navigation.navigate('Tracker');
       } else {
         navigation.replace('Tabs', { screen: 'Today' });
       }
@@ -42,7 +42,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         {!firstRun ? (
           <View style={styles.topRow}>
-            <CloseButton onPress={() => navigation.goBack()} />
+            <BackButton onPress={() => navigation.goBack()} />
           </View>
         ) : null}
 
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },

@@ -15,7 +15,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
@@ -85,7 +85,7 @@ const STEPS: RitualStep[] = [
 export function MorningRitualScreen({ navigation }: Props) {
   const [idx, setIdx] = useState(0);
   const [done, setDone] = useState(false);
-  const { updateToday, settings } = useDay();
+  const { updateToday, addQuiltEntry, settings } = useDay();
   const reducedMotion = useReducedMotion();
   const step = STEPS[idx];
 
@@ -195,6 +195,7 @@ export function MorningRitualScreen({ navigation }: Props) {
       setIdx(idx + 1);
     } else {
       await updateToday({ morningRitualDone: true });
+      await addQuiltEntry({ type: 'ritual' });
       setDone(true);
     }
   };
@@ -215,7 +216,8 @@ export function MorningRitualScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <View style={styles.progressDots}>
+          <BackButton onPress={close} accessibilityLabel="Exit ritual" />
+          <View style={[styles.progressDots, { flex: 1, justifyContent: 'center' }]}>
             {STEPS.map((_, i) => (
               <View
                 key={i}
@@ -227,7 +229,6 @@ export function MorningRitualScreen({ navigation }: Props) {
               />
             ))}
           </View>
-          <CloseButton onPress={close} accessibilityLabel="Close ritual" />
         </View>
 
         <ScrollView

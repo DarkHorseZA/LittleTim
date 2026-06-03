@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -10,25 +9,17 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
-import { DailyEntry } from '../types';
-import { TourCard } from '../components/TourCard';
-import { PulsingMark } from '../components/PulsingMark';
+import { appendStitch, loadStitches, todayKey } from '../store/storage';
+import { JournalStitch } from '../types';
+import { toast } from '../components/Toast';
 
-type Props = CompositeScreenProps<
-  BottomTabScreenProps<TabsParamList, 'Journal'>,
-  NativeStackScreenProps<RootStackParamList>
->;
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function prettyDate(key: string): string {
   const [y, m, d] = key.split('-').map(Number);
@@ -39,216 +30,186 @@ function prettyDate(key: string): string {
   });
 }
 
-function shortDate(key: string): string {
-  const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  });
-}
+// ─── Saved stitch card ────────────────────────────────────────────────────────
 
-export function JournalScreen() {
-  const { today, updateToday, entries } = useDay();
-  const [sewedWith, setSewedWith] = useState(today.journal?.sewedWith ?? '');
-  const [threadPulled, setThreadPulled] = useState(
-    today.journal?.threadPulled ?? ''
-  );
-  const [savedJustNow, setSavedJustNow] = useState(false);
-
-  const pastEntries = useMemo(() => {
-    return Object.values(entries)
-      .filter(
-        (e) =>
-          e.date !== today.date &&
-          e.journal &&
-          (e.journal.sewedWith?.trim() || e.journal.threadPulled?.trim())
-      )
-      .sort((a, b) => (a.date < b.date ? 1 : -1));
-  }, [entries, today.date]);
-
-  const save = async () => {
-    Keyboard.dismiss();
-    try {
-      // Completion feel, parallel to Baseline/Belief/Practice save flows.
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch {}
-    await updateToday({
-      journal: {
-        sewedWith: sewedWith.trim() || undefined,
-        threadPulled: threadPulled.trim() || undefined,
-        updatedAt: new Date().toISOString(),
-      },
-    });
-    setSavedJustNow(true);
-    setTimeout(() => setSavedJustNow(false), 2000);
-  };
-
-  const canSave =
-    (sewedWith.trim().length > 0 || threadPulled.trim().length > 0) &&
-    (sewedWith.trim() !== (today.journal?.sewedWith ?? '') ||
-      threadPulled.trim() !== (today.journal?.threadPulled ?? ''));
-
+function StitchCard({ stitch }: { stitch: JournalStitch }) {
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{ flex: 1 }}
-      >
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
-          <View style={styles.topRow}>
-            <Text style={text.eyebrow}>Patchwork Journal</Text>
-            <PulsingMark size={56} />
-          </View>
-          <Text style={styles.title}>Tonight's stitch</Text>
-          <Text style={styles.body}>
-            Two sentences. Don't try to be eloquent. Just be honest.
-          </Text>
-
-          <TourCard
-            storageKey="journal"
-            title="The Patchwork Journal."
-            tips={[
-              'Each evening, write one stitch you sewed, and one moment the old thread pulled.',
-              'You\'re not being graded. The body reads honesty, not eloquence.',
-              'Read a week of stitches aloud on a Sunday, the quilt begins to show.',
-            ]}
-          />
-
-          <View style={styles.card}>
-            <View style={styles.promptHead}>
-              <View style={styles.promptIcon}>
-                <Ionicons name="heart" size={14} color={colors.done} />
-              </View>
-              <Text style={styles.promptLabel}>Sewed with love</Text>
-            </View>
-            <TextInput
-              value={sewedWith}
-              onChangeText={setSewedWith}
-              placeholder="Today I sewed with love when I\u2026"
-              placeholderTextColor={colors.inkFaint}
-              multiline
-              style={styles.input}
-              accessibilityLabel="Sewed with love, one sentence"
-            />
-
-            <View style={styles.divider} />
-
-            <View style={styles.promptHead}>
-              <View
-                style={[
-                  styles.promptIcon,
-                  { backgroundColor: colors.clayWash },
-                ]}
-              >
-                <Ionicons name="pulse" size={14} color={colors.clayDeep} />
-              </View>
-              <Text style={styles.promptLabel}>When the old thread pulled</Text>
-            </View>
-            <TextInput
-              value={threadPulled}
-              onChangeText={setThreadPulled}
-              placeholder="Today, when the old thread pulled, I\u2026"
-              placeholderTextColor={colors.inkFaint}
-              multiline
-              style={styles.input}
-              accessibilityLabel="When the old thread pulled, one sentence"
-            />
-          </View>
-
-          <Pressable
-            onPress={canSave ? save : undefined}
-            disabled={!canSave && !savedJustNow}
-            accessibilityRole="button"
-            accessibilityLabel={
-              savedJustNow ? 'Stitch saved' : canSave ? 'Save stitch' : 'Nothing to save yet'
-            }
-            accessibilityState={{ disabled: !canSave && !savedJustNow }}
-            style={({ pressed, focused }: any) => [
-              styles.saveBtn,
-              {
-                backgroundColor: savedJustNow
-                  ? colors.done
-                  : canSave
-                  ? colors.clay
-                  : colors.lineSoft,
-                opacity: pressed ? 0.92 : 1,
-              },
-              focused && canSave && webFocus,
-            ]}
-          >
-            <Ionicons
-              name={savedJustNow ? 'checkmark' : 'save-outline'}
-              size={16}
-              color={savedJustNow || canSave ? colors.white : colors.inkFaint}
-              style={{ marginRight: 6 }}
-            />
-            <Text
-              style={[
-                styles.saveText,
-                { color: savedJustNow || canSave ? colors.white : colors.inkFaint },
-              ]}
-            >
-              {savedJustNow ? 'Stitched' : 'Save stitch'}
-            </Text>
-          </Pressable>
-
-          <View style={{ height: 32 }} />
-
-          <Text style={text.eyebrow}>Past stitches</Text>
-          <Text style={styles.pastSub}>
-            {pastEntries.length === 0
-              ? 'Your previous entries will appear here.'
-              : 'Read them aloud at the end of the week, you will see the quilt.'}
-          </Text>
-
-          {pastEntries.map((e) => (
-            <PastStitch key={e.date} entry={e} />
-          ))}
-
-          <View style={{ height: 40 }} />
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-}
-
-function PastStitch({ entry }: { entry: DailyEntry }) {
-  const j = entry.journal;
-  if (!j) return null;
-  return (
-    <View style={styles.pastCard}>
-      <Text style={styles.pastDate}>{shortDate(entry.date)}</Text>
-      {j.sewedWith ? (
-        <View style={styles.pastLine}>
-          <View
-            style={[styles.pastDot, { backgroundColor: colors.done }]}
-          />
-          <Text style={styles.pastText}>{j.sewedWith}</Text>
+    <View style={styles.stitchCard}>
+      <Text style={styles.stitchDate}>{prettyDate(stitch.date)}</Text>
+      {stitch.sewedWithLove ? (
+        <View style={styles.stitchSection}>
+          <Text style={styles.stitchLabel}>SEWED WITH LOVE</Text>
+          <Text style={styles.stitchBody}>{stitch.sewedWithLove}</Text>
         </View>
       ) : null}
-      {j.threadPulled ? (
-        <View style={styles.pastLine}>
-          <View
-            style={[styles.pastDot, { backgroundColor: colors.clay }]}
-          />
-          <Text style={styles.pastText}>{j.threadPulled}</Text>
+      {stitch.oldThreadPulled ? (
+        <View style={styles.stitchSection}>
+          <Text style={styles.stitchLabel}>WHEN THE OLD THREAD PULLED</Text>
+          <Text style={styles.stitchBody}>{stitch.oldThreadPulled}</Text>
         </View>
       ) : null}
     </View>
   );
 }
 
+// ─── Main component ───────────────────────────────────────────────────────────
+
+export function JournalContent() {
+  const { addQuiltEntry } = useDay();
+  const today = todayKey();
+
+  const [sewedWithLove, setSewedWithLove] = useState('');
+  const [oldThread, setOldThread]         = useState('');
+  const [stitches, setStitches]           = useState<JournalStitch[]>([]);
+
+  // Reload entries every time the tab comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      loadStitches().then(setStitches);
+    }, [])
+  );
+
+  const hasInput =
+    sewedWithLove.trim().length > 0 || oldThread.trim().length > 0;
+
+  const handleSave = async () => {
+    if (!hasInput) return;
+
+    const stitch: JournalStitch = {
+      id: Date.now().toString(),
+      date: today,
+      sewedWithLove:   sewedWithLove.trim()  || undefined,
+      oldThreadPulled: oldThread.trim()      || undefined,
+      savedAt: new Date().toISOString(),
+    };
+
+    const updated = await appendStitch(stitch);
+    await addQuiltEntry({ type: 'journal' });
+    setStitches(updated);
+    setSewedWithLove('');
+    setOldThread('');
+    toast("Stitch saved, your quilt grows.", "success");
+  };
+
+  const sorted = [...stitches].sort((a, b) =>
+    a.savedAt > b.savedAt ? -1 : 1
+  );
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      {/*
+        Input section sits OUTSIDE the ScrollView.
+        Diagnostic confirmed: TextInputs inside a ScrollView were not
+        receiving taps on web. Outside ScrollView they work correctly.
+      */}
+      <View style={styles.inputSection}>
+        <Text style={styles.title}>Today's Stitches</Text>
+        <Text style={styles.body}>
+          Two sentences. Don't try to be eloquent. Just be honest.
+        </Text>
+
+        <View style={styles.card}>
+          {/* Prompt 1 */}
+          <View style={styles.promptHead}>
+            <View style={styles.promptIcon}>
+              <Ionicons name="heart" size={14} color={colors.done} />
+            </View>
+            <Text style={styles.promptLabel}>Sewed with love</Text>
+          </View>
+          <TextInput
+            value={sewedWithLove}
+            onChangeText={setSewedWithLove}
+            placeholder="Today I sewed with love when I..."
+            placeholderTextColor="#9c9183"
+            multiline
+            scrollEnabled={false}
+            style={styles.input}
+            accessibilityLabel="Sewed with love"
+          />
+
+          <View style={styles.divider} />
+
+          {/* Prompt 2 */}
+          <View style={styles.promptHead}>
+            <View style={[styles.promptIcon, { backgroundColor: colors.clayWash }]}>
+              <Ionicons name="pulse" size={14} color={colors.clayDeep} />
+            </View>
+            <Text style={styles.promptLabel}>When the old thread pulled</Text>
+          </View>
+          <TextInput
+            value={oldThread}
+            onChangeText={setOldThread}
+            placeholder="Today, when the old thread pulled, I..."
+            placeholderTextColor="#9c9183"
+            multiline
+            scrollEnabled={false}
+            style={styles.input}
+            accessibilityLabel="When the old thread pulled"
+          />
+        </View>
+
+        {/* Save button */}
+        <Pressable
+          onPress={hasInput ? handleSave : undefined}
+          accessibilityRole="button"
+          accessibilityLabel={hasInput ? 'Save stitch' : 'Maybe later'}
+          style={({ pressed, focused }: any) => [
+            styles.saveBtn,
+            { backgroundColor: hasInput ? colors.clay : colors.lineSoft },
+            pressed && { opacity: 0.88 },
+            focused && hasInput && webFocus,
+          ]}
+        >
+          <Ionicons
+            name="save-outline"
+            size={16}
+            color={hasInput ? colors.white : colors.inkFaint}
+            style={{ marginRight: 6 }}
+          />
+          <Text style={[styles.saveText, { color: hasInput ? colors.white : colors.inkFaint }]}>
+            {hasInput ? 'Save Stitch' : 'Maybe later'}
+          </Text>
+        </Pressable>
+      </View>
+
+      {/* Saved stitches — in ScrollView so long history can scroll */}
+      <ScrollView
+        style={styles.listScroll}
+        contentContainerStyle={styles.listContainer}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.pastHeader}>
+          <Text style={text.eyebrow}>Saved Stitches</Text>
+          <Text style={styles.pastSub}>Your thread, recorded.</Text>
+        </View>
+
+        {sorted.length === 0 ? (
+          <Text style={styles.emptyState}>
+            Your first stitch is waiting to be sewn.
+          </Text>
+        ) : (
+          sorted.map((s) => <StitchCard key={s.id} stitch={s} />)
+        )}
+
+        <View style={{ height: 40 }} />
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}
+
+// ─── Styles ───────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.bg },
-  container: { flexGrow: 1, padding: 20, paddingBottom: 40 },
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  inputSection: {
+    padding: 20,
+    paddingBottom: 8,
   },
   title: { ...text.h1, marginTop: 8, marginBottom: 6 },
-  body: { ...text.body, marginBottom: 18 },
+  body:  { ...text.body, marginBottom: 18 },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
@@ -274,13 +235,13 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   input: {
-    fontFamily: fonts.sans,
     fontSize: 16,
+    color: '#2c2620',
+    minHeight: 72,
+    paddingTop: 4,
+    fontFamily: fonts.sans,
     lineHeight: 22,
-    color: colors.ink,
-    minHeight: 60,
     textAlignVertical: 'top',
-    paddingVertical: 4,
   },
   divider: {
     height: 1,
@@ -303,41 +264,52 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
+  listScroll: {
+    flex: 1,
+  },
+  listContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+  },
+  pastHeader: {
+    marginBottom: 14,
+  },
   pastSub: {
     ...text.body,
     marginTop: 4,
-    marginBottom: 14,
   },
-  pastCard: {
+  emptyState: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.inkFaint,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  stitchCard: {
     backgroundColor: colors.surface,
-    borderRadius: radius.lg,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 10,
+    marginBottom: 12,
     ...shadows.sm,
   },
-  pastDate: {
+  stitchDate: {
     fontFamily: fonts.serifBold,
-    fontSize: 15,
+    fontSize: 17,
     color: colors.ink,
+    marginBottom: 10,
+  },
+  stitchSection: {
     marginBottom: 8,
   },
-  pastLine: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginTop: 6,
+  stitchLabel: {
+    ...text.eyebrow,
+    fontSize: 10,
+    marginBottom: 4,
   },
-  pastDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginTop: 8,
-    marginRight: 10,
-  },
-  pastText: {
-    flex: 1,
-    fontFamily: fonts.sans,
-    fontSize: 14,
-    lineHeight: 20,
+  stitchBody: {
+    ...text.body,
     color: colors.ink,
+    lineHeight: 21,
   },
 });

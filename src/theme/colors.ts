@@ -45,6 +45,14 @@ export const colors = {
   heat3: '#D99C6E',
   heat4: '#B7572E', // same as clay, full intensity
 
+  // Quilt patch ramp (q0 = unsewn, q4 = richly sewn)
+  q0: '#e8ddc9',
+  q1: '#ecceaa',
+  q2: '#ddb083',
+  q3: '#cb8a56',
+  q4: '#b0542f',
+  thread: '#cdbfa6', // dashed border on unsewn patches
+
   // Misc
   amber: '#E0B872',
   danger: '#B5524C',

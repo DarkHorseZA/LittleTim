@@ -188,8 +188,8 @@ export function WelcomeScreen({ navigation }: Props) {
               onPress={() => {
                 if (!settings.hasSeenHowTo) {
                   navigation.replace('HowToUse', { firstRun: true });
-                } else if (!settings.baseline) {
-                  navigation.replace('Baseline', { firstRun: true });
+                } else if (!settings.lastCheckInDate) {
+                  navigation.navigate('Tracker');
                 } else {
                   navigation.replace('Tabs', { screen: 'Today' });
                 }

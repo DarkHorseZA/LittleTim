@@ -1,78 +1,135 @@
 import { Belief } from '../types';
 
-// One belief per chapter (Introduction + Chapters 1-9).
-// Statements and embeddings are distilled in the book's voice, paraphrased
-// from the manuscript's "Chapter Takeaway" sections, never lifted verbatim.
+// Eighteen affirming beliefs, all present-tense, all safe to land on any day.
+// First ten map one-to-one with chapters 0–9 for chapter-gated display.
+// The remaining eight carry chapter 0 (always unlocked) and enter the
+// day-of-year rotation to broaden the daily welcome card.
 export const beliefs: Belief[] = [
   {
     id: 'b-intro',
     chapter: 0,
-    statement: 'I am safe. I am worthy. I am Love. Let there be me.',
+    statement: 'I am safe. I am worthy. I am Love.',
     embedding:
-      'Hands on your knees, then belly, then heart. Whisper each word as your hands arrive.',
+      'Hands on your knees, then belly, then heart. Whisper each phrase as your hands arrive.',
   },
   {
     id: 'b-ch1',
     chapter: 1,
-    statement: 'I can change the memory with an other experience.',
+    statement: 'Fear was sewn in. Love is my own thread.',
     embedding:
-      'Notice what scent, sound, or face pulls at you today. Pause. Ask: is this mine, or passed to me?',
+      'Notice one old Fear-thought today. Breathe out slowly. Whisper: “This is not my original thread.”',
   },
   {
     id: 'b-ch2',
     chapter: 2,
-    statement: 'My immune function follows my emotional state.',
+    statement: 'I am Love, creating.',
     embedding:
-      'Hand on heart. Slow the breath. Whisper: “I feel safe, and my body listens.”',
+      'Open both hands, palms up. Feel the warmth in them. Whisper: “I am Love, and I am creating right now.”',
   },
   {
     id: 'b-ch3',
     chapter: 3,
-    statement: 'Emotion filled belief is my creative power.',
+    statement: 'The blessing comes first, before any doing, any earning.',
     embedding:
-      'Remember one moment you created something from Love. Let the warmth return to your chest.',
+      'Hands on heart. Breathe in. Whisper: “I am already blessed.” Let it land before the day begins.',
   },
   {
     id: 'b-ch4',
     chapter: 4,
-    statement: 'I am earth. Returning to earth is homecoming.',
+    statement: 'I came from earth. She is home.',
     embedding:
-      'Rub your palms together until they feel warm. Whisper: “I am earth, wrapped in light.”',
+      'Press your feet to the floor. Feel the earth beneath you. Whisper: “I am home. She is holding me.”',
   },
   {
     id: 'b-ch5',
     chapter: 5,
-    statement: 'I am Love from Love.',
+    statement: 'I am not alone. Spirit and Earth are still creating alongside me.',
     embedding:
-      'Open your arms away from your body, “I let go of shame.” Bring them back to your heart, “I resew with Love.”',
+      'Reach one hand out beside you. Whisper: “I am Love, creating, and I am not alone.”',
   },
   {
     id: 'b-ch6',
     chapter: 6,
-    statement: 'I am blessed. I may. I can.',
+    statement: 'I am blessed with permission and power.',
     embedding:
-      'Hands on heart, belly, face. Three soft whispers of “I am blessed.”',
+      'Hands on heart, belly, face. Three soft whispers: “I am blessed. I may. I can.”',
   },
   {
     id: 'b-ch7',
     chapter: 7,
-    statement: 'I feel. I whisper. I touch. I breathe. I bless.',
+    statement: 'Every breath is the breath of lives.',
     embedding:
-      'Sixty seconds. One of each: feel a feeling, whisper a “let there be”, touch your palms, three breaths, bless yourself.',
+      'Three slow breaths. With each inhale whisper inside: “I breathe the breath of lives.”',
   },
   {
     id: 'b-ch8',
     chapter: 8,
-    statement: 'The power is in the now.',
+    statement: 'The power is in the now, not the perfect.',
     embedding:
-      'Hand on heart. Whisper: “I am not that feeling. I am the one who feels it.” Take one breath. Sew one stitch.',
+      'Hand on heart. Whisper: “I am not that feeling. I am the one who feels it.” One breath. One stitch.',
   },
   {
     id: 'b-ch9',
     chapter: 9,
-    statement: 'They are here. They are weaving with me.',
+    statement: 'The quilt grows. Nothing here can be unstitched.',
     embedding:
-      'Reach one hand out beside you. Whisper: “I am Love, creating, and I am not alone.”',
+      'Hold your hands open. Picture every stitch you have sewn. Whisper: “It is here. It is real.”',
+  },
+  {
+    id: 'b-wrapped',
+    chapter: 0,
+    statement: 'I am wrapped in light.',
+    embedding:
+      'Close your eyes. Imagine soft light settling around your shoulders like a shawl. Rest there for one breath.',
+  },
+  {
+    id: 'b-softness',
+    chapter: 0,
+    statement: 'Softness compounds. Every stitch counts.',
+    embedding:
+      'One hand on heart. Whisper: “This small thing I did today, it counts.” Let it be enough.',
+  },
+  {
+    id: 'b-good',
+    chapter: 0,
+    statement: 'I am good. Very good.',
+    embedding:
+      'Hands on your face, palms warm. Whisper: “Very good.” Say it as if you mean it for someone you Love.',
+  },
+  {
+    id: 'b-worthy',
+    chapter: 0,
+    statement: 'I am worthy of Love, also loving my Self.',
+    embedding:
+      'Arms across your chest, a gentle self-embrace. Whisper: “I am worthy of this.” Hold for three breaths.',
+  },
+  {
+    id: 'b-sweat',
+    chapter: 0,
+    statement: 'The sweat is drying. I am remembering who I am.',
+    embedding:
+      'Rub your palms slowly down your arms. Breathe out. Whisper: “I am remembering.”',
+  },
+  {
+    id: 'b-image',
+    chapter: 0,
+    statement: 'I came from Them. I am made in Their image.',
+    embedding:
+      'Look at your hands. Whisper: “These hands come from Love. They are Love’s hands.”',
+  },
+  {
+    id: 'b-willing',
+    chapter: 0,
+    statement: 'I do not have to be perfect. I only have to be willing.',
+    embedding:
+      'One breath in through the nose. One slow breath out. Whisper: “Willing is enough.”',
+  },
+  {
+    id: 'b-anticipation',
+    chapter: 0,
+    statement: 'I am earth, from Earth. She is waiting with anticipation.',
+    embedding:
+      'Feet on the floor, eyes soft. Whisper: “She knows me. She is glad I am here.”',
   },
 ];
 

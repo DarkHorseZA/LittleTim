@@ -14,11 +14,11 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
-import { nav, pressScale, tap, webFocus } from '../theme/interactions';
+import { nav, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { PatchworkQuilt } from '../components/PatchworkQuilt';
 import { PulsingMark } from '../components/PulsingMark';
-import { StreakStrip } from '../components/StreakStrip';
 import { TourCard } from '../components/TourCard';
 import { APP_NAME_DISPLAY_CAPS } from '../config';
 import { beliefForDate } from '../data/beliefs';
@@ -38,8 +38,9 @@ function prettyDate(d: Date): string {
   });
 }
 
+
 export function HomeScreen({ navigation }: Props) {
-  const { today, streak, entries, settings, updateSettings } = useDay();
+  const { today, settings, updateSettings } = useDay();
   const now = useMemo(() => new Date(), []);
   const belief = useMemo(
     () => beliefForDate(now, settings.currentChapter),
@@ -60,7 +61,6 @@ export function HomeScreen({ navigation }: Props) {
   const seeDone = today.seeDone;
   const ritualDone = !!today.morningRitualDone;
   const trackerDoneToday = settings.lastCheckInDate === todayKey(now);
-  const hasBaseline = !!settings.baseline;
 
   return (
     <View style={styles.root}>
@@ -159,30 +159,14 @@ export function HomeScreen({ navigation }: Props) {
 
           <View style={{ height: 16 }} />
 
-          <View style={styles.streakCard}>
-            <View style={styles.streakTop}>
-              <View>
-                <Text style={text.eyebrow}>Current streak</Text>
-                <View style={styles.streakNumRow}>
-                  <Text style={text.number}>{streak}</Text>
-                  <Text style={styles.streakUnit}>
-                    {streak === 1 ? 'day' : 'days'}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.flameWrap}>
-                <Ionicons
-                  name="flame"
-                  size={26}
-                  color={streak > 0 ? colors.clay : colors.inkFaint}
-                />
-              </View>
-            </View>
-            <StreakStrip entries={entries} />
-            <Text style={styles.streakHint}>
-              A day counts when you complete the ritual, MSG, or SEE.
+          {/* Patchwork Quilt — compact (4-week grid, stats, tap-to-detail) */}
+          <View style={styles.quiltSection}>
+            <Text style={styles.quiltOverline}>YOUR PATCHWORK QUILT</Text>
+            <Text style={styles.quiltTagline}>
+              {'“'}Stitch by little stitch, it becomes beautiful.{'”'}
             </Text>
           </View>
+          <PatchworkQuilt size="compact" />
 
           <Pressable
             onPress={() => {
@@ -254,29 +238,23 @@ export function HomeScreen({ navigation }: Props) {
           />
 
           <View style={styles.sectionHead}>
-            <Text style={text.eyebrow}>Wellness tracker</Text>
+            <Text style={text.eyebrow}>How are we sewing?</Text>
             <Text style={styles.sectionTitle}>
               {trackerDoneToday
-                ? 'Checked in today'
-                : hasBaseline
-                ? 'How are you, really?'
-                : 'Set your baseline'}
+                ? 'Reflection complete'
+                : 'A moment to notice'}
             </Text>
             <Text style={styles.sectionBody}>
               {trackerDoneToday
-                ? 'One reading per day. See your change since baseline, or pick a focus area.'
-                : hasBaseline
-                ? 'Five quick sliders. Once a day is enough.'
-                : 'A single reading, so future check-ins have something to measure against.'}
+                ? 'You\u2019ve already reflected today. Come back tomorrow, the thread moves slowly.'
+                : 'Not a survey. Just a gentle pause, whenever you\u2019re ready.'}
             </Text>
           </View>
           <Button
             title={
               trackerDoneToday
-                ? 'See today\u2019s reading'
-                : hasBaseline
-                ? 'Start check-in'
-                : 'Set baseline now'
+                ? 'See today\u2019s reflection'
+                : 'A moment to notice'
             }
             onPress={() => navigation.navigate('Tracker')}
             size="lg"
@@ -540,42 +518,22 @@ const styles = StyleSheet.create({
     marginRight: 6,
     textTransform: 'uppercase',
   },
-  streakCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.xl,
-    padding: 22,
-    ...shadows.md,
-    marginBottom: 20,
+  quiltSection: {
+    marginBottom: 12,
   },
-  streakTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+  quiltOverline: {
+    fontFamily: fonts.sansBold,
+    fontSize: 10,
+    letterSpacing: 2.2,
+    color: colors.inkFaint,
+    textTransform: 'uppercase',
+    marginBottom: 4,
   },
-  streakNumRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 4,
-  },
-  streakUnit: {
-    fontFamily: fonts.sansMed,
+  quiltTagline: {
+    fontFamily: fonts.serifItalic,
     fontSize: 14,
+    lineHeight: 20,
     color: colors.inkSoft,
-    marginLeft: 8,
-    marginBottom: 10,
-    letterSpacing: 0.5,
-  },
-  flameWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.clayWash,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  streakHint: {
-    ...text.caption,
-    marginTop: 12,
   },
   beliefCard: {
     borderRadius: radius.lg,

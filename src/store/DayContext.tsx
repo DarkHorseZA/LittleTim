@@ -6,11 +6,12 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { DailyEntry } from '../types';
+import { DailyEntry, QuiltEntry } from '../types';
 import {
-  computeStreak,
+  addQuiltEntry as addQuiltEntryStorage,
   getEntry,
   loadEntries,
+  loadQuiltEntries,
   loadSettings,
   saveSettings,
   Settings,
@@ -23,10 +24,11 @@ type DayContextValue = {
   ready: boolean;
   today: DailyEntry;
   entries: Record<string, DailyEntry>;
-  streak: number;
+  quiltEntries: QuiltEntry[];
   settings: Settings;
   updateToday: (patch: Partial<DailyEntry>) => Promise<void>;
   updateSettings: (patch: Partial<Settings>) => Promise<void>;
+  addQuiltEntry: (entry: Omit<QuiltEntry, 'date'>) => Promise<void>;
   refresh: () => Promise<void>;
 };
 
@@ -35,6 +37,7 @@ const DayContext = createContext<DayContextValue | undefined>(undefined);
 export function DayProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [entries, setEntries] = useState<Record<string, DailyEntry>>({});
+  const [quiltEntries, setQuiltEntries] = useState<QuiltEntry[]>([]);
   const [today, setToday] = useState<DailyEntry>({
     date: todayKey(),
     msgDone: false,
@@ -43,9 +46,14 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<Settings>({ reminderHour: 8 });
 
   const refresh = useCallback(async () => {
-    const [allEntries, s] = await Promise.all([loadEntries(), loadSettings()]);
+    const [allEntries, s, allQuilt] = await Promise.all([
+      loadEntries(),
+      loadSettings(),
+      loadQuiltEntries(),
+    ]);
     setEntries(allEntries);
     setSettings(s);
+    setQuiltEntries(allQuilt);
     const t = await getEntry(todayKey());
     setToday(t);
   }, []);
@@ -65,9 +73,6 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
         setToday(next);
         setEntries((prev) => ({ ...prev, [next.date]: next }));
       } catch {
-        // AsyncStorage can throw on quota exhaustion, corrupted data, or web
-        // storage being disabled (incognito, iframe sandbox). Surface a
-        // soft toast instead of crashing or silently dropping the write.
         toast("Couldn't save your entry. Your device storage may be full.", 'error');
       }
     },
@@ -87,20 +92,32 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
     [settings]
   );
 
-  const streak = useMemo(() => computeStreak(entries), [entries]);
+  const addQuiltEntry = useCallback(
+    async (entry: Omit<QuiltEntry, 'date'>) => {
+      const full: QuiltEntry = { date: todayKey(), ...entry };
+      try {
+        const next = await addQuiltEntryStorage(full);
+        setQuiltEntries(next);
+      } catch {
+        toast("Couldn't save your stitch. Your device storage may be full.", 'error');
+      }
+    },
+    []
+  );
 
   const value = useMemo<DayContextValue>(
     () => ({
       ready,
       today,
       entries,
-      streak,
+      quiltEntries,
       settings,
       updateToday,
       updateSettings,
+      addQuiltEntry,
       refresh,
     }),
-    [ready, today, entries, streak, settings, updateToday, updateSettings, refresh]
+    [ready, today, entries, quiltEntries, settings, updateToday, updateSettings, addQuiltEntry, refresh]
   );
 
   return <DayContext.Provider value={value}>{children}</DayContext.Provider>;

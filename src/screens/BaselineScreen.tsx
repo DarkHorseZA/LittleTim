@@ -8,14 +8,16 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { ScoreSlider } from '../components/ScoreSlider';
 import { focusAreaOrder, focusAreas } from '../data/focusAreas';
 import { FocusArea, TrackerScores } from '../types';
 import { useDay } from '../store/DayContext';
 import { todayKey } from '../store/storage';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Baseline'>;
+// BaselineScreen is no longer in the navigator — replaced by TrackerScreen.
+// Kept as an archive. Props typed loosely so the file continues to compile.
+type Props = { navigation: any; route: any };
 
 const INITIAL_SCORES: TrackerScores = {
   happiness: 5,
@@ -83,9 +85,9 @@ export function BaselineScreen({ navigation, route }: Props) {
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         {!firstRun ? (
           <View style={styles.topRow}>
-            <CloseButton
+            <BackButton
               onPress={() => navigation.goBack()}
-              accessibilityLabel="Close baseline"
+              accessibilityLabel="Go back"
             />
           </View>
         ) : null}
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },

@@ -1,8 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BaselineRecord, DailyEntry } from '../types';
+import { BaselineRecord, DailyEntry, JournalStitch, QuiltEntry, ReflectionEntry } from '../types';
 
 const KEY_ENTRIES = 'littletim:entries:v1';
 const KEY_SETTINGS = 'littletim:settings:v1';
+const KEY_QUILT = 'littletim:quilt:v1';
+const KEY_REFLECTION = 'littletim:reflection:v1';
+const KEY_STITCHES  = 'littletim:stitches:v1';
 
 export type Profile = {
   displayName?: string;
@@ -88,17 +91,70 @@ export async function saveSettings(settings: Settings): Promise<void> {
   await AsyncStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
 }
 
-export function computeStreak(entries: Record<string, DailyEntry>): number {
-  let streak = 0;
-  const cursor = new Date();
-  while (true) {
-    const key = todayKey(cursor);
-    const e = entries[key];
-    const completed =
-      !!e && (e.morningRitualDone || e.msgDone || e.seeDone);
-    if (!completed) break;
-    streak += 1;
-    cursor.setDate(cursor.getDate() - 1);
+export async function loadQuiltEntries(): Promise<QuiltEntry[]> {
+  const raw = await AsyncStorage.getItem(KEY_QUILT);
+  if (!raw) return [];
+  try {
+    return JSON.parse(raw) as QuiltEntry[];
+  } catch {
+    return [];
   }
-  return streak;
+}
+
+export async function saveQuiltEntries(entries: QuiltEntry[]): Promise<void> {
+  await AsyncStorage.setItem(KEY_QUILT, JSON.stringify(entries));
+}
+
+// Adds a QuiltEntry, deduplicating by date + type. Returns the updated list.
+export async function addQuiltEntry(entry: QuiltEntry): Promise<QuiltEntry[]> {
+  const existing = await loadQuiltEntries();
+  const isDuplicate = existing.some(
+    (e) => e.date === entry.date && e.type === entry.type
+  );
+  if (isDuplicate) return existing;
+  const next = [...existing, entry];
+  await saveQuiltEntries(next);
+  return next;
+}
+
+// ─── Reflection entries ───────────────────────────────────────────────────────
+
+export async function loadReflections(): Promise<Record<string, ReflectionEntry>> {
+  const raw = await AsyncStorage.getItem(KEY_REFLECTION);
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw) as Record<string, ReflectionEntry>;
+  } catch {
+    return {};
+  }
+}
+
+export async function saveReflection(entry: ReflectionEntry): Promise<void> {
+  const all = await loadReflections();
+  all[entry.date] = entry;
+  await AsyncStorage.setItem(KEY_REFLECTION, JSON.stringify(all));
+}
+
+export async function getTodayReflection(date: string): Promise<ReflectionEntry | null> {
+  const all = await loadReflections();
+  return all[date] ?? null;
+}
+
+// ─── Journal stitches ─────────────────────────────────────────────────────────
+
+export async function loadStitches(): Promise<JournalStitch[]> {
+  const raw = await AsyncStorage.getItem(KEY_STITCHES);
+  if (!raw) return [];
+  try {
+    return JSON.parse(raw) as JournalStitch[];
+  } catch {
+    return [];
+  }
+}
+
+export async function appendStitch(stitch: JournalStitch): Promise<JournalStitch[]> {
+  const all = await loadStitches();
+  const next = [...all, stitch];
+  await AsyncStorage.setItem(KEY_STITCHES, JSON.stringify(next));
+  return next;
 }

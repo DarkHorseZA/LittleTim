@@ -7,7 +7,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { findPractice } from '../data/practices';
 import { useDay } from '../store/DayContext';
 
@@ -18,7 +18,7 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
     () => findPractice(route.params.practiceId),
     [route.params.practiceId]
   );
-  const { today, updateToday } = useDay();
+  const { today, updateToday, addQuiltEntry } = useDay();
 
   if (!practice) {
     return (
@@ -37,8 +37,10 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
     // Completion haptic is fired by the Button (haptic="success"). No manual call.
     if (practice.kind === 'MSG') {
       await updateToday({ msgDone: true, msgPracticeId: practice.id });
+      await addQuiltEntry({ type: 'msg' });
     } else {
       await updateToday({ seeDone: true, seePracticeId: practice.id });
+      await addQuiltEntry({ type: 'see' });
     }
     navigation.goBack();
   };
@@ -46,10 +48,10 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.topRow}>
-        <CloseButton
+        <BackButton
           onPress={() => navigation.goBack()}
           variant="solid"
-          accessibilityLabel="Close practice"
+          accessibilityLabel="Go back"
         />
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },

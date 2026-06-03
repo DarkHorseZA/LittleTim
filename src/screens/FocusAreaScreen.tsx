@@ -16,7 +16,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { focusAreas } from '../data/focusAreas';
 import { COACHING_URL, hasCoachingUrl } from '../config';
 import { useDay } from '../store/DayContext';
@@ -65,9 +65,9 @@ export function FocusAreaScreen({ navigation, route }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <CloseButton
-            onPress={() => navigation.popToTop()}
-            accessibilityLabel="Close and return to Today"
+          <BackButton
+            onPress={() => navigation.goBack()}
+            accessibilityLabel="Go back"
           />
         </View>
 
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },

@@ -4,15 +4,13 @@ import { FocusArea, PracticeKind } from '../types';
 export type TabsParamList = {
   Today: undefined;
   Practice: { initialKind?: PracticeKind | 'WHEN' } | undefined;
-  Journal: undefined;
-  History: undefined;
-  Settings: undefined;
+  Journal: { initialTab?: 'journal' | 'quilt' } | undefined;
+  More: undefined;
 };
 
 export type RootStackParamList = {
   Welcome: undefined;
   HowToUse: { firstRun?: boolean } | undefined;
-  Baseline: { firstRun?: boolean } | undefined;
   Tabs: NavigatorScreenParams<TabsParamList>;
   Belief: undefined;
   PracticeDetail: { practiceId: string };
@@ -23,5 +21,6 @@ export type RootStackParamList = {
   MorningRitual: undefined;
   Glossary: undefined;
   Connect: undefined;
+  Settings: undefined;
   NotFound: undefined;
 };

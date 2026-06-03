@@ -12,17 +12,16 @@ import { TriggerDetailScreen } from '../screens/TriggerDetailScreen';
 import { BeliefScreen } from '../screens/BeliefScreen';
 import { TrackerScreen } from '../screens/TrackerScreen';
 import { FocusAreaScreen } from '../screens/FocusAreaScreen';
-import { HistoryScreen } from '../screens/HistoryScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { AccountScreen } from '../screens/AccountScreen';
-import { BaselineScreen } from '../screens/BaselineScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { HowToUseScreen } from '../screens/HowToUseScreen';
 import { MorningRitualScreen } from '../screens/MorningRitualScreen';
-import { JournalScreen } from '../screens/JournalScreen';
+import { JournalHistoryScreen } from '../screens/JournalHistoryScreen';
 import { GlossaryScreen } from '../screens/GlossaryScreen';
 import { ConnectScreen } from '../screens/ConnectScreen';
 import { NotFoundScreen } from '../screens/NotFoundScreen';
+import { MoreScreen } from '../screens/MoreScreen';
 import { colors, layout } from '../theme/colors';
 import { fonts } from '../theme/type';
 
@@ -37,15 +36,18 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Welcome: '',
       HowToUse: 'how-to-use',
-      Baseline: 'baseline',
       Tabs: {
         path: 'app',
         screens: {
           Today: 'today',
           Practice: 'practice',
-          Journal: 'journal',
-          History: 'history',
-          Settings: 'settings',
+          Journal: {
+            path: 'journal',
+            screens: {
+              // initialTab param is carried via the URL query string automatically
+            },
+          },
+          More: 'more',
         },
       },
       Belief: 'belief',
@@ -57,6 +59,7 @@ const linking: LinkingOptions<RootStackParamList> = {
       MorningRitual: 'ritual',
       Glossary: 'glossary',
       Connect: 'connect',
+      Settings: 'settings',
       // NotFound is programmatically navigable (no public path). Leaving
       // it unwired from the URL map keeps the root path '' reserved for
       // Welcome. Unrecognised URLs fall back to Welcome via initialRouteName.
@@ -118,26 +121,26 @@ function TabsNavigator() {
       />
       <Tabs.Screen
         name="Journal"
-        component={JournalScreen as any}
+        component={JournalHistoryScreen as any}
         options={{
+          tabBarLabel: 'Journal',
           tabBarIcon: tabIcon('create', 'create-outline'),
-          tabBarAccessibilityLabel: 'Journal, tonight\u2019s stitch',
+          tabBarAccessibilityLabel: 'Journal, tonight’s stitch and your quilt',
         }}
       />
       <Tabs.Screen
-        name="History"
-        component={HistoryScreen as any}
+        name="More"
+        component={MoreScreen as any}
         options={{
-          tabBarIcon: tabIcon('calendar', 'calendar-outline'),
-          tabBarAccessibilityLabel: 'History, your quiet progress',
-        }}
-      />
-      <Tabs.Screen
-        name="Settings"
-        component={SettingsScreen as any}
-        options={{
-          tabBarIcon: tabIcon('settings', 'settings-outline'),
-          tabBarAccessibilityLabel: 'Settings',
+          tabBarIcon: ({ focused, color, size }: { focused: boolean; color: string; size: number }) => (
+            <Ionicons
+              name={focused ? 'ellipsis-horizontal' : 'ellipsis-horizontal-outline'}
+              size={size + 4}
+              color={color}
+            />
+          ),
+          tabBarLabel: () => null,
+          tabBarAccessibilityLabel: 'More, settings, glossary and connect',
         }}
       />
     </Tabs.Navigator>
@@ -164,11 +167,6 @@ export function RootNavigator() {
           component={HowToUseScreen}
           options={{ animation: 'slide_from_right' }}
         />
-        <Stack.Screen
-          name="Baseline"
-          component={BaselineScreen}
-          options={{ animation: 'slide_from_right' }}
-        />
         <Stack.Screen name="Tabs" component={TabsNavigator} />
         <Stack.Screen
           name="Belief"
@@ -188,7 +186,7 @@ export function RootNavigator() {
         <Stack.Screen
           name="Tracker"
           component={TrackerScreen}
-          options={{ presentation: 'modal' }}
+          options={{ animation: 'slide_from_right' }}
         />
         <Stack.Screen
           name="FocusArea"
@@ -217,6 +215,11 @@ export function RootNavigator() {
           name="Connect"
           component={ConnectScreen}
           options={{ presentation: 'modal', animation: 'fade_from_bottom' }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{ presentation: 'modal', animation: 'slide_from_right' }}
         />
         <Stack.Screen
           name="NotFound"

@@ -8,6 +8,7 @@ import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { PulsingMark } from '../components/PulsingMark';
+import { BackButton } from '../components/BackButton';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'NotFound'>;
 
@@ -32,6 +33,9 @@ export function NotFoundScreen({ navigation }: Props) {
         style={styles.hero}
       />
       <SafeAreaView style={styles.safe}>
+        <View style={styles.navRow}>
+          <BackButton onPress={() => navigation.goBack()} />
+        </View>
         <View style={styles.content}>
           <View style={styles.markWrap}>
             <PulsingMark size={96} accessibilityLabel="re-Genesis mark" />
@@ -61,6 +65,11 @@ const styles = StyleSheet.create({
     bottom: undefined,
   },
   safe: { flex: 1 },
+  navRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
   content: {
     flex: 1,
     paddingHorizontal: layout.screen,

@@ -17,7 +17,7 @@ import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { PulsingMark } from '../components/PulsingMark';
 import { useDay } from '../store/DayContext';
 
@@ -84,9 +84,9 @@ export function AccountScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <CloseButton
+          <BackButton
             onPress={() => navigation.goBack()}
-            accessibilityLabel="Close account"
+            accessibilityLabel="Go back"
           />
         </View>
 
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: layout.screen,
     paddingTop: 10,
   },

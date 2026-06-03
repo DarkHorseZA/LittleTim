@@ -9,13 +9,14 @@ import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Belief'>;
 
 export function BeliefScreen({ navigation }: Props) {
-  const { today, updateToday, settings } = useDay();
+  const { today, updateToday, addQuiltEntry, settings } = useDay();
   const belief = useMemo(
     () => beliefForDate(new Date(), settings.currentChapter),
     [settings.currentChapter]
@@ -27,6 +28,7 @@ export function BeliefScreen({ navigation }: Props) {
       beliefId: belief.id,
       beliefAcknowledged: true,
     });
+    await addQuiltEntry({ type: 'belief' });
     navigation.goBack();
   };
 
@@ -42,12 +44,12 @@ export function BeliefScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.closeRow}>
+          <BackButton onPress={() => navigation.goBack()} />
           <CloseButton
             onPress={() => navigation.navigate('Glossary')}
             icon="help-circle-outline"
             accessibilityLabel="Open glossary"
           />
-          <CloseButton onPress={() => navigation.goBack()} />
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>

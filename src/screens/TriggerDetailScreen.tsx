@@ -7,7 +7,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { findTrigger } from '../data/triggers';
 import { chapterById } from '../data/chapters';
 
@@ -32,10 +32,10 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.topRow}>
-        <CloseButton
+        <BackButton
           onPress={() => navigation.goBack()}
           variant="solid"
-          accessibilityLabel="Close gesture"
+          accessibilityLabel="Go back"
         />
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },

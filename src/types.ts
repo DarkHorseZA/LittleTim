@@ -65,6 +65,35 @@ export type FocusAreaPrompt = {
   coachingTeaser: string;
 };
 
+export type QuiltEntryType = 'ritual' | 'msg' | 'see' | 'journal' | 'belief';
+
+export type JournalStitch = {
+  id: string;               // timestamp string used as unique key
+  date: string;             // YYYY-MM-DD
+  sewedWithLove?: string;   // prompt 1 response
+  oldThreadPulled?: string; // prompt 2 response
+  savedAt: string;          // ISO timestamp
+};
+
+export type BodyZone = 'mind' | 'heart' | 'belly' | 'whole';
+
+export type ReflectionEntry = {
+  date: string;                  // YYYY-MM-DD
+  word?: string;                 // Step 1 — one word
+  aliveness?: BodyZone;          // Step 2 — where they feel most alive
+  tension?: BodyZone[];          // Step 2 — where tension sits (multi)
+  warmth?: number;               // Step 3 — 0-100
+  reflection?: string;           // Step 4 — freeform sentence
+  reflectionPrompt?: string;     // which prompt they chose
+  sharedWithAuthor?: boolean;    // opt-in anonymous sharing
+};
+
+export type QuiltEntry = {
+  date: string;           // YYYY-MM-DD
+  type: QuiltEntryType;
+  focusArea?: FocusArea;
+};
+
 export type TriggerGesture = {
   id: string;
   chapter: number; // 0 = Introduction (always unlocked), 1-9 = chapters (unlocked when settings.currentChapter >= this value)

@@ -10,9 +10,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { CompositeScreenProps } from '@react-navigation/native';
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { RootStackParamList, TabsParamList } from '../navigation/types';
+import { RootStackParamList } from '../navigation/types';
 import { colors, layout, radius, shadows } from '../theme/colors';
 import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
@@ -20,11 +18,9 @@ import { APP_NAME, ATTRIBUTION } from '../config';
 import { useDay } from '../store/DayContext';
 import { chapters } from '../data/chapters';
 import { PulsingMark } from '../components/PulsingMark';
+import { BackButton } from '../components/BackButton';
 
-type Props = CompositeScreenProps<
-  BottomTabScreenProps<TabsParamList, 'Settings'>,
-  NativeStackScreenProps<RootStackParamList>
->;
+type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
 const HOURS = [6, 7, 8, 9, 10, 12, 18, 20];
 
@@ -79,6 +75,9 @@ export function SettingsScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
+      <View style={styles.navRow}>
+        <BackButton onPress={() => navigation.navigate('Tabs', { screen: 'More' })} variant="solid" />
+      </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.topRow}>
           <Text style={text.eyebrow}>Settings</Text>
@@ -143,47 +142,16 @@ export function SettingsScreen({ navigation }: Props) {
           </View>
         </Pressable>
 
-        <View style={{ height: 14 }} />
-
-        <Pressable
-          onPress={() => {
-            nav();
-            navigation.navigate('HowToUse');
-          }}
-          accessibilityRole="button"
-          accessibilityLabel="How to use re-Genesis: the rhythm of a day in the practice"
-          style={({ pressed, focused }: any) => [
-            pressed && pressScale,
-            focused && webFocus,
-          ]}
-        >
-          <View style={styles.linkCard}>
-            <View style={styles.iconCircle}>
-              <Ionicons name="compass-outline" size={16} color={colors.clay} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.cardTitle}>How to use re-Genesis</Text>
-              <Text style={styles.linkSub}>
-                The rhythm of a day in the practice.
-              </Text>
-            </View>
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={colors.inkFaint}
-            />
-          </View>
-        </Pressable>
 
         <View style={{ height: 10 }} />
 
         <Pressable
           onPress={() => {
             nav();
-            navigation.navigate('Glossary');
+            navigation.navigate('Tracker');
           }}
           accessibilityRole="button"
-          accessibilityLabel="Open glossary of terms from the book"
+          accessibilityLabel="Open reflection"
           style={({ pressed, focused }: any) => [
             pressed && pressScale,
             focused && webFocus,
@@ -191,56 +159,12 @@ export function SettingsScreen({ navigation }: Props) {
         >
           <View style={styles.linkCard}>
             <View style={styles.iconCircle}>
-              <Ionicons
-                name="book-outline"
-                size={16}
-                color={colors.clay}
-              />
+              <Ionicons name="leaf-outline" size={16} color={colors.clay} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.cardTitle}>Glossary</Text>
+              <Text style={styles.cardTitle}>How are we sewing?</Text>
               <Text style={styles.linkSub}>
-                Words from the book, MSG, SEE, bārak, ruach, and more.
-              </Text>
-            </View>
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={colors.inkFaint}
-            />
-          </View>
-        </Pressable>
-
-        <View style={{ height: 10 }} />
-
-        <Pressable
-          onPress={() => {
-            nav();
-            navigation.navigate('Baseline', { firstRun: false });
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={
-            settings.baseline
-              ? 'Retake your wellness baseline'
-              : 'Set your wellness baseline'
-          }
-          style={({ pressed, focused }: any) => [
-            pressed && pressScale,
-            focused && webFocus,
-          ]}
-        >
-          <View style={styles.linkCard}>
-            <View style={styles.iconCircle}>
-              <Ionicons name="pulse-outline" size={16} color={colors.clay} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.cardTitle}>
-                {settings.baseline ? 'Retake baseline' : 'Set baseline'}
-              </Text>
-              <Text style={styles.linkSub}>
-                {settings.baseline
-                  ? `Captured ${settings.baseline.capturedOn}. Update it any time.`
-                  : 'Five gentle readings that mark where you start.'}
+                A moment to notice. Always optional.
               </Text>
             </View>
             <Ionicons
@@ -433,6 +357,12 @@ export function SettingsScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
+  navRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 4,
+  },
   container: { flexGrow: 1, padding: layout.screen, paddingBottom: 40 },
   topRow: {
     flexDirection: 'row',

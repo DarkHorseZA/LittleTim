@@ -18,7 +18,7 @@ import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { nav, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { CloseButton } from '../components/CloseButton';
+import { BackButton } from '../components/BackButton';
 import { PulsingMark } from '../components/PulsingMark';
 import {
   AUTHOR_NAME,
@@ -70,7 +70,7 @@ export function ConnectScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         <View style={styles.topRow}>
-          <CloseButton onPress={() => navigation.goBack()} />
+          <BackButton onPress={() => navigation.goBack()} />
         </View>
 
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: layout.screen,
     paddingTop: 10,
   },
