@@ -1,7 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import {
-  KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -96,15 +94,7 @@ export function JournalContent() {
   );
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}
-    >
-      {/*
-        Input section sits OUTSIDE the ScrollView.
-        Diagnostic confirmed: TextInputs inside a ScrollView were not
-        receiving taps on web. Outside ScrollView they work correctly.
-      */}
+    <View style={{ flex: 1 }}>
       <View style={styles.inputSection}>
         <Text style={styles.title}>Today's Stitches</Text>
         <Text style={styles.body}>
@@ -197,7 +187,7 @@ export function JournalContent() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

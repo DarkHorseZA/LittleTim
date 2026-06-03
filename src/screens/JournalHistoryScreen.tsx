@@ -29,35 +29,29 @@ export function JournalHistoryScreen({ route }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
   return (
-    <SafeAreaView style={styles.root} edges={['top']} pointerEvents="box-none">
+    <SafeAreaView style={styles.root} edges={['top']}>
       {/* Header */}
-      <View style={styles.header} pointerEvents="box-none">
+      <View style={styles.header}>
         <Text style={text.eyebrow}>Journal</Text>
         <PulsingMark size={56} accessibilityLabel="re-Genesis mark" />
       </View>
 
       {/* Segment tab bar */}
-      <View style={[styles.segment, { zIndex: 2 }]} pointerEvents="box-none">
+      <View style={styles.segment}>
         <SegmentButton
-          label="Today’s Stitches"
+          label="Today's Stitches"
           active={activeTab === 'journal'}
-          onPress={() => {
-            tap();
-            setActiveTab('journal');
-          }}
+          onPress={() => { tap(); setActiveTab('journal'); }}
         />
         <SegmentButton
           label="Your Quilt"
           active={activeTab === 'quilt'}
-          onPress={() => {
-            tap();
-            setActiveTab('quilt');
-          }}
+          onPress={() => { tap(); setActiveTab('quilt'); }}
         />
       </View>
 
-      {/* Content — rendered beneath the segment bar */}
-      <View style={[styles.content, { zIndex: 1 }]}>
+      {/* Content */}
+      <View style={styles.content}>
         {activeTab === 'journal' ? <JournalContent /> : <PatchworkQuilt />}
       </View>
     </SafeAreaView>
