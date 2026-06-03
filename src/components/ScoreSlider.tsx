@@ -42,6 +42,9 @@ export function ScoreSlider({
         maximumTrackTintColor={colors.line}
         thumbTintColor={tint}
         style={styles.slider}
+        accessibilityLabel={`${label} score`}
+        accessibilityHint={`Adjust to rate your ${label.toLowerCase()} today from 1 to 10`}
+        accessibilityValue={{ min: 1, max: 10, now: value }}
       />
     </View>
   );

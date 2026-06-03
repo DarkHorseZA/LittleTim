@@ -3,10 +3,9 @@ import { FocusArea, PracticeKind } from '../types';
 
 export type TabsParamList = {
   Today: undefined;
-  Practice: { initialKind?: PracticeKind } | undefined;
-  Journal: undefined;
-  History: undefined;
-  Settings: undefined;
+  Practice: { initialKind?: PracticeKind | 'WHEN' } | undefined;
+  Journal: { initialTab?: 'journal' | 'quilt' } | undefined;
+  More: undefined;
 };
 
 export type RootStackParamList = {
@@ -16,9 +15,13 @@ export type RootStackParamList = {
   Tabs: NavigatorScreenParams<TabsParamList>;
   Belief: undefined;
   PracticeDetail: { practiceId: string };
+  TriggerDetail: { triggerId: string };
   Tracker: undefined;
   FocusArea: { focusArea: FocusArea };
   Account: undefined;
   MorningRitual: undefined;
   Glossary: undefined;
+  Connect: undefined;
+  Settings: undefined;
+  NotFound: undefined;
 };

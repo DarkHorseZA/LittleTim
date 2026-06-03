@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Alert,
   Linking,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,6 +16,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { BackButton } from '../components/BackButton';
 import { focusAreas } from '../data/focusAreas';
 import { COACHING_URL, hasCoachingUrl } from '../config';
 import { useDay } from '../store/DayContext';
@@ -65,16 +65,13 @@ export function FocusAreaScreen({ navigation, route }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <Pressable
-            hitSlop={16}
-            onPress={() => navigation.popToTop()}
-            style={styles.closeBtn}
-          >
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
+          <BackButton
+            onPress={() => navigation.goBack()}
+            accessibilityLabel="Go back"
+          />
         </View>
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={[styles.emojiCircle, { backgroundColor: tintSoft }]}>
             <Text style={styles.emoji}>{fa.emoji}</Text>
           </View>
@@ -89,10 +86,12 @@ export function FocusAreaScreen({ navigation, route }: Props) {
             <TextInput
               value={reflection}
               onChangeText={setReflection}
-              placeholder="Let the first honest sentence land here…"
+              placeholder="Let the first honest sentence land here\u2026"
               placeholderTextColor={colors.inkFaint}
               multiline
               style={styles.input}
+              accessibilityLabel="Reflection, private"
+              accessibilityHint={`Write about ${fa.label.toLowerCase()}`}
             />
           </View>
 
@@ -134,19 +133,11 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
     paddingTop: 10,
   },
-  closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  container: { padding: 28, paddingTop: 12, paddingBottom: 40 },
+  container: { flexGrow: 1, padding: 28, paddingTop: 12, paddingBottom: 40 },
   emojiCircle: {
     width: 80,
     height: 80,
@@ -161,7 +152,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontFamily: fonts.sansBold,
     fontSize: 11,
-    letterSpacing: 2.4,
+    letterSpacing: 2.2,
     textTransform: 'uppercase',
     marginBottom: 12,
   },

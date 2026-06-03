@@ -14,9 +14,11 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
+import { nav, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
-import { StreakStrip } from '../components/StreakStrip';
+import { PatchworkQuilt } from '../components/PatchworkQuilt';
+import { PulsingMark } from '../components/PulsingMark';
 import { TourCard } from '../components/TourCard';
 import { APP_NAME_DISPLAY_CAPS } from '../config';
 import { beliefForDate } from '../data/beliefs';
@@ -36,8 +38,9 @@ function prettyDate(d: Date): string {
   });
 }
 
+
 export function HomeScreen({ navigation }: Props) {
-  const { today, streak, entries, settings, updateSettings } = useDay();
+  const { today, settings, updateSettings } = useDay();
   const now = useMemo(() => new Date(), []);
   const belief = useMemo(
     () => beliefForDate(now, settings.currentChapter),
@@ -57,7 +60,7 @@ export function HomeScreen({ navigation }: Props) {
   const msgDone = today.msgDone;
   const seeDone = today.seeDone;
   const ritualDone = !!today.morningRitualDone;
-  const trackerDone = !!today.tracker;
+  const trackerDoneToday = settings.lastCheckInDate === todayKey(now);
 
   return (
     <View style={styles.root}>
@@ -68,11 +71,23 @@ export function HomeScreen({ navigation }: Props) {
         style={styles.hero}
       />
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.topRow}>
             <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
-            <Pressable onPress={() => navigation.navigate('Belief')}>
-              <Ionicons name="sparkles-outline" size={20} color={colors.clayDeep} />
+            <Pressable
+              onPress={() => {
+                nav();
+                navigation.navigate('Belief');
+              }}
+              hitSlop={12}
+              accessibilityRole="button"
+              accessibilityLabel="Open today's belief reminder"
+              style={({ pressed, focused }: any) => [
+                pressed && pressScale,
+                focused && webFocus,
+              ]}
+            >
+              <PulsingMark size={56} accessibilityLabel="re-Genesis mark, today's belief" />
             </Pressable>
           </View>
 
@@ -81,6 +96,9 @@ export function HomeScreen({ navigation }: Props) {
             {firstName ? `, ${firstName}` : ''}
           </Text>
           <Text style={styles.date}>{prettyDate(now)}</Text>
+          <Text style={styles.quiltLine}>
+            {'\u201C'}One stitch today. Small stitches make the quilt.{'\u201D'}
+          </Text>
 
           <TourCard
             storageKey="today"
@@ -92,7 +110,18 @@ export function HomeScreen({ navigation }: Props) {
             ]}
           />
 
-          <Pressable onPress={() => navigation.navigate('MorningRitual')}>
+          <Pressable
+            onPress={() => {
+              nav();
+              navigation.navigate('MorningRitual');
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={ritualDone ? 'Practice the morning ritual again' : 'Begin the morning ritual, the Five Gestures'}
+            style={({ pressed, focused }: any) => [
+              pressed && pressScale,
+              focused && webFocus,
+            ]}
+          >
             <LinearGradient
               colors={ritualDone ? gradients.sage : gradients.clay}
               start={{ x: 0, y: 0 }}
@@ -107,7 +136,7 @@ export function HomeScreen({ navigation }: Props) {
                   <Ionicons
                     name={ritualDone ? 'checkmark-circle' : 'sunny'}
                     size={18}
-                    color="#FFFFFF"
+                    color={colors.white}
                   />
                 </View>
               </View>
@@ -130,32 +159,27 @@ export function HomeScreen({ navigation }: Props) {
 
           <View style={{ height: 16 }} />
 
-          <View style={styles.streakCard}>
-            <View style={styles.streakTop}>
-              <View>
-                <Text style={text.eyebrow}>Current streak</Text>
-                <View style={styles.streakNumRow}>
-                  <Text style={text.number}>{streak}</Text>
-                  <Text style={styles.streakUnit}>
-                    {streak === 1 ? 'day' : 'days'}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.flameWrap}>
-                <Ionicons
-                  name="flame"
-                  size={26}
-                  color={streak > 0 ? colors.clay : colors.inkFaint}
-                />
-              </View>
-            </View>
-            <StreakStrip entries={entries} />
-            <Text style={styles.streakHint}>
-              A day counts when you complete the ritual, MSG, or SEE.
+          {/* Patchwork Quilt — compact (4-week grid, stats, tap-to-detail) */}
+          <View style={styles.quiltSection}>
+            <Text style={styles.quiltOverline}>YOUR PATCHWORK QUILT</Text>
+            <Text style={styles.quiltTagline}>
+              {'“'}Stitch by little stitch, it becomes beautiful.{'”'}
             </Text>
           </View>
+          <PatchworkQuilt size="compact" />
 
-          <Pressable onPress={() => navigation.navigate('Belief')}>
+          <Pressable
+            onPress={() => {
+              nav();
+              navigation.navigate('Belief');
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={`Open belief reminder: ${belief.statement}`}
+            style={({ pressed, focused }: any) => [
+              pressed && pressScale,
+              focused && webFocus,
+            ]}
+          >
             <LinearGradient
               colors={gradients.heart}
               start={{ x: 0, y: 0 }}
@@ -177,7 +201,7 @@ export function HomeScreen({ navigation }: Props) {
 
           <View style={styles.sectionHead}>
             <Text style={text.eyebrow}>Go deeper</Text>
-            <Text style={styles.sectionTitle}>Two soul technologies</Text>
+            <Text style={styles.sectionTitle}>Three soul technologies</Text>
             <Text style={styles.sectionBody}>
               Small and daily beats big and rare.
             </Text>
@@ -202,24 +226,80 @@ export function HomeScreen({ navigation }: Props) {
               navigation.navigate('Practice', { initialKind: 'SEE' })
             }
           />
+          <View style={{ height: 12 }} />
+          <PracticeTile
+            kind="WHEN"
+            title="For the moment"
+            body="Trigger-specific gestures. Unlock as you move through the book."
+            done={false}
+            onPress={() =>
+              navigation.navigate('Practice', { initialKind: 'WHEN' })
+            }
+          />
 
           <View style={styles.sectionHead}>
-            <Text style={text.eyebrow}>Wellness tracker</Text>
+            <Text style={text.eyebrow}>How are we sewing?</Text>
             <Text style={styles.sectionTitle}>
-              {trackerDone ? 'Checked in today' : 'How are you, really?'}
+              {trackerDoneToday
+                ? 'Reflection complete'
+                : 'A moment to notice'}
             </Text>
             <Text style={styles.sectionBody}>
-              {trackerDone
-                ? 'You can update your check-in any time.'
-                : 'Five quick sliders, then a reflection prompt.'}
+              {trackerDoneToday
+                ? 'You\u2019ve already reflected today. Come back tomorrow, the thread moves slowly.'
+                : 'Not a survey. Just a gentle pause, whenever you\u2019re ready.'}
             </Text>
           </View>
           <Button
-            title={trackerDone ? 'Update today’s check-in' : 'Start check-in'}
+            title={
+              trackerDoneToday
+                ? 'See today\u2019s reflection'
+                : 'A moment to notice'
+            }
             onPress={() => navigation.navigate('Tracker')}
             size="lg"
             trailingIcon="arrow-forward"
           />
+
+          <View style={styles.sectionHead}>
+            <Text style={text.eyebrow}>Connect</Text>
+            <Text style={styles.sectionTitle}>Stay with the thread</Text>
+            <Text style={styles.sectionBody}>
+              Work with T, find the book, or hear when the next one lands.
+            </Text>
+          </View>
+          <Pressable
+            onPress={() => {
+              nav();
+              navigation.navigate('Connect');
+            }}
+            style={({ pressed, focused }: any) => [
+              styles.connectCard,
+              pressed && pressScale,
+              focused && webFocus,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Connect with T: sessions, talks, reader circle, and the book"
+          >
+            <View style={styles.connectIcon}>
+              <Ionicons
+                name="heart-circle-outline"
+                size={22}
+                color={colors.clay}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.connectTitle}>Connect with T</Text>
+              <Text style={styles.connectBody}>
+                Sessions, talks, reader circle, the book in every format.
+              </Text>
+            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={20}
+              color={colors.inkFaint}
+            />
+          </Pressable>
 
           <View style={{ height: 40 }} />
         </ScrollView>
@@ -244,14 +324,26 @@ function PracticeTile({
   done,
   onPress,
 }: {
-  kind: 'MSG' | 'SEE';
+  kind: 'MSG' | 'SEE' | 'WHEN';
   title: string;
   body: string;
   done: boolean;
   onPress: () => void;
 }) {
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => pressed && { opacity: 0.9 }}>
+    <Pressable
+      onPress={() => {
+        nav();
+        onPress();
+      }}
+      style={({ pressed, focused }: any) => [
+        pressed && pressScale,
+        focused && webFocus,
+      ]}
+      accessibilityRole="button"
+      accessibilityLabel={`${kind}: ${title}. ${done ? 'Complete for today.' : 'Tap to begin.'}`}
+      accessibilityHint={`${body}`}
+    >
       <View
         style={[
           styles.tile,
@@ -299,6 +391,35 @@ function PracticeTile({
 }
 
 const styles = StyleSheet.create({
+  connectCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 16,
+    ...shadows.sm,
+  },
+  connectIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.clayWash,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  connectTitle: {
+    fontFamily: fonts.serifBold,
+    fontSize: 17,
+    color: colors.ink,
+  },
+  connectBody: {
+    fontFamily: fonts.sans,
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.inkSoft,
+    marginTop: 2,
+  },
   root: {
     flex: 1,
     backgroundColor: colors.bg,
@@ -309,6 +430,7 @@ const styles = StyleSheet.create({
     bottom: undefined,
   },
   container: {
+    flexGrow: 1,
     padding: 20,
     paddingBottom: 40,
   },
@@ -334,7 +456,14 @@ const styles = StyleSheet.create({
     fontSize: 34,
     lineHeight: 40,
     marginTop: 2,
-    marginBottom: 24,
+    marginBottom: 10,
+  },
+  quiltLine: {
+    fontFamily: fonts.serifItalic,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.inkSoft,
+    marginBottom: 22,
   },
   ritualHero: {
     borderRadius: radius.xl,
@@ -351,14 +480,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansBold,
     fontSize: 11,
     letterSpacing: 2.2,
-    color: 'rgba(255,255,255,0.85)',
+    color: colors.onClaySoft,
     textTransform: 'uppercase',
   },
   ritualBadge: {
     width: 34,
     height: 34,
     borderRadius: 17,
-    backgroundColor: 'rgba(255,255,255,0.22)',
+    backgroundColor: colors.onClayChip,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -366,14 +495,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.serifBold,
     fontSize: 30,
     lineHeight: 36,
-    color: '#FFFFFF',
+    color: colors.white,
     marginTop: 12,
   },
   ritualBody: {
     fontFamily: fonts.sans,
     fontSize: 14,
     lineHeight: 20,
-    color: 'rgba(255,255,255,0.92)',
+    color: colors.onClayStrong,
     marginTop: 8,
   },
   ritualCta: {
@@ -385,46 +514,26 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansBold,
     fontSize: 13,
     letterSpacing: 1.2,
-    color: '#FFFFFF',
+    color: colors.white,
     marginRight: 6,
     textTransform: 'uppercase',
   },
-  streakCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.xl,
-    padding: 22,
-    ...shadows.md,
-    marginBottom: 20,
+  quiltSection: {
+    marginBottom: 12,
   },
-  streakTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+  quiltOverline: {
+    fontFamily: fonts.sansBold,
+    fontSize: 10,
+    letterSpacing: 2.2,
+    color: colors.inkFaint,
+    textTransform: 'uppercase',
+    marginBottom: 4,
   },
-  streakNumRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 4,
-  },
-  streakUnit: {
-    fontFamily: fonts.sansMed,
+  quiltTagline: {
+    fontFamily: fonts.serifItalic,
     fontSize: 14,
+    lineHeight: 20,
     color: colors.inkSoft,
-    marginLeft: 8,
-    marginBottom: 10,
-    letterSpacing: 0.5,
-  },
-  flameWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: colors.clayWash,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  streakHint: {
-    ...text.caption,
-    marginTop: 12,
   },
   beliefCard: {
     borderRadius: radius.lg,
@@ -452,8 +561,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   sectionHead: {
-    marginTop: 8,
-    marginBottom: 12,
+    marginTop: 32,
+    marginBottom: 16,
   },
   sectionTitle: {
     ...text.h2,
@@ -487,12 +596,12 @@ const styles = StyleSheet.create({
   },
   kindBadgeText: {
     fontFamily: fonts.sansBold,
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 11,
     letterSpacing: 1.5,
   },
   kindBadgeTextDone: {
-    color: '#FFFFFF',
+    color: colors.white,
   },
   tileCheck: {
     width: 28,

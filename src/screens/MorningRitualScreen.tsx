@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Easing,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,14 +10,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
+import { BackButton } from '../components/BackButton';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MorningRitual'>;
 
@@ -85,7 +85,8 @@ const STEPS: RitualStep[] = [
 export function MorningRitualScreen({ navigation }: Props) {
   const [idx, setIdx] = useState(0);
   const [done, setDone] = useState(false);
-  const { updateToday, settings } = useDay();
+  const { updateToday, addQuiltEntry, settings } = useDay();
+  const reducedMotion = useReducedMotion();
   const step = STEPS[idx];
 
   const belief = useMemo(
@@ -97,20 +98,26 @@ export function MorningRitualScreen({ navigation }: Props) {
   const pulse = useRef(new Animated.Value(0)).current;
   const breath = useRef(new Animated.Value(0)).current;
 
-  // Step entrance fade
+  // Step entrance fade. Shorter under reduced motion, but never snapped,
+  // so the text still feels intentional when you land on a step.
   useEffect(() => {
     fade.setValue(0);
     Animated.timing(fade, {
       toValue: 1,
-      duration: 500,
+      duration: reducedMotion ? 180 : 500,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
-  }, [idx, fade]);
+  }, [idx, fade, reducedMotion]);
 
-  // Gentle icon pulse (all steps except breathe, which has its own cycle)
+  // Gentle icon pulse (all steps except breathe, which has its own cycle).
+  // Skipped entirely under reduced motion.
   useEffect(() => {
     if (step.id === 'breathe') return;
+    if (reducedMotion) {
+      pulse.setValue(0);
+      return;
+    }
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, {
@@ -129,11 +136,16 @@ export function MorningRitualScreen({ navigation }: Props) {
     );
     loop.start();
     return () => loop.stop();
-  }, [step.id, pulse]);
+  }, [step.id, pulse, reducedMotion]);
 
-  // Breath pacer (4s inhale / 4s exhale)
+  // Breath pacer (4s inhale / 4s exhale). Reduced motion parks it mid-breath
+  // so the visual stays, but nothing moves.
   useEffect(() => {
     if (step.id !== 'breathe') return;
+    if (reducedMotion) {
+      breath.setValue(0.5);
+      return;
+    }
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(breath, {
@@ -152,7 +164,7 @@ export function MorningRitualScreen({ navigation }: Props) {
     );
     loop.start();
     return () => loop.stop();
-  }, [step.id, breath]);
+  }, [step.id, breath, reducedMotion]);
 
   const pulseScale = pulse.interpolate({
     inputRange: [0, 1],
@@ -177,16 +189,13 @@ export function MorningRitualScreen({ navigation }: Props) {
   });
 
   const next = async () => {
-    try {
-      await Haptics.selectionAsync();
-    } catch {}
+    // Haptic is fired by the Button (selection for step advance, success for
+    // completion). No manual call needed here.
     if (idx < STEPS.length - 1) {
       setIdx(idx + 1);
     } else {
-      try {
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      } catch {}
       await updateToday({ morningRitualDone: true });
+      await addQuiltEntry({ type: 'ritual' });
       setDone(true);
     }
   };
@@ -207,7 +216,8 @@ export function MorningRitualScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topRow}>
-          <View style={styles.progressDots}>
+          <BackButton onPress={close} accessibilityLabel="Exit ritual" />
+          <View style={[styles.progressDots, { flex: 1, justifyContent: 'center' }]}>
             {STEPS.map((_, i) => (
               <View
                 key={i}
@@ -219,12 +229,10 @@ export function MorningRitualScreen({ navigation }: Props) {
               />
             ))}
           </View>
-          <Pressable hitSlop={16} onPress={close} style={styles.closeBtn}>
-            <Ionicons name="close" size={22} color={colors.ink} />
-          </Pressable>
         </View>
 
         <ScrollView
+          style={{ flex: 1 }}
           contentContainerStyle={styles.container}
           showsVerticalScrollIndicator={false}
         >
@@ -298,7 +306,7 @@ export function MorningRitualScreen({ navigation }: Props) {
               <View style={styles.beliefPanel}>
                 <Text style={styles.beliefLabel}>Today's belief</Text>
                 <Text style={styles.beliefStatement}>
-                  "{belief.statement}"
+                  {`\u201C${belief.statement}\u201D`}
                 </Text>
               </View>
             ) : null}
@@ -311,6 +319,7 @@ export function MorningRitualScreen({ navigation }: Props) {
             trailingIcon={idx < STEPS.length - 1 ? 'arrow-forward' : 'checkmark'}
             onPress={next}
             size="lg"
+            haptic={idx < STEPS.length - 1 ? 'selection' : 'success'}
           />
         </View>
       </SafeAreaView>
@@ -325,17 +334,24 @@ function CompletionView({
   onClose: () => void;
   beliefStatement: string;
 }) {
+  const reducedMotion = useReducedMotion();
   const glow = useRef(new Animated.Value(0)).current;
   const fade = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(fade, {
       toValue: 1,
-      duration: 700,
+      duration: reducedMotion ? 200 : 700,
       easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
     }).start();
-    Animated.loop(
+
+    if (reducedMotion) {
+      glow.setValue(0.6);
+      return;
+    }
+
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(glow, {
           toValue: 1,
@@ -350,8 +366,10 @@ function CompletionView({
           useNativeDriver: true,
         }),
       ])
-    ).start();
-  }, [glow, fade]);
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [glow, fade, reducedMotion]);
 
   const glowScale = glow.interpolate({
     inputRange: [0, 1],
@@ -395,7 +413,7 @@ function CompletionView({
           <Text style={styles.completionEyebrow}>Sewn</Text>
           <Text style={styles.completionTitle}>One more stitch.</Text>
           <Text style={styles.completionBody}>
-            "{beliefStatement}"
+            {`\u201C${beliefStatement}\u201D`}
           </Text>
           <Text style={styles.completionSub}>
             Small stitches make the quilt.
@@ -439,15 +457,8 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: colors.line,
   },
-  closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   container: {
+    flexGrow: 1,
     padding: 28,
     paddingBottom: 24,
     alignItems: 'center',
@@ -455,7 +466,7 @@ const styles = StyleSheet.create({
   stepLabel: {
     fontFamily: fonts.sansBold,
     fontSize: 11,
-    letterSpacing: 2.4,
+    letterSpacing: 2.2,
     textTransform: 'uppercase',
     marginBottom: 22,
   },

@@ -1,0 +1,98 @@
+name: Deploy web (V1 root + V2 preview)
+
+# Builds both branches and deploys a combined Pages artifact:
+#   https://darkhorseza.github.io/LittleTim/        -> V1 (live, claude/wellness-tracking-app-qpuqu)
+#   https://darkhorseza.github.io/LittleTim/v2/     -> V2 preview (this branch)
+#
+# Triggers on push to either branch. If only V1 is pushed, the original
+# deploy-web.yml still runs and publishes just V1 at root. If V2 is pushed,
+# this combined workflow rebuilds both and republishes the preview at /v2/.
+
+on:
+  push:
+    branches:
+      - v2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout V1 branch (live)
+        uses: actions/checkout@v4
+        with:
+          ref: claude/wellness-tracking-app-qpuqu
+          path: v1
+
+      - name: Checkout V2 branch (this)
+        uses: actions/checkout@v4
+        with:
+          ref: v2
+          path: v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install V1 deps
+        working-directory: v1
+        run: npm install --no-audit --no-fund
+
+      - name: Build V1 web (baseUrl /LittleTim)
+        working-directory: v1
+        run: |
+          npx expo export --platform web
+          cp dist/index.html dist/404.html
+
+      - name: Rewrite V2 baseUrl to /LittleTim/v2
+        working-directory: v2
+        run: |
+          node -e "const fs=require('fs'); const j=JSON.parse(fs.readFileSync('./app.json','utf8')); j.expo.experiments=j.expo.experiments||{}; j.expo.experiments.baseUrl='/LittleTim/v2'; fs.writeFileSync('./app.json', JSON.stringify(j,null,2));"
+
+      - name: Install V2 deps
+        working-directory: v2
+        run: npm install --no-audit --no-fund
+
+      - name: Typecheck V2 (tsc --noEmit)
+        working-directory: v2
+        run: npx tsc --noEmit
+
+      - name: Build V2 web (baseUrl /LittleTim/v2)
+        working-directory: v2
+        run: |
+          npx expo export --platform web
+          cp dist/index.html dist/404.html
+
+      - name: Merge V1 at root, V2 at /v2
+        run: |
+          mkdir -p combined
+          cp -r v1/dist/. combined/
+          mkdir -p combined/v2
+          cp -r v2/dist/. combined/v2/
+          ls -la combined
+          ls -la combined/v2
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: combined
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -9,7 +9,10 @@ export const colors = {
   // Ink
   ink: '#211A13',
   inkSoft: '#5E554B',
-  inkFaint: '#9A9086',
+  // inkFaint meets WCAG AA (4.5:1) on bg `#F5EFE6`; used for captions, meta, subs.
+  inkFaint: '#6A6058',
+  // inkHush is decorative-only (legends, dots, borders). Not for readable text.
+  inkHush: '#9A9086',
   line: '#E7DCC9',
   lineSoft: '#F1E8D9',
 
@@ -35,9 +38,39 @@ export const colors = {
   relationships: '#6E7FAE',
   relationshipsSoft: '#D7DEEB',
 
+  // Heatmap intensities (History grid). 5 steps, on-brand clay ramp.
+  heat0: '#F1E8D9', // same as lineSoft, for "no activity"
+  heat1: '#F4D6C2',
+  heat2: '#EDBB99',
+  heat3: '#D99C6E',
+  heat4: '#B7572E', // same as clay, full intensity
+
+  // Quilt patch ramp (q0 = unsewn, q4 = richly sewn)
+  q0: '#e8ddc9',
+  q1: '#ecceaa',
+  q2: '#ddb083',
+  q3: '#cb8a56',
+  q4: '#b0542f',
+  thread: '#cdbfa6', // dashed border on unsewn patches
+
   // Misc
   amber: '#E0B872',
   danger: '#B5524C',
+
+  // Semantic neutrals for on-brand foregrounds. Use `onClay` for text/icons
+  // sitting on clay or gradient clay buttons. `white` is the universal alias
+  // for pure white so we never hardcode #FFFFFF in components.
+  white: '#FFFFFF',
+  onClay: '#FFFFFF',
+
+  // Translucent surface tokens. Use these instead of raw rgba() literals so
+  // the alpha ramp is consistent across the app and survives a dark-mode pass.
+  // `glass` sits over dawn gradients (close buttons on modal heroes).
+  // `onClay*` variants sit on clay gradients (Today hero chips, subhead text).
+  glass: 'rgba(255,255,255,0.70)',
+  onClaySoft: 'rgba(255,255,255,0.85)',
+  onClayStrong: 'rgba(255,255,255,0.92)',
+  onClayChip: 'rgba(255,255,255,0.22)',
 };
 
 export type AreaColor =
@@ -55,7 +88,26 @@ export const radius = {
   pill: 999,
 };
 
+// 4pt spacing function (existing).
 export const spacing = (n: number) => n * 4;
+
+// Layout tokens. Keep screen padding consistent across every SafeAreaView container.
+export const layout = {
+  screen: 20, // horizontal/vertical padding on the scroll container
+  screenTight: 16, // for dense pages
+  screenLoose: 24, // for editorial / modal hero blocks
+  maxWidth: 520, // cap content width on desktop/tablet web
+};
+
+// Icon circle sizes (avatar, list-item icon, hero icon, etc.).
+// Use these any time you draw a round icon-in-a-disc.
+export const iconSize = {
+  xs: 24,
+  sm: 30,
+  md: 40,
+  lg: 52,
+  xl: 88,
+};
 
 export const shadows = {
   sm: {

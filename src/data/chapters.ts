@@ -73,7 +73,7 @@ export const chapters: ChapterInfo[] = [
     id: 9,
     title: 'You Are Not Alone',
     shortTitle: 'Ch. 9',
-    eyebrow: 'The Divine Matrix',
+    eyebrow: 'The Divine Matrix is Someone',
     part: 'Two',
   },
 ];
