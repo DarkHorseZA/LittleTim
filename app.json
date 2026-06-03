@@ -25,6 +25,9 @@
     },
     "experiments": {
       "baseUrl": "/LittleTim"
-    }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }
