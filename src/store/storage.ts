@@ -23,6 +23,8 @@ export type Settings = {
   lastCheckInDate?: string; // YYYY-MM-DD of most recent tracker completion
   notifyOnNewBook?: boolean; // user opted in for future book announcements
   hasSeenNewBookPrompt?: boolean; // dismissed the "new book" card at least once
+  registeredEmail?: string; // set once the reader registers on first open
+  registeredAt?: string; // ISO timestamp of registration
 };
 
 const defaultSettings: Settings = {

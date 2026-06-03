@@ -17,6 +17,11 @@ export const APP_NAME = 're-Genesis';
 export const APP_NAME_DISPLAY_CAPS = 'RE-GENESIS';
 export const APP_TAGLINE = 'Unravel. Resew. Live.';
 
+// The live web address of the app. Used for the QR code printed in the book
+// and for embedding on an author website.
+export const APP_URL = 'https://darkhorseza.github.io/LittleTim/';
+
+// Book & author attribution
 export const BOOK_TITLE = 're-Genesis';
 export const AUTHOR_NAME = 'Theunis Pienaar';
 export const AUTHOR_SHORT = 'T';
