@@ -28,18 +28,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout V1 branch (live)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: claude/wellness-tracking-app-qpuqu
           path: v1
 
       - name: Checkout V2 branch (this)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: v2
           path: v2
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
 
