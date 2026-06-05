@@ -19,6 +19,7 @@ import { useDay } from '../store/DayContext';
 import { PulsingMark } from '../components/PulsingMark';
 import { BackButton } from '../components/BackButton';
 import { ChapterPicker } from '../components/ChapterPicker';
+import { toast } from '../components/Toast';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -36,6 +37,14 @@ export function SettingsScreen({ navigation }: Props) {
   const { settings, updateSettings } = useDay();
   const profile = settings.profile ?? {};
   const signedIn = !!profile.displayName;
+
+  const handleCompleteBook = () => {
+    updateSettings({ bookCompleted: true });
+    toast(
+      'Lovely. The check-in won’t appear on open anymore. You can still pick a chapter here anytime.',
+      'success'
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -156,6 +165,9 @@ export function SettingsScreen({ navigation }: Props) {
           <ChapterPicker
             value={settings.currentChapter}
             onChange={(id) => updateSettings({ currentChapter: id })}
+            bookCompleted={!!settings.bookCompleted}
+            showCompletedOption
+            onCompleteBook={handleCompleteBook}
           />
         </View>
 

@@ -13,14 +13,28 @@ export function ChapterPicker({
   value,
   onChange,
   includeAuto = true,
+  bookCompleted = false,
+  showCompletedOption = false,
+  onCompleteBook,
 }: {
   value: number | undefined;
   onChange: (id: number | undefined) => void;
   includeAuto?: boolean;
+  // When true, the chapter chips read as unselected and the "I've completed the
+  // book" option is the active selection instead.
+  bookCompleted?: boolean;
+  // Render the "I've completed the book" option at the end of the selector.
+  showCompletedOption?: boolean;
+  onCompleteBook?: () => void;
 }) {
   const partOne = chapters.filter((ch) => ch.part === 'One');
   const partTwo = chapters.filter((ch) => ch.part === 'Two');
   const topLevel = chapters.filter((ch) => ch.part === undefined);
+
+  // While the book is marked complete, no chapter chip shows as selected, the
+  // completed option carries the active state.
+  const autoSelected = !bookCompleted && value === undefined;
+  const chapterSelected = (id: number) => !bookCompleted && value === id;
 
   return (
     <View>
@@ -28,7 +42,7 @@ export function ChapterPicker({
         {includeAuto && (
           <Chip
             label="Auto"
-            selected={value === undefined}
+            selected={autoSelected}
             onPress={() => onChange(undefined)}
             accessibilityLabel="Auto chapter, rotate through all chapters"
           />
@@ -37,7 +51,7 @@ export function ChapterPicker({
           <Chip
             key={ch.id}
             label={ch.shortTitle}
-            selected={value === ch.id}
+            selected={chapterSelected(ch.id)}
             onPress={() => onChange(ch.id)}
             accessibilityLabel={`Chapter: ${ch.shortTitle}`}
           />
@@ -50,7 +64,7 @@ export function ChapterPicker({
           <Chip
             key={ch.id}
             label={ch.shortTitle}
-            selected={value === ch.id}
+            selected={chapterSelected(ch.id)}
             onPress={() => onChange(ch.id)}
             accessibilityLabel={`Chapter: ${ch.shortTitle}`}
           />
@@ -63,12 +77,23 @@ export function ChapterPicker({
           <Chip
             key={ch.id}
             label={ch.shortTitle}
-            selected={value === ch.id}
+            selected={chapterSelected(ch.id)}
             onPress={() => onChange(ch.id)}
             accessibilityLabel={`Chapter: ${ch.shortTitle}`}
           />
         ))}
       </View>
+
+      {showCompletedOption && (
+        <View style={[styles.chapters, styles.completedRow]}>
+          <Chip
+            label={'I’ve completed the book'}
+            selected={!!bookCompleted}
+            onPress={() => onCompleteBook?.()}
+            accessibilityLabel="I've completed the book"
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -111,6 +136,7 @@ function Chip({
 
 const styles = StyleSheet.create({
   chapters: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  completedRow: { marginTop: 16 },
   partLabel: {
     ...text.eyebrow,
     marginTop: 14,

@@ -67,6 +67,10 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
 
   const updateToday = useCallback(
     async (patch: Partial<DailyEntry>) => {
+      // Never persist before the initial load has hydrated state, otherwise a
+      // mount-time write (e.g. on a cold-start deep link) would overwrite the
+      // stored entry with near-initial defaults.
+      if (!ready) return;
       const next = { ...today, ...patch, date: todayKey() };
       try {
         await upsertEntry(next);
@@ -76,11 +80,15 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
         toast("Couldn't save your entry. Your device storage may be full.", 'error');
       }
     },
-    [today]
+    [today, ready]
   );
 
   const updateSettings = useCallback(
     async (patch: Partial<Settings>) => {
+      // Hydration guard: do not write settings until the initial load has run.
+      // This prevents a cold-start mount-time write from clobbering the stored
+      // settings (chapter, onboarding flags, registration) with defaults.
+      if (!ready) return;
       const next = { ...settings, ...patch };
       try {
         await saveSettings(next);
@@ -89,11 +97,12 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
         toast("Couldn't save your settings. Your device storage may be full.", 'error');
       }
     },
-    [settings]
+    [settings, ready]
   );
 
   const addQuiltEntry = useCallback(
     async (entry: Omit<QuiltEntry, 'date'>) => {
+      if (!ready) return;
       const full: QuiltEntry = { date: todayKey(), ...entry };
       try {
         const next = await addQuiltEntryStorage(full);
@@ -102,7 +111,7 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
         toast("Couldn't save your stitch. Your device storage may be full.", 'error');
       }
     },
-    []
+    [ready]
   );
 
   const value = useMemo<DayContextValue>(

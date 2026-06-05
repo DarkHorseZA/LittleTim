@@ -40,7 +40,7 @@ function prettyDate(d: Date): string {
 
 
 export function HomeScreen({ navigation }: Props) {
-  const { today, settings, updateSettings } = useDay();
+  const { ready, today, settings, updateSettings } = useDay();
   const now = useMemo(() => new Date(), []);
   const belief = useMemo(
     () => beliefForDate(now, settings.currentChapter),
@@ -49,13 +49,16 @@ export function HomeScreen({ navigation }: Props) {
   const firstName = (settings.profile?.displayName ?? '').split(' ')[0];
 
   useEffect(() => {
+    // Wait for the initial load to hydrate before reading/writing settings, so a
+    // cold-start mount here cannot persist defaults over the stored values.
+    if (!ready) return;
     const key = todayKey(now);
     if (settings.lastBeliefSeenOn !== key) {
       updateSettings({ lastBeliefSeenOn: key });
       const t = setTimeout(() => navigation.navigate('Belief'), 320);
       return () => clearTimeout(t);
     }
-  }, [navigation, settings.lastBeliefSeenOn, now, updateSettings]);
+  }, [ready, navigation, settings.lastBeliefSeenOn, now, updateSettings]);
 
   const msgDone = today.msgDone;
   const seeDone = today.seeDone;
