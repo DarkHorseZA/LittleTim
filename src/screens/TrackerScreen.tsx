@@ -32,6 +32,7 @@ import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { BackButton } from '../components/BackButton';
 import { PulsingMark } from '../components/PulsingMark';
+import { LegsIcon } from '../components/LegsIcon';
 import { BodyZone, ReflectionEntry } from '../types';
 import {
   getTodayReflection,
@@ -46,11 +47,18 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Tracker'>;
 
 const COOL_COLOR = '#8aa0b0';
 
-const BODY_ZONES: { key: BodyZone; label: string; ionicon: keyof typeof Ionicons.glyphMap }[] = [
-  { key: 'mind',  label: 'Head',       ionicon: 'happy-outline'     },
-  { key: 'heart', label: 'Heart',      ionicon: 'heart-outline'     },
-  { key: 'belly', label: 'Solar plexus', ionicon: 'ellipse-outline'   },
-  { key: 'whole', label: 'Legs',       ionicon: 'body-outline'      },
+type ZoneDef = {
+  key: BodyZone;
+  label: string;
+  ionicon?: keyof typeof Ionicons.glyphMap;
+  legs?: boolean; // custom SVG pair-of-legs icon
+};
+
+const BODY_ZONES: ZoneDef[] = [
+  { key: 'mind',  label: 'Head',         ionicon: 'happy-outline'   },
+  { key: 'heart', label: 'Heart',        ionicon: 'heart-outline'   },
+  { key: 'belly', label: 'Solar plexus', ionicon: 'ellipse-outline' },
+  { key: 'whole', label: 'Legs',         legs: true                 },
 ];
 
 const PROMPTS = [
@@ -210,7 +218,7 @@ function ZoneButton({
   variant,
   onPress,
 }: {
-  zone: { key: BodyZone; label: string; ionicon: keyof typeof Ionicons.glyphMap };
+  zone: ZoneDef;
   selected: boolean;
   variant: 'aliveness' | 'tension';
   onPress: () => void;
@@ -235,7 +243,11 @@ function ZoneButton({
         focused && webFocus,
       ]}
     >
-      <Ionicons name={zone.ionicon} size={20} color={fg} />
+      {zone.legs ? (
+        <LegsIcon size={24} color={fg} />
+      ) : (
+        <Ionicons name={zone.ionicon!} size={20} color={fg} />
+      )}
       <Text style={[zoneStyles.label, { color: fg }]}>{zone.label}</Text>
     </Pressable>
   );
