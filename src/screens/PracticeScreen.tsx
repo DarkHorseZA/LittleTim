@@ -187,8 +187,25 @@ function renderTriggerList({
   bookCompleted: boolean;
   navigation: Props['navigation'];
 }) {
-  // Only gestures for the current chapter and earlier are shown. Future ones
-  // are simply not rendered, no locked teasers.
+  // The WHEN gestures are a supplementary library, the whole of which opens
+  // once the reader reaches Chapter Nine, or marks the book complete. Before
+  // then nothing is rendered, no locked teasers.
+  const libraryOpen = bookCompleted || currentChapter === 9;
+
+  if (!libraryOpen) {
+    return (
+      <View style={styles.whenIntro}>
+        <Text style={styles.whenIntroText}>
+          When the old thread pulls, reach for the matching gesture.
+        </Text>
+        <Text style={[styles.whenIntroText, { marginTop: 8 }]}>
+          This flowing library of gestures opens as you reach Chapter Nine, or
+          when you mark the book complete.
+        </Text>
+      </View>
+    );
+  }
+
   const list = triggerGestures.filter((g) =>
     isChapterUnlocked(g.chapter, currentChapter, bookCompleted)
   );
@@ -197,8 +214,8 @@ function renderTriggerList({
     <>
       <View style={styles.whenIntro}>
         <Text style={styles.whenIntroText}>
-          When the old thread pulls, reach for the matching gesture. More arrive
-          as you move through the book.
+          When the old thread pulls, reach for the matching gesture. A flowing
+          library, for every kind of ache.
         </Text>
       </View>
       {list.map((g) => {

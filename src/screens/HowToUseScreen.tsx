@@ -77,7 +77,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
             </Body>
           </Section>
 
-          <Section eyebrow="Three soul technologies">
+          <Section eyebrow="Two soul technologies">
             <View style={styles.techRow}>
               <View style={styles.techCircle}>
                 <Text style={styles.techLetter}>M</Text>
@@ -112,8 +112,9 @@ export function HowToUseScreen({ navigation, route }: Props) {
               </View>
             </View>
 
-            <View style={{ height: 16 }} />
+          </Section>
 
+          <Section eyebrow="A bonus library">
             <View style={styles.techRow}>
               <View
                 style={[styles.techCircle, { backgroundColor: colors.clayDeep }]}
@@ -121,13 +122,11 @@ export function HowToUseScreen({ navigation, route }: Props) {
                 <Text style={styles.techLetter}>W</Text>
               </View>
               <View style={styles.techText}>
-                <Text style={styles.techTitle}>
-                  WHEN · Trigger-specific gestures
-                </Text>
+                <Text style={styles.techTitle}>WHEN · Gesture Library</Text>
                 <Body>
-                  For the moment the old thread pulls. Twenty-one gestures,
-                  one for each kind of ache, unlocking as you move through
-                  the book.
+                  For the moments the old thread pulls, a flowing library of
+                  gestures, one for each kind of ache. It opens when you reach
+                  Chapter Nine, or mark the book complete.
                 </Body>
               </View>
             </View>
@@ -156,11 +155,11 @@ export function HowToUseScreen({ navigation, route }: Props) {
               body="Two short sentences: one stitch you sewed, one moment the old thread pulled."
             />
             <Rhythm
-              icon="calendar-outline"
+              icon="leaf-outline"
               time="Daily"
               duration="2 min"
-              title="Wellness check-in"
-              body="Five sliders, happiness, loved, health, wealth, relationships. One reading a day, measured against your baseline."
+              title="How was your day?"
+              body="A gentle somatic reflection. One word, where you feel it in your body, how warm life feels. Not a survey, just a pause."
             />
           </Section>
 
@@ -181,7 +180,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
               style={{ marginBottom: 8 }}
             />
             <Text style={styles.reminderText}>
-              {`\u201CRepetition unravels and resews. Small stitches make the quilt.\u201D`}
+              {`\u201CRepetition unravels and resews. Small stitches become the quilt.\u201D`}
             </Text>
           </View>
 

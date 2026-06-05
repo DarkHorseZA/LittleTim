@@ -22,16 +22,16 @@ export const beliefs: Belief[] = [
   {
     id: 'b-ch2',
     chapter: 2,
-    statement: 'I am Love, creating.',
+    statement: 'When I feel safe and loved, my body heals.',
     embedding:
-      'Open both hands, palms up. Feel the warmth in them. Whisper: “I am Love, and I am creating right now.”',
+      'One hand on your heart, one on your belly. Breathe slowly. Whisper: “I am safe. I am loved. My body is healing.”',
   },
   {
     id: 'b-ch3',
     chapter: 3,
-    statement: 'The blessing comes first, before any doing, any earning.',
+    statement: 'My belief, filled with emotion, creates my Life. I choose to believe from Love.',
     embedding:
-      'Hands on heart. Breathe in. Whisper: “I am already blessed.” Let it land before the day begins.',
+      'Picture one thing you want to create today. Hold it with warm feeling. Whisper: “I believe this, from Love.”',
   },
   {
     id: 'b-ch4',
@@ -43,9 +43,9 @@ export const beliefs: Belief[] = [
   {
     id: 'b-ch5',
     chapter: 5,
-    statement: 'I am not alone. Spirit and Earth are still creating alongside me.',
+    statement: 'Spirit and Earth fell in Love, and from that Love They made me. They adore me.',
     embedding:
-      'Reach one hand out beside you. Whisper: “I am Love, creating, and I am not alone.”',
+      'Hands resting on your heart. Feel that you are looked upon with adoration. Whisper: “They made me from Love. They adore me.”',
   },
   {
     id: 'b-ch6',

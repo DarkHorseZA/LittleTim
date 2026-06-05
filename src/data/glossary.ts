@@ -36,14 +36,7 @@ export const glossary: GlossaryTerm[] = [
     term: 'Imagio Dei',
     origin: 'Latin',
     definition:
-      'Image of God. The picture of The Divine sewn into us through ancestors and childhood, often invisible, always influential.',
-  },
-  {
-    id: 'imagio-animi',
-    term: 'Imagio Animi',
-    origin: 'Latin',
-    definition:
-      'Image of Self. Your Imagio Dei gives you a clue to your Imagio Animi, and the other way around. Change one, change the other.',
+      'Image of God. The picture of The Divine sewn into us through ancestors and childhood, often invisible, always influential. It shapes the picture we hold of our Self. Change this picture, and your Life changes.',
   },
   {
     id: 'aboriginal-i-am',
@@ -115,5 +108,42 @@ export const glossary: GlossaryTerm[] = [
     term: 'The God-Wound',
     definition:
       'Shame, abandonment, betrayal, experienced in association with The Divine and passed down through generations. The wound that holds other wounds in place.',
+  },
+  {
+    id: 'soul-technology',
+    term: 'Soul Technology',
+    definition:
+      'A practice that engages spirit and earth at once. The book’s two are the MSG and the SEE. Without them the book is only information, with them, insight becomes life-sight.',
+  },
+  {
+    id: 'emotional-assignment',
+    term: 'Emotional Assignment',
+    definition:
+      'Noticing that not every feeling is yours, then returning each one to who, when, and where it belongs, and assigning Love to the moment. Ask gently: “Is this mine?”',
+  },
+  {
+    id: 'fff',
+    term: 'FFF · Fight-Flight-Freeze',
+    definition:
+      'The body’s Fear response, and eventually Flop. Held there, we live in toxic stress, which wearies and ages us. Fear keeps us in Fight-Flight-Freeze.',
+  },
+  {
+    id: 'rdr',
+    term: 'RDR · Rest-Digest-Reproduce',
+    definition:
+      'What safety and Love switch on. In Rest-Digest-Reproduce the body heals and is rejuvenated. Love brings RDR.',
+  },
+  {
+    id: 'divine-matrix',
+    term: 'The Divine Matrix',
+    definition:
+      'Not a thing, but Them, Spirit and Earth, still creating alongside you, weaving the squares you cannot yet see, bending everything to your benefit.',
+  },
+  {
+    id: 'adamah-haaretz',
+    term: 'Adamah · Ha’aretz',
+    origin: 'Hebrew (אֲדָמָה · הָאָרֶץ)',
+    definition:
+      'Earth. You are earth (adamah), and to earth you return, not as punishment, as homecoming. Ha’aretz is present from the very beginning, a Lover, not dead matter.',
   },
 ];

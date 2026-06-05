@@ -214,7 +214,7 @@ export function ConnectScreen({ navigation }: Props) {
 
           <View style={{ height: 30 }} />
           <Text style={styles.footer}>
-            {`\u201CSmall stitches make the quilt.\u201D`}
+            {`\u201CSmall stitches become the quilt.\u201D`}
           </Text>
           <View style={{ height: 30 }} />
         </ScrollView>

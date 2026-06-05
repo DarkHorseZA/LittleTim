@@ -416,7 +416,7 @@ function CompletionView({
             {`\u201C${beliefStatement}\u201D`}
           </Text>
           <Text style={styles.completionSub}>
-            Small stitches make the quilt.
+            Small stitches become the quilt.
           </Text>
 
           <View style={{ flex: 1 }} />

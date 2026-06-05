@@ -100,7 +100,7 @@ export function HomeScreen({ navigation }: Props) {
           </Text>
           <Text style={styles.date}>{prettyDate(now)}</Text>
           <Text style={styles.quiltLine}>
-            {'\u201C'}One stitch today. Small stitches make the quilt.{'\u201D'}
+            {'\u201C'}One stitch today. Small stitches become the quilt.{'\u201D'}
           </Text>
 
           <TourCard

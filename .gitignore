@@ -10,3 +10,7 @@ ios/
 android/
 package-lock.json
 .claude/
+
+# Manuscript, never commit the book to the repo
+*.docx
+Theunis Pienaar re-Genesis Proposal.docx

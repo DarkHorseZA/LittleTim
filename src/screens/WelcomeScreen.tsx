@@ -31,7 +31,7 @@ const TAGLINES = [
   'Unravel. Resew.',
   'I am earth, wrapped in light.',
   'I am Love, creating.',
-  'Small stitches make the quilt.',
+  'Small stitches become the quilt.',
   'A breath, then a day.',
   'You are not alone.',
   'Repetition unravels and resews.',

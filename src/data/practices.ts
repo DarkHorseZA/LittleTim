@@ -83,9 +83,10 @@ export const msgPractices: Practice[] = [
       'Sit comfortably. Close your eyes.',
       'Both hands on your belly, where you were first held as earth. Breathe in through your nose, out through your mouth.',
       'Whisper: “I am earth.”',
-      'Feel the ground under you, floor, soil, foundation. Whisper: “I came from earth. I will return to earth. It is not a curse. It is home.”',
+      'Feel the ground under you, floor, soil, foundation. Whisper: “I came from earth. I return to earth. It is not a curse. She is home. I recognize my Self.”',
       'One hand moves to your heart. Whisper: “The breath in me is the breath of lives. I have always been. I will always be.”',
       'Breathe once more. Whisper: “I am wrapped in light.” Stay for a few breaths.',
+      'Through your day, when you eat, whisper quietly: “It is awesome to be Earth.”',
     ],
   },
   {
@@ -149,7 +150,7 @@ export const msgPractices: Practice[] = [
       'Recall a moment today when fear, shame, or forgetting pulled at you. Don’t judge. Just let it be present.',
       'Whisper: “I am not that feeling. I am the one who feels it.” Take another breath.',
       'Whisper: “I sew one stitch, right here, right now.”',
-      'Other hand on your belly. A final breath. That was a stitch.',
+      'Other hand on your belly. Feel Love, feel Love’s warmth. See Love in that moment. A final breath. That was a stitch.',
     ],
   },
   {
