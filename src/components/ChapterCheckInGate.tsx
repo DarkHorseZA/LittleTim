@@ -62,7 +62,8 @@ export function ChapterCheckInGate({ active }: { active: boolean }) {
   if (!open) return null;
 
   const handleContinue = () => {
-    updateSettings({ currentChapter: selected });
+    // Choosing a chapter keeps the reader in the book, so "completed" stays off.
+    updateSettings({ currentChapter: selected, bookCompleted: false });
     setOpen(false);
   };
 

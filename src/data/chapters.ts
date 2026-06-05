@@ -82,4 +82,21 @@ export function chapterById(id: number): ChapterInfo | undefined {
   return chapters.find((c) => c.id === id);
 }
 
+// Whether a practice/gesture from `chapter` is available to the reader.
+//   - bookCompleted unlocks everything, regardless of the stored chapter.
+//   - The Introduction (chapter 0) is always available.
+//   - Otherwise a chapter is available once the reader has reached it
+//     (chapter <= currentChapter). An unset chapter (undefined) means only the
+//     Introduction shows.
+export function isChapterUnlocked(
+  chapter: number,
+  currentChapter: number | null | undefined,
+  bookCompleted?: boolean
+): boolean {
+  if (bookCompleted) return true;
+  if (chapter === 0) return true;
+  if (currentChapter === undefined || currentChapter === null) return false;
+  return chapter <= currentChapter;
+}
+
 export const CHAPTER_COUNT = chapters.length;

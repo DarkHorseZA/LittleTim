@@ -164,7 +164,11 @@ export function SettingsScreen({ navigation }: Props) {
           </Text>
           <ChapterPicker
             value={settings.currentChapter}
-            onChange={(id) => updateSettings({ currentChapter: id })}
+            onChange={(id) =>
+              // Choosing a chapter means the reader is back in the book, so it
+              // clears "completed" and the launch check-in returns on open.
+              updateSettings({ currentChapter: id, bookCompleted: false })
+            }
             bookCompleted={!!settings.bookCompleted}
             showCompletedOption
             onCompleteBook={handleCompleteBook}

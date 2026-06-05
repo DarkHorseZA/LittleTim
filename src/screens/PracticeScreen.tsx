@@ -16,8 +16,8 @@ import { colors, radius, shadows } from '../theme/colors';
 import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { msgPractices, seePractices } from '../data/practices';
-import { triggerGestures, isTriggerUnlocked } from '../data/triggers';
-import { chapterById } from '../data/chapters';
+import { triggerGestures } from '../data/triggers';
+import { chapterById, isChapterUnlocked } from '../data/chapters';
 import { PracticeKind } from '../types';
 import { useDay } from '../store/DayContext';
 import { TourCard } from '../components/TourCard';
@@ -35,6 +35,7 @@ export function PracticeScreen({ navigation, route }: Props) {
   const [kind, setKind] = useState<Kind>(initialKind);
   const { today, settings } = useDay();
   const currentChapter = settings.currentChapter;
+  const bookCompleted = !!settings.bookCompleted;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -54,7 +55,7 @@ export function PracticeScreen({ navigation, route }: Props) {
           tips={[
             'MSG, gestures the body remembers. SEE, sensual exercises that surface hidden belief.',
             'WHEN, trigger-specific gestures for a moment of shame, grief, fear, or joy.',
-            'Each card shows which chapter unlocks it. WHEN gestures unlock as you progress.',
+            'New practices arrive gently as you move through the book, one chapter at a time.',
           ]}
         />
 
@@ -80,8 +81,8 @@ export function PracticeScreen({ navigation, route }: Props) {
         </View>
 
         {kind === 'MSG' || kind === 'SEE'
-          ? renderPracticeList({ kind, today, navigation })
-          : renderTriggerList({ currentChapter, navigation })}
+          ? renderPracticeList({ kind, today, navigation, currentChapter, bookCompleted })
+          : renderTriggerList({ currentChapter, bookCompleted, navigation })}
 
         <View style={{ height: 24 }} />
       </ScrollView>
@@ -93,12 +94,21 @@ function renderPracticeList({
   kind,
   today,
   navigation,
+  currentChapter,
+  bookCompleted,
 }: {
   kind: PracticeKind;
   today: ReturnType<typeof useDay>['today'];
   navigation: Props['navigation'];
+  currentChapter: number | undefined;
+  bookCompleted: boolean;
 }) {
-  const list = kind === 'MSG' ? msgPractices : seePractices;
+  const all = kind === 'MSG' ? msgPractices : seePractices;
+  // Only the current chapter and earlier (plus the Introduction) are shown.
+  // Future chapters stay hidden until the reader reaches them.
+  const list = all.filter((p) =>
+    isChapterUnlocked(p.chapter, currentChapter, bookCompleted)
+  );
   const doneForKind = kind === 'MSG' ? today.msgDone : today.seeDone;
   const doneId = kind === 'MSG' ? today.msgPracticeId : today.seePracticeId;
 
@@ -170,88 +180,55 @@ function renderPracticeList({
 
 function renderTriggerList({
   currentChapter,
+  bookCompleted,
   navigation,
 }: {
   currentChapter: number | undefined;
+  bookCompleted: boolean;
   navigation: Props['navigation'];
 }) {
+  // Only gestures for the current chapter and earlier are shown. Future ones
+  // are simply not rendered, no locked teasers.
+  const list = triggerGestures.filter((g) =>
+    isChapterUnlocked(g.chapter, currentChapter, bookCompleted)
+  );
+
   return (
     <>
       <View style={styles.whenIntro}>
         <Text style={styles.whenIntroText}>
-          When the old thread pulls, reach for the matching gesture. Each one
-          unlocks as you reach its chapter.
+          When the old thread pulls, reach for the matching gesture. More arrive
+          as you move through the book.
         </Text>
-        {currentChapter === undefined ? (
-          <Text style={styles.whenIntroHint}>
-            Set your chapter in Settings to unlock more gestures. The
-            Introduction is open to everyone.
-          </Text>
-        ) : null}
       </View>
-      {triggerGestures.map((g) => {
-        const unlocked = isTriggerUnlocked(g, currentChapter);
+      {list.map((g) => {
         const chapter = chapterById(g.chapter);
         return (
           <Pressable
             key={g.id}
-            disabled={!unlocked}
             onPress={() => {
               nav();
               navigation.navigate('TriggerDetail', { triggerId: g.id });
             }}
             accessibilityRole="button"
-            accessibilityLabel={
-              unlocked
-                ? `Open gesture: ${g.title}`
-                : `Locked gesture: ${g.title}`
-            }
+            accessibilityLabel={`Open gesture: ${g.title}`}
             style={({ pressed, focused }: any) => [
               { marginBottom: 12 },
-              // Locked cards should not scale or ring on focus.
-              unlocked && pressed && pressScale,
-              unlocked && focused && webFocus,
+              pressed && pressScale,
+              focused && webFocus,
             ]}
           >
-            <View
-              style={[
-                styles.card,
-                shadows.sm,
-                !unlocked && styles.cardLocked,
-              ]}
-            >
+            <View style={[styles.card, shadows.sm]}>
               <View style={styles.cardRow}>
                 <View style={styles.cardLeft}>
-                  <Text
-                    style={[
-                      styles.triggerWhen,
-                      !unlocked && styles.lockedText,
-                    ]}
-                  >
-                    {g.trigger}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.cardTitle,
-                      !unlocked && styles.lockedText,
-                    ]}
-                  >
-                    {g.title}
-                  </Text>
+                  <Text style={styles.triggerWhen}>{g.trigger}</Text>
+                  <Text style={styles.cardTitle}>{g.title}</Text>
                 </View>
-                {unlocked ? (
-                  <Ionicons
-                    name="chevron-forward"
-                    size={22}
-                    color={colors.inkFaint}
-                  />
-                ) : (
-                  <Ionicons
-                    name="lock-closed"
-                    size={18}
-                    color={colors.inkFaint}
-                  />
-                )}
+                <Ionicons
+                  name="chevron-forward"
+                  size={22}
+                  color={colors.inkFaint}
+                />
               </View>
               <View style={styles.metaRow}>
                 <View style={styles.pill}>
@@ -269,9 +246,7 @@ function renderTriggerList({
                     color={colors.inkSoft}
                   />
                   <Text style={styles.chapterPillText}>
-                    {unlocked
-                      ? `${chapter?.shortTitle ?? 'Ch.'} · ${g.theme}`
-                      : `Unlocks with ${chapter?.shortTitle ?? 'Ch.'}`}
+                    {`${chapter?.shortTitle ?? 'Ch.'} · ${g.theme}`}
                   </Text>
                 </View>
               </View>
@@ -383,11 +358,6 @@ const styles = StyleSheet.create({
   whenIntroText: {
     ...text.body,
   },
-  whenIntroHint: {
-    ...text.caption,
-    marginTop: 6,
-    color: colors.clayDeep,
-  },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
@@ -395,13 +365,6 @@ const styles = StyleSheet.create({
   },
   cardDone: {
     backgroundColor: colors.doneSoft,
-  },
-  cardLocked: {
-    backgroundColor: colors.surfaceSoft,
-    opacity: 0.72,
-  },
-  lockedText: {
-    color: colors.inkFaint,
   },
   cardRow: {
     flexDirection: 'row',
