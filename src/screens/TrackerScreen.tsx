@@ -57,7 +57,7 @@ type ZoneDef = {
 const BODY_ZONES: ZoneDef[] = [
   { key: 'mind',  label: 'Head',         ionicon: 'happy-outline'   },
   { key: 'heart', label: 'Heart',        ionicon: 'heart-outline'   },
-  { key: 'belly', label: 'Solar plexus', ionicon: 'ellipse-outline' },
+  { key: 'belly', label: 'Belly',        ionicon: 'ellipse-outline' },
   { key: 'whole', label: 'Legs',         legs: true                 },
 ];
 
