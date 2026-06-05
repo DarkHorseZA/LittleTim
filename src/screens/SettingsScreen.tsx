@@ -16,9 +16,9 @@ import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { APP_NAME, ATTRIBUTION } from '../config';
 import { useDay } from '../store/DayContext';
-import { chapters } from '../data/chapters';
 import { PulsingMark } from '../components/PulsingMark';
 import { BackButton } from '../components/BackButton';
+import { ChapterPicker } from '../components/ChapterPicker';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -31,42 +31,6 @@ function initials(name?: string): string | null {
   return joined.length > 0 ? joined : null;
 }
 
-function ChapterChip({
-  label,
-  selected,
-  onPress,
-}: {
-  label: string;
-  selected: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      onPress={() => {
-        tap();
-        onPress();
-      }}
-      style={({ pressed, focused }: any) => [
-        styles.chapterChip,
-        selected && styles.chapterChipOn,
-        pressed && { transform: [{ scale: 0.97 }] },
-        focused && webFocus,
-      ]}
-      accessibilityRole="button"
-      accessibilityState={{ selected }}
-      accessibilityLabel={`Chapter: ${label}`}
-    >
-      <Text
-        style={[
-          styles.chapterChipText,
-          selected && styles.chapterChipTextOn,
-        ]}
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 export function SettingsScreen({ navigation }: Props) {
   const { settings, updateSettings } = useDay();
@@ -189,72 +153,10 @@ export function SettingsScreen({ navigation }: Props) {
             chapter. Leave it blank to let the app rotate a different one
             each day.
           </Text>
-          {/* Top-level: Auto + Introduction. These two are always visible. */}
-          <View style={styles.chapters}>
-            <Pressable
-              onPress={() => {
-                tap();
-                updateSettings({ currentChapter: undefined });
-              }}
-              style={({ pressed, focused }: any) => [
-                styles.chapterChip,
-                settings.currentChapter === undefined && styles.chapterChipOn,
-                pressed && { transform: [{ scale: 0.97 }] },
-                focused && webFocus,
-              ]}
-              accessibilityRole="button"
-              accessibilityState={{ selected: settings.currentChapter === undefined }}
-              accessibilityLabel="Auto chapter, rotate through all chapters"
-            >
-              <Text
-                style={[
-                  styles.chapterChipText,
-                  settings.currentChapter === undefined &&
-                    styles.chapterChipTextOn,
-                ]}
-              >
-                Auto
-              </Text>
-            </Pressable>
-            {chapters
-              .filter((ch) => ch.part === undefined)
-              .map((ch) => (
-                <ChapterChip
-                  key={ch.id}
-                  label={ch.shortTitle}
-                  selected={settings.currentChapter === ch.id}
-                  onPress={() => updateSettings({ currentChapter: ch.id })}
-                />
-              ))}
-          </View>
-
-          <Text style={styles.partLabel}>Part One</Text>
-          <View style={styles.chapters}>
-            {chapters
-              .filter((ch) => ch.part === 'One')
-              .map((ch) => (
-                <ChapterChip
-                  key={ch.id}
-                  label={ch.shortTitle}
-                  selected={settings.currentChapter === ch.id}
-                  onPress={() => updateSettings({ currentChapter: ch.id })}
-                />
-              ))}
-          </View>
-
-          <Text style={styles.partLabel}>Part Two</Text>
-          <View style={styles.chapters}>
-            {chapters
-              .filter((ch) => ch.part === 'Two')
-              .map((ch) => (
-                <ChapterChip
-                  key={ch.id}
-                  label={ch.shortTitle}
-                  selected={settings.currentChapter === ch.id}
-                  onPress={() => updateSettings({ currentChapter: ch.id })}
-                />
-              ))}
-          </View>
+          <ChapterPicker
+            value={settings.currentChapter}
+            onChange={(id) => updateSettings({ currentChapter: id })}
+          />
         </View>
 
         <View style={{ height: 14 }} />
@@ -459,29 +361,6 @@ const styles = StyleSheet.create({
   linkSub: {
     ...text.caption,
     marginTop: 2,
-  },
-  chapters: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  partLabel: {
-    ...text.eyebrow,
-    marginTop: 14,
-    marginBottom: 10,
-  },
-  chapterChip: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: radius.pill,
-    backgroundColor: colors.lineSoft,
-  },
-  chapterChipOn: {
-    backgroundColor: colors.clay,
-  },
-  chapterChipText: {
-    color: colors.inkSoft,
-    fontFamily: fonts.sansSemi,
-    fontSize: 13,
-  },
-  chapterChipTextOn: {
-    color: colors.white,
   },
   brandMark: {
     width: 180,

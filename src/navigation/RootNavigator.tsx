@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
-import { NavigationContainer, LinkingOptions } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  LinkingOptions,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,6 +27,7 @@ import { GlossaryScreen } from '../screens/GlossaryScreen';
 import { ConnectScreen } from '../screens/ConnectScreen';
 import { NotFoundScreen } from '../screens/NotFoundScreen';
 import { MoreScreen } from '../screens/MoreScreen';
+import { ChapterCheckInGate } from '../components/ChapterCheckInGate';
 import { colors, layout } from '../theme/colors';
 import { fonts } from '../theme/type';
 
@@ -149,8 +154,25 @@ function TabsNavigator() {
 }
 
 export function RootNavigator() {
+  const navRef = useNavigationContainerRef<RootStackParamList>();
+  const [topRoute, setTopRoute] = useState<string | undefined>(undefined);
+
+  // Track the top-level stack route so the chapter check-in only fires once the
+  // reader is inside the app (Tabs), not over the Welcome splash.
+  const syncRoute = useCallback(() => {
+    const state = navRef.getRootState?.();
+    if (state && typeof state.index === 'number') {
+      setTopRoute(state.routes[state.index]?.name);
+    }
+  }, [navRef]);
+
   const content = (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer
+      ref={navRef}
+      linking={linking}
+      onReady={syncRoute}
+      onStateChange={syncRoute}
+    >
       <Stack.Navigator
         initialRouteName="Welcome"
         screenOptions={{
@@ -236,16 +258,27 @@ export function RootNavigator() {
     </NavigationContainer>
   );
 
+  const gate = <ChapterCheckInGate active={topRoute === 'Tabs'} />;
+
   // On web, center a phone-sized viewport so the app feels like an app, not a
-  // stretched web page. On native, this wrapper is transparent.
+  // stretched web page. On native, this wrapper is transparent. The gate sits
+  // above the navigation tree so it overlays the whole phone frame.
   if (Platform.OS === 'web') {
     return (
       <View style={webStyles.outer}>
-        <View style={webStyles.inner}>{content}</View>
+        <View style={webStyles.inner}>
+          {content}
+          {gate}
+        </View>
       </View>
     );
   }
-  return content;
+  return (
+    <View style={{ flex: 1 }}>
+      {content}
+      {gate}
+    </View>
+  );
 }
 
 const webStyles = StyleSheet.create({

@@ -25,6 +25,7 @@ export type Settings = {
   hasSeenNewBookPrompt?: boolean; // dismissed the "new book" card at least once
   registeredEmail?: string; // set once the reader registers on first open
   registeredAt?: string; // ISO timestamp of registration
+  bookCompleted?: boolean; // true once the reader taps "I've completed the book"; permanently hides the launch chapter check-in
 };
 
 const defaultSettings: Settings = {
@@ -37,6 +38,7 @@ const defaultSettings: Settings = {
   lastCheckInDate: undefined,
   notifyOnNewBook: false,
   hasSeenNewBookPrompt: false,
+  bookCompleted: false,
 };
 
 export function todayKey(d: Date = new Date()): string {
