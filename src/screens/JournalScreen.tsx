@@ -50,7 +50,7 @@ function StitchCard({ stitch }: { stitch: JournalStitch }) {
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ─── Today's Stitches tab (inputs only) ──────────────────────────────────────
 
 export function JournalContent() {
   const { addQuiltEntry } = useDay();
@@ -58,14 +58,6 @@ export function JournalContent() {
 
   const [sewedWithLove, setSewedWithLove] = useState('');
   const [oldThread, setOldThread]         = useState('');
-  const [stitches, setStitches]           = useState<JournalStitch[]>([]);
-
-  // Reload entries every time the tab comes into focus
-  useFocusEffect(
-    useCallback(() => {
-      loadStitches().then(setStitches);
-    }, [])
-  );
 
   const hasInput =
     sewedWithLove.trim().length > 0 || oldThread.trim().length > 0;
@@ -81,17 +73,12 @@ export function JournalContent() {
       savedAt: new Date().toISOString(),
     };
 
-    const updated = await appendStitch(stitch);
+    await appendStitch(stitch);
     await addQuiltEntry({ type: 'journal' });
-    setStitches(updated);
     setSewedWithLove('');
     setOldThread('');
     toast("Stitch saved, your quilt grows.", "success");
   };
-
-  const sorted = [...stitches].sort((a, b) =>
-    a.savedAt > b.savedAt ? -1 : 1
-  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -164,30 +151,49 @@ export function JournalContent() {
           </Text>
         </Pressable>
       </View>
-
-      {/* Saved stitches — in ScrollView so long history can scroll */}
-      <ScrollView
-        style={styles.listScroll}
-        contentContainerStyle={styles.listContainer}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.pastHeader}>
-          <Text style={text.eyebrow}>Saved Stitches</Text>
-          <Text style={styles.pastSub}>Your thread, recorded.</Text>
-        </View>
-
-        {sorted.length === 0 ? (
-          <Text style={styles.emptyState}>
-            Your first stitch is waiting to be sewn.
-          </Text>
-        ) : (
-          sorted.map((s) => <StitchCard key={s.id} stitch={s} />)
-        )}
-
-        <View style={{ height: 40 }} />
-      </ScrollView>
     </View>
+  );
+}
+
+// ─── Saved Stitches tab (review only) ────────────────────────────────────────
+
+export function SavedStitches() {
+  const [stitches, setStitches] = useState<JournalStitch[]>([]);
+
+  // Reload on focus so a stitch saved on the Today's Stitches tab shows up the
+  // moment the user switches to this tab (the component mounts fresh).
+  useFocusEffect(
+    useCallback(() => {
+      loadStitches().then(setStitches);
+    }, [])
+  );
+
+  const sorted = [...stitches].sort((a, b) =>
+    a.savedAt > b.savedAt ? -1 : 1
+  );
+
+  return (
+    <ScrollView
+      style={styles.listScroll}
+      contentContainerStyle={styles.listContainer}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.pastHeader}>
+        <Text style={text.eyebrow}>Saved Stitches</Text>
+        <Text style={styles.pastSub}>Your thread, recorded.</Text>
+      </View>
+
+      {sorted.length === 0 ? (
+        <Text style={styles.emptyState}>
+          Your first stitch is waiting to be sewn.
+        </Text>
+      ) : (
+        sorted.map((s) => <StitchCard key={s.id} stitch={s} />)
+      )}
+
+      <View style={{ height: 40 }} />
+    </ScrollView>
   );
 }
 

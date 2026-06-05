@@ -14,10 +14,10 @@ import { colors, radius } from '../theme/colors';
 import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { PulsingMark } from '../components/PulsingMark';
-import { JournalContent } from './JournalScreen';
+import { JournalContent, SavedStitches } from './JournalScreen';
 import { PatchworkQuilt } from '../components/PatchworkQuilt';
 
-type Tab = 'journal' | 'quilt';
+type Tab = 'journal' | 'saved' | 'quilt';
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, 'Journal'>,
@@ -44,6 +44,11 @@ export function JournalHistoryScreen({ route }: Props) {
           onPress={() => { tap(); setActiveTab('journal'); }}
         />
         <SegmentButton
+          label="Saved Stitches"
+          active={activeTab === 'saved'}
+          onPress={() => { tap(); setActiveTab('saved'); }}
+        />
+        <SegmentButton
           label="Your Quilt"
           active={activeTab === 'quilt'}
           onPress={() => { tap(); setActiveTab('quilt'); }}
@@ -52,7 +57,13 @@ export function JournalHistoryScreen({ route }: Props) {
 
       {/* Content */}
       <View style={styles.content}>
-        {activeTab === 'journal' ? <JournalContent /> : <PatchworkQuilt />}
+        {activeTab === 'journal' ? (
+          <JournalContent />
+        ) : activeTab === 'saved' ? (
+          <SavedStitches />
+        ) : (
+          <PatchworkQuilt />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -79,7 +90,11 @@ function SegmentButton({
         focused && webFocus,
       ]}
     >
-      <Text style={[styles.segLabel, active && styles.segLabelActive]}>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        style={[styles.segLabel, active && styles.segLabelActive]}
+      >
         {label}
       </Text>
     </Pressable>
@@ -111,6 +126,7 @@ const styles = StyleSheet.create({
   segBtn: {
     flex: 1,
     paddingVertical: 9,
+    paddingHorizontal: 6,
     alignItems: 'center',
     borderRadius: radius.pill,
   },
@@ -124,8 +140,8 @@ const styles = StyleSheet.create({
   },
   segLabel: {
     fontFamily: fonts.sansSemi,
-    fontSize: 13,
-    letterSpacing: 0.3,
+    fontSize: 12,
+    letterSpacing: 0.2,
     color: colors.inkFaint,
   },
   segLabelActive: {
