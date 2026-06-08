@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "re-Genesis",
-    "slug": "littletim",
-    "version": "0.1.0",
+    "slug": "re-genesis",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "littletim",
@@ -15,10 +15,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.littletim.app"
+      "bundleIdentifier": "com.theunispienaar.regenesis"
     },
     "android": {
-      "package": "com.littletim.app",
+      "package": "com.theunispienaar.regenesis",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/brand/icon.png",
         "backgroundColor": "#F5EFE6"
@@ -30,6 +31,14 @@
     },
     "experiments": {
       "baseUrl": "/LittleTim"
+    },
+    "plugins": [
+      "expo-asset"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "98c320ea-e677-469a-876d-1fbd7038cc6e"
+      }
     }
   }
 }
