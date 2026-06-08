@@ -85,7 +85,8 @@ export function HomeScreen({ navigation }: Props) {
         style={styles.hero}
       />
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.topRow}>
             <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
             <Pressable

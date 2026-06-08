@@ -541,6 +541,7 @@ export function TrackerScreen({ navigation }: Props) {
           >
             {/* Prompt chooser */}
             <ScrollView
+        showsVerticalScrollIndicator={false}
               horizontal
               showsHorizontalScrollIndicator={false}
               style={styles.promptScroll}

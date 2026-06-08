@@ -52,7 +52,8 @@ export function BeliefScreen({ navigation }: Props) {
           />
         </View>
 
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.mark}>
             <Ionicons name="sparkles" size={20} color={colors.clayDeep} />
           </View>

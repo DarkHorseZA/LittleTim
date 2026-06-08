@@ -38,6 +38,7 @@ export function MoreScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
         contentContainerStyle={styles.container}
         alwaysBounceVertical={false}

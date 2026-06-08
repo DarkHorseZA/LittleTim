@@ -38,7 +38,8 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
           accessibilityLabel="Go back"
         />
       </View>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.kindPill}>
           <Text style={styles.kindPillText}>WHEN</Text>
         </View>

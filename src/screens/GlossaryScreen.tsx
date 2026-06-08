@@ -36,7 +36,8 @@ export function GlossaryScreen({ navigation }: Props) {
           />
         </View>
 
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.headerRow}>
             <Text style={text.eyebrow}>Glossary</Text>
             <PulsingMark size={56} />

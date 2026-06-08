@@ -52,7 +52,8 @@ export function SettingsScreen({ navigation }: Props) {
       <View style={styles.navRow}>
         <BackButton onPress={() => navigation.navigate('Tabs', { screen: 'More' })} variant="solid" />
       </View>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.topRow}>
           <Text style={text.eyebrow}>Settings</Text>
           <PulsingMark size={56} />

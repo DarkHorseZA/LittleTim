@@ -73,7 +73,8 @@ export function ConnectScreen({ navigation }: Props) {
           <BackButton onPress={() => navigation.goBack()} />
         </View>
 
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.headerRow}>
             <Text style={text.eyebrow}>Connect</Text>
             <PulsingMark size={56} />

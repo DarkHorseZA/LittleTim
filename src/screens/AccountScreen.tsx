@@ -90,7 +90,8 @@ export function AccountScreen({ navigation }: Props) {
           />
         </View>
 
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.avatarWrap}>
             <View style={styles.avatar}>
               {initials(name) ? (

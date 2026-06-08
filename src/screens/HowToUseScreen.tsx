@@ -47,7 +47,8 @@ export function HowToUseScreen({ navigation, route }: Props) {
           </View>
         ) : null}
 
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <View style={styles.masthead}>
             <Image
               source={require('../../assets/brand/icon.png')}

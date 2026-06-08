@@ -92,7 +92,8 @@ export function BaselineScreen({ navigation, route }: Props) {
           </View>
         ) : null}
 
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
           <Text style={styles.eyebrow}>First reading</Text>
           <Text style={styles.title}>Where are you today?</Text>
           <Text style={styles.subtitle}>

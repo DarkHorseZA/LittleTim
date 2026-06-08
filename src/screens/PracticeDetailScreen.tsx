@@ -92,7 +92,8 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
           accessibilityLabel="Go back"
         />
       </View>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.kindPill}>
           <Text style={styles.kindPillText}>{practice.kind}</Text>
         </View>

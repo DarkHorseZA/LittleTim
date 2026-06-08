@@ -44,7 +44,8 @@ export function HistoryContent() {
   return (
     <SafeAreaView style={styles.safe} edges={[]}>
 
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <Text style={styles.title}>Your quiet progress</Text>
         <Text style={styles.body}>
           Every patch is a day you showed up. Softness compounds.

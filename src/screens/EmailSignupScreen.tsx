@@ -99,6 +99,7 @@ export function EmailSignupScreen({ navigation, route }: Props) {
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
           <ScrollView
+        showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps="handled"
           >
