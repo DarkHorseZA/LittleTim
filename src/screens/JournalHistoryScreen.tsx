@@ -10,7 +10,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
-import { colors, radius } from '../theme/colors';
+import { colors, layout, radius } from '../theme/colors';
 import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { PulsingMark } from '../components/PulsingMark';
@@ -30,40 +30,42 @@ export function JournalHistoryScreen({ route }: Props) {
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={text.eyebrow}>Journal</Text>
-        <PulsingMark size={56} accessibilityLabel="re-Genesis mark" />
-      </View>
+      <View style={styles.innerWrap}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={text.eyebrow}>Journal</Text>
+          <PulsingMark size={56} accessibilityLabel="re-Genesis mark" />
+        </View>
 
-      {/* Segment tab bar */}
-      <View style={styles.segment}>
-        <SegmentButton
-          label="Today's Stitches"
-          active={activeTab === 'journal'}
-          onPress={() => { tap(); setActiveTab('journal'); }}
-        />
-        <SegmentButton
-          label="Saved Stitches"
-          active={activeTab === 'saved'}
-          onPress={() => { tap(); setActiveTab('saved'); }}
-        />
-        <SegmentButton
-          label="Your Quilt"
-          active={activeTab === 'quilt'}
-          onPress={() => { tap(); setActiveTab('quilt'); }}
-        />
-      </View>
+        {/* Segment tab bar */}
+        <View style={styles.segment}>
+          <SegmentButton
+            label="Today's Stitches"
+            active={activeTab === 'journal'}
+            onPress={() => { tap(); setActiveTab('journal'); }}
+          />
+          <SegmentButton
+            label="Saved Stitches"
+            active={activeTab === 'saved'}
+            onPress={() => { tap(); setActiveTab('saved'); }}
+          />
+          <SegmentButton
+            label="Your Quilt"
+            active={activeTab === 'quilt'}
+            onPress={() => { tap(); setActiveTab('quilt'); }}
+          />
+        </View>
 
-      {/* Content */}
-      <View style={styles.content}>
-        {activeTab === 'journal' ? (
-          <JournalContent />
-        ) : activeTab === 'saved' ? (
-          <SavedStitches />
-        ) : (
-          <PatchworkQuilt />
-        )}
+        {/* Content */}
+        <View style={styles.content}>
+          {activeTab === 'journal' ? (
+            <JournalContent />
+          ) : activeTab === 'saved' ? (
+            <SavedStitches />
+          ) : (
+            <PatchworkQuilt />
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -105,6 +107,12 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: colors.bg,
+  },
+  innerWrap: {
+    flex: 1,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   header: {
     flexDirection: 'row',

@@ -27,7 +27,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StackActions } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/types';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, layout, radius, shadows } from '../theme/colors';
 import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { BackButton } from '../components/BackButton';
@@ -664,6 +664,9 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 8,
     paddingBottom: 48,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   headerRow: {
     flexDirection: 'row',

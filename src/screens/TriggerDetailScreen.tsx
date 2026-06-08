@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
@@ -98,6 +98,9 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 8,
     paddingBottom: 48,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   missing: { padding: 24, color: colors.inkSoft },
   kindPill: {

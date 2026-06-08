@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, layout, radius, shadows } from '../theme/colors';
 import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { msgPractices, seePractices } from '../data/practices';
@@ -326,7 +326,14 @@ function SegmentButton({
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  container: { flexGrow: 1, padding: 20, paddingBottom: 40 },
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    paddingBottom: 40,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
+  },
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -13,7 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
@@ -137,7 +137,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
   },
-  container: { flexGrow: 1, padding: 28, paddingTop: 12, paddingBottom: 40 },
+  container: {
+    flexGrow: 1,
+    padding: 28,
+    paddingTop: 12,
+    paddingBottom: 40,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
+  },
   emojiCircle: {
     width: 80,
     height: 80,

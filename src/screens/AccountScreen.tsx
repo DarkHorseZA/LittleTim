@@ -235,6 +235,9 @@ const styles = StyleSheet.create({
     padding: layout.screen,
     paddingTop: 10,
     paddingBottom: 40,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   avatarWrap: {
     alignItems: 'center',

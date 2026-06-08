@@ -12,7 +12,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { RootStackParamList, TabsParamList } from '../navigation/types';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, layout, radius, shadows } from '../theme/colors';
 import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 
@@ -85,6 +85,9 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     paddingBottom: 40,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   heading: {
     ...text.h1,

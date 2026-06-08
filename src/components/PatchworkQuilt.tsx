@@ -480,7 +480,7 @@ export function PatchworkQuilt({ size = 'full' }: { size?: PatchworkQuiltSize })
 
   // Content width measurement (screen padding 20×2 = 40)
   const [contentWidth, setContentWidth] = useState(
-    Math.min(windowWidth, layout.maxWidth) - 40
+    Math.min(windowWidth, layout.contentMaxWidth) - 40
   );
   const cellSize = Math.floor((contentWidth - 6 * GAP) / 7);
 
@@ -821,6 +821,9 @@ const styles = StyleSheet.create({
     padding: layout.screen,
     paddingTop: 12,
     paddingBottom: 40,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   statsRow: {
     flexDirection: 'row',

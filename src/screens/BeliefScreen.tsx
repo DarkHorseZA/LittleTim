@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, gradients, radius, shadows } from '../theme/colors';
+import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { CloseButton } from '../components/CloseButton';
@@ -105,6 +105,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 28,
     paddingTop: 16,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   mark: {
     width: 44,

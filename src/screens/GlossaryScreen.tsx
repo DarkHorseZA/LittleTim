@@ -11,7 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, gradients, radius, shadows } from '../theme/colors';
+import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { glossary } from '../data/glossary';
 import { BackButton } from '../components/BackButton';
@@ -86,6 +86,9 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 12,
     paddingBottom: 40,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   headerRow: {
     flexDirection: 'row',

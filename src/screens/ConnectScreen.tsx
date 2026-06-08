@@ -381,6 +381,9 @@ const styles = StyleSheet.create({
     padding: layout.screenLoose,
     paddingTop: 10,
     paddingBottom: 40,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   headerRow: {
     flexDirection: 'row',

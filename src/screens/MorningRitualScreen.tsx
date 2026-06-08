@@ -12,7 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, gradients, radius, shadows } from '../theme/colors';
+import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
@@ -462,6 +462,9 @@ const styles = StyleSheet.create({
     padding: 28,
     paddingBottom: 24,
     alignItems: 'center',
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   stepLabel: {
     fontFamily: fonts.sansBold,

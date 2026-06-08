@@ -313,7 +313,14 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 4,
   },
-  container: { flexGrow: 1, padding: layout.screen, paddingBottom: 40 },
+  container: {
+    flexGrow: 1,
+    padding: layout.screen,
+    paddingBottom: 40,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
+  },
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',
