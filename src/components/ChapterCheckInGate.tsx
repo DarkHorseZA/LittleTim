@@ -59,6 +59,13 @@ export function ChapterCheckInGate({ active }: { active: boolean }) {
     }
   }, [ready, active, settings.bookCompleted, settings.currentChapter]);
 
+  // If the reader navigates away from the Tabs area while the gate is open
+  // (e.g. tapping a menu item before dismissing), close it so the backdrop
+  // does not block touches on the destination screen.
+  useEffect(() => {
+    if (!active) setOpen(false);
+  }, [active]);
+
   if (!open) return null;
 
   const handleContinue = () => {

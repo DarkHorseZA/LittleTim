@@ -38,6 +38,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
         start={{ x: 0, y: 0 }}
         end={{ x: 0.9, y: 1 }}
         style={styles.hero}
+        pointerEvents="none"
       />
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
         {!firstRun ? (

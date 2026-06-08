@@ -4,6 +4,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
   View,
 } from 'react-native';
@@ -219,6 +220,37 @@ export function SettingsScreen({ navigation }: Props) {
 
         <View style={{ height: 14 }} />
 
+        <View style={styles.card}>
+          <View style={styles.cardHead}>
+            <View style={styles.iconCircle}>
+              <Ionicons name="sparkles-outline" size={16} color={colors.clay} />
+            </View>
+            <Text style={styles.cardTitle}>Practice reminders</Text>
+          </View>
+          <View style={styles.toggleRow}>
+            <Text style={styles.toggleBody}>
+              Show a gentle note after a Today practice, pointing to earlier chapters.
+            </Text>
+            <Switch
+              value={!settings.practiceHintDisabled}
+              onValueChange={(enabled) => {
+                // Turning ON also clears the "seen" flag so the hint can appear
+                // again on the next Today-tab completion.
+                updateSettings({
+                  practiceHintDisabled: !enabled,
+                  practiceHintSeen: enabled ? false : settings.practiceHintSeen,
+                });
+              }}
+              trackColor={{ false: colors.line, true: colors.clay }}
+              thumbColor={colors.white}
+              accessibilityLabel="Practice reminders toggle"
+              accessibilityRole="switch"
+            />
+          </View>
+        </View>
+
+        <View style={{ height: 14 }} />
+
         <Pressable
           onPress={() => {
             nav();
@@ -351,6 +383,18 @@ const styles = StyleSheet.create({
   cardBody: {
     ...text.body,
     marginBottom: 14,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  toggleBody: {
+    flex: 1,
+    fontFamily: fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.inkSoft,
   },
   hours: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   hour: {

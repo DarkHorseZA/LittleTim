@@ -26,6 +26,8 @@ export type Settings = {
   registeredEmail?: string; // set once the reader registers on first open
   registeredAt?: string; // ISO timestamp of registration
   bookCompleted?: boolean; // true once the reader taps "I've completed the book"; permanently hides the launch chapter check-in
+  practiceHintSeen?: boolean;     // true once the "earlier chapters" hint has been shown after a Today-tab completion
+  practiceHintDisabled?: boolean; // true = permanent opt-out; hint never shows regardless of practiceHintSeen
 };
 
 const defaultSettings: Settings = {
@@ -39,6 +41,8 @@ const defaultSettings: Settings = {
   notifyOnNewBook: false,
   hasSeenNewBookPrompt: false,
   bookCompleted: false,
+  practiceHintSeen: false,
+  practiceHintDisabled: false,
 };
 
 export function todayKey(d: Date = new Date()): string {

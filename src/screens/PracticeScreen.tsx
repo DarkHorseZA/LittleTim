@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -33,6 +33,15 @@ type Props = CompositeScreenProps<
 export function PracticeScreen({ navigation, route }: Props) {
   const initialKind: Kind = route.params?.initialKind ?? 'MSG';
   const [kind, setKind] = useState<Kind>(initialKind);
+
+  // Sync the active tab when this screen is navigated to with a new initialKind
+  // param, e.g. when tapping a tile on the Today page that deep-links to WHEN.
+  useEffect(() => {
+    if (route.params?.initialKind) {
+      setKind(route.params.initialKind);
+    }
+  }, [route.params?.initialKind]);
+
   const { today, settings } = useDay();
   const currentChapter = settings.currentChapter;
   const bookCompleted = !!settings.bookCompleted;
@@ -51,7 +60,7 @@ export function PracticeScreen({ navigation, route }: Props) {
 
         <TourCard
           storageKey="practice"
-          title="Three soul technologies."
+          title="Soul Technologies."
           tips={[
             'MSG, gestures the body remembers. SEE, sensual exercises that surface hidden belief.',
             'WHEN, trigger-specific gestures for a moment of shame, grief, fear, or joy.',

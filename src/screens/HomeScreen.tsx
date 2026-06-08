@@ -22,6 +22,8 @@ import { PulsingMark } from '../components/PulsingMark';
 import { TourCard } from '../components/TourCard';
 import { APP_NAME_DISPLAY_CAPS } from '../config';
 import { beliefForDate } from '../data/beliefs';
+import { msgPractices, seePractices } from '../data/practices';
+import { Practice } from '../types';
 import { useDay } from '../store/DayContext';
 import { todayKey } from '../store/storage';
 
@@ -64,6 +66,15 @@ export function HomeScreen({ navigation }: Props) {
   const seeDone = today.seeDone;
   const ritualDone = !!today.morningRitualDone;
   const trackerDoneToday = settings.lastCheckInDate === todayKey(now);
+
+  const currentChapter = settings.currentChapter;
+  const bookCompleted = !!settings.bookCompleted;
+  const whenUnlocked = currentChapter === 9 || bookCompleted;
+
+  // The practice for today is the one matching the current chapter, or the
+  // Introduction practice as a fallback when no chapter is selected.
+  const todayMsg = practiceForChapter(msgPractices, currentChapter);
+  const todaySee = practiceForChapter(seePractices, currentChapter);
 
   return (
     <View style={styles.root}>
@@ -204,7 +215,7 @@ export function HomeScreen({ navigation }: Props) {
 
           <View style={styles.sectionHead}>
             <Text style={text.eyebrow}>Go deeper</Text>
-            <Text style={styles.sectionTitle}>Three soul technologies</Text>
+            <Text style={styles.sectionTitle}>Soul Technologies</Text>
             <Text style={styles.sectionBody}>
               Small and daily beats big and rare.
             </Text>
@@ -216,7 +227,7 @@ export function HomeScreen({ navigation }: Props) {
             body="Gentle, repeatable shapes the body remembers."
             done={msgDone}
             onPress={() =>
-              navigation.navigate('Practice', { initialKind: 'MSG' })
+              navigation.navigate('PracticeDetail', { practiceId: todayMsg.id, source: 'today' })
             }
           />
           <View style={{ height: 12 }} />
@@ -226,19 +237,23 @@ export function HomeScreen({ navigation }: Props) {
             body="Complete what the body started. Rebuild capacity."
             done={seeDone}
             onPress={() =>
-              navigation.navigate('Practice', { initialKind: 'SEE' })
+              navigation.navigate('PracticeDetail', { practiceId: todaySee.id, source: 'today' })
             }
           />
-          <View style={{ height: 12 }} />
-          <PracticeTile
-            kind="WHEN"
-            title="For the moment"
-            body="Trigger-specific gestures. Unlock as you move through the book."
-            done={false}
-            onPress={() =>
-              navigation.navigate('Practice', { initialKind: 'WHEN' })
-            }
-          />
+          {whenUnlocked && (
+            <>
+              <View style={{ height: 12 }} />
+              <PracticeTile
+                kind="WHEN"
+                title="For the moment"
+                body="Trigger-specific gestures. A gesture for every kind of ache."
+                done={false}
+                onPress={() =>
+                  navigation.navigate('Practice', { initialKind: 'WHEN' })
+                }
+              />
+            </>
+          )}
 
           <View style={styles.sectionHead}>
             <Text style={text.eyebrow}>How are we sewing?</Text>
@@ -309,6 +324,16 @@ export function HomeScreen({ navigation }: Props) {
       </SafeAreaView>
     </View>
   );
+}
+
+// Returns the practice for the given chapter, falling back to the Introduction
+// practice (index 0) when no chapter is set or no match is found.
+function practiceForChapter(practices: Practice[], chapter: number | undefined): Practice {
+  if (chapter !== undefined) {
+    const match = practices.find((p) => p.chapter === chapter);
+    if (match) return match;
+  }
+  return practices[0];
 }
 
 function greet(d: Date): string {

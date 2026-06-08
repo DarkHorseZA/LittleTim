@@ -14,7 +14,7 @@ export type RootStackParamList = {
   HowToUse: { firstRun?: boolean } | undefined;
   Tabs: NavigatorScreenParams<TabsParamList>;
   Belief: undefined;
-  PracticeDetail: { practiceId: string };
+  PracticeDetail: { practiceId: string; source?: 'today' };
   TriggerDetail: { triggerId: string };
   Tracker: undefined;
   FocusArea: { focusArea: FocusArea };
