@@ -256,10 +256,10 @@ function ZoneButton({
 const zoneStyles = StyleSheet.create({
   btn: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: 6,
     paddingVertical: 14,
     borderRadius: radius.lg,
     minWidth: 0,
