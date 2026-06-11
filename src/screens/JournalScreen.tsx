@@ -7,14 +7,17 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadows } from '../theme/colors';
-import { webFocus } from '../theme/interactions';
+import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { appendStitch, loadStitches, todayKey } from '../store/storage';
 import { JournalStitch } from '../types';
+import { RootStackParamList } from '../navigation/types';
+import { JournalPost, useJournalFeed } from '../data/journalFeed';
 import { toast } from '../components/Toast';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -26,6 +29,26 @@ function prettyDate(key: string): string {
     month: 'long',
     day: 'numeric',
   });
+}
+
+// Turns an ISO timestamp into a gentle relative phrase, e.g. "3 days ago".
+function relativeDate(iso: string): string {
+  const then = new Date(iso).getTime();
+  if (Number.isNaN(then)) return '';
+  const seconds = Math.round((Date.now() - then) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+  const days = Math.round(hours / 24);
+  if (days < 7) return days === 1 ? 'yesterday' : `${days} days ago`;
+  const weeks = Math.round(days / 7);
+  if (days < 30) return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+  const months = Math.round(days / 30);
+  if (days < 365) return months === 1 ? '1 month ago' : `${months} months ago`;
+  const years = Math.round(days / 365);
+  return years === 1 ? '1 year ago' : `${years} years ago`;
 }
 
 // ─── Saved stitch card ────────────────────────────────────────────────────────
@@ -197,6 +220,74 @@ export function SavedStitches() {
   );
 }
 
+// ─── T's Journal tab (T's posts, fetched from the feed) ──────────────────────
+
+function PostCard({
+  post,
+  onPress,
+}: {
+  post: JournalPost;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Read ${post.title}`}
+      style={({ pressed, focused }: any) => [
+        styles.postCard,
+        pressed && pressScale,
+        focused && webFocus,
+      ]}
+    >
+      <Text style={styles.postTitle}>{post.title}</Text>
+      {post.excerpt ? (
+        <Text style={styles.postExcerpt} numberOfLines={3}>
+          {post.excerpt}
+        </Text>
+      ) : null}
+      <Text style={styles.postMeta}>{relativeDate(post.published_at)}</Text>
+    </Pressable>
+  );
+}
+
+export function TsJournal() {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { posts, loading } = useJournalFeed();
+
+  const open = (post: JournalPost) => {
+    tap();
+    navigation.navigate('JournalPost', { url: post.url, title: post.title });
+  };
+
+  return (
+    <ScrollView
+      style={styles.listScroll}
+      contentContainerStyle={styles.listContainer}
+      showsVerticalScrollIndicator={false}
+    >
+      <View style={styles.pastHeader}>
+        <Text style={styles.pastSub}>Words from Theunis, as they arrive.</Text>
+      </View>
+
+      {posts.length === 0 ? (
+        <Text style={styles.emptyState}>
+          {loading
+            ? 'Gathering T’s latest threads…'
+            : 'No entries yet, check back soon.'}
+        </Text>
+      ) : (
+        posts.map((p) => (
+          <PostCard key={p.slug} post={p} onPress={() => open(p)} />
+        ))
+      )}
+
+      <View style={{ height: 40 }} />
+    </ScrollView>
+  );
+}
+
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
@@ -307,5 +398,29 @@ const styles = StyleSheet.create({
     ...text.body,
     color: colors.ink,
     lineHeight: 21,
+  },
+  postCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    padding: 18,
+    marginBottom: 12,
+    ...shadows.sm,
+  },
+  postTitle: {
+    fontFamily: fonts.serifBold,
+    fontSize: 18,
+    color: colors.ink,
+    marginBottom: 8,
+  },
+  postExcerpt: {
+    ...text.body,
+    color: colors.ink,
+    lineHeight: 22,
+    marginBottom: 10,
+  },
+  postMeta: {
+    ...text.eyebrow,
+    fontSize: 10,
+    color: colors.inkFaint,
   },
 });

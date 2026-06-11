@@ -13,6 +13,10 @@ export const BOOK_PAPERBACK_URL = ''; // Amazon / Takealot / author store
 
 export const NEWSLETTER_URL = ''; // opt-in for "new book" announcements
 
+// T's Journal feed. A JSON list of T's posts, fetched and cached on-device.
+// Blank hides the "T's Journal" tab entirely (same pattern as the URLs above).
+export const JOURNAL_FEED_URL = 'https://theunispienaar.com/journal.json';
+
 export const APP_NAME = 're-Genesis';
 export const APP_NAME_DISPLAY_CAPS = 'RE-GENESIS';
 export const APP_TAGLINE = 'Unravel. Resew. Live.';

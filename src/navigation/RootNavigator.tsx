@@ -23,6 +23,7 @@ import { EmailSignupScreen } from '../screens/EmailSignupScreen';
 import { HowToUseScreen } from '../screens/HowToUseScreen';
 import { MorningRitualScreen } from '../screens/MorningRitualScreen';
 import { JournalHistoryScreen } from '../screens/JournalHistoryScreen';
+import { JournalPostScreen } from '../screens/JournalPostScreen';
 import { GlossaryScreen } from '../screens/GlossaryScreen';
 import { ConnectScreen } from '../screens/ConnectScreen';
 import { NotFoundScreen } from '../screens/NotFoundScreen';
@@ -248,6 +249,11 @@ export function RootNavigator() {
           name="Settings"
           component={SettingsScreen}
           options={{ presentation: 'modal', animation: 'slide_from_right' }}
+        />
+        <Stack.Screen
+          name="JournalPost"
+          component={JournalPostScreen}
+          options={{ presentation: 'modal' }}
         />
         <Stack.Screen
           name="NotFound"

@@ -23,5 +23,6 @@ export type RootStackParamList = {
   Glossary: undefined;
   Connect: undefined;
   Settings: undefined;
+  JournalPost: { url: string; title: string };
   NotFound: undefined;
 };

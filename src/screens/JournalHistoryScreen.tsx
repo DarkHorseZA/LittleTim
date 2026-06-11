@@ -14,10 +14,11 @@ import { colors, layout, radius } from '../theme/colors';
 import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { PulsingMark } from '../components/PulsingMark';
-import { JournalContent, SavedStitches } from './JournalScreen';
+import { JournalContent, SavedStitches, TsJournal } from './JournalScreen';
 import { PatchworkQuilt } from '../components/PatchworkQuilt';
+import { JOURNAL_FEED_URL, hasUrl } from '../config';
 
-type Tab = 'journal' | 'saved' | 'quilt';
+type Tab = 'journal' | 'saved' | 'quilt' | 'tjournal';
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, 'Journal'>,
@@ -25,6 +26,7 @@ type Props = CompositeScreenProps<
 >;
 
 export function JournalHistoryScreen({ route }: Props) {
+  const showTsJournal = hasUrl(JOURNAL_FEED_URL);
   const initialTab: Tab = route.params?.initialTab ?? 'journal';
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
@@ -54,6 +56,13 @@ export function JournalHistoryScreen({ route }: Props) {
             active={activeTab === 'quilt'}
             onPress={() => { tap(); setActiveTab('quilt'); }}
           />
+          {showTsJournal ? (
+            <SegmentButton
+              label="T’s Journal"
+              active={activeTab === 'tjournal'}
+              onPress={() => { tap(); setActiveTab('tjournal'); }}
+            />
+          ) : null}
         </View>
 
         {/* Content */}
@@ -62,6 +71,8 @@ export function JournalHistoryScreen({ route }: Props) {
             <JournalContent />
           ) : activeTab === 'saved' ? (
             <SavedStitches />
+          ) : activeTab === 'tjournal' && showTsJournal ? (
+            <TsJournal />
           ) : (
             <PatchworkQuilt />
           )}
