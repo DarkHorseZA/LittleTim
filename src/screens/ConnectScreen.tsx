@@ -146,7 +146,7 @@ export function ConnectScreen({ navigation }: Props) {
             <BookFormatRow
               icon="headset-outline"
               label="Audiobook"
-              sub="Listen in T's voice."
+              sub="Listen in T’s voice."
               hasLink={hasUrl(BOOK_AUDIOBOOK_URL)}
               onPress={() => open(BOOK_AUDIOBOOK_URL)}
             />
@@ -176,7 +176,7 @@ export function ConnectScreen({ navigation }: Props) {
                   Tell me about a new book
                 </Text>
                 <Text style={styles.notifySub}>
-                  We'll let you know once, quietly, when the next one is ready.
+                  We’ll let you know once, quietly, when the next one is ready.
                 </Text>
               </View>
               <Switch
@@ -196,7 +196,7 @@ export function ConnectScreen({ navigation }: Props) {
                   color={colors.done}
                 />
                 <Text style={styles.notifyConfirmText}>
-                  You're on the list. No noise, just the news.
+                  You’re on the list. No noise, just the news.
                 </Text>
               </View>
             ) : null}

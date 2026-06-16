@@ -118,7 +118,7 @@ export function EmailSignupScreen({ navigation, route }: Props) {
               <Text style={styles.title}>Stay on the thread</Text>
               <Text style={styles.body}>
                 {APP_NAME} is the daily companion to {AUTHOR_NAME}'s book.
-                Leave your email and we'll let you know when new tools, and
+                Leave your email and we’ll let you know when new tools, and
                 the next book, arrive.
               </Text>
 
@@ -152,7 +152,7 @@ export function EmailSignupScreen({ navigation, route }: Props) {
                 />
                 {showError ? (
                   <Text style={styles.errorText}>
-                    That doesn't look like an email yet.
+                    That doesn’t look like an email yet.
                   </Text>
                 ) : (
                   <Text style={styles.caption}>

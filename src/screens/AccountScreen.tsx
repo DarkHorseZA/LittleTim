@@ -139,7 +139,7 @@ export function AccountScreen({ navigation }: Props) {
               accessibilityLabel="Email address, optional"
             />
             <Text style={styles.caption}>
-              Saved locally only. We'll use it when cloud sync ships.
+              Saved locally only. We’ll use it when cloud sync ships.
             </Text>
           </View>
 

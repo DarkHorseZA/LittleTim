@@ -96,13 +96,13 @@ export function HomeScreen({ navigation }: Props) {
               }}
               hitSlop={12}
               accessibilityRole="button"
-              accessibilityLabel="Open today's belief reminder"
+              accessibilityLabel="Open today’s belief reminder"
               style={({ pressed, focused }: any) => [
                 pressed && pressScale,
                 focused && webFocus,
               ]}
             >
-              <PulsingMark size={56} accessibilityLabel="re-Genesis mark, today's belief" />
+              <PulsingMark size={56} accessibilityLabel="re-Genesis mark, today’s belief" />
             </Pressable>
           </View>
 

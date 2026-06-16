@@ -42,7 +42,7 @@ export function JournalHistoryScreen({ route }: Props) {
         {/* Segment tab bar */}
         <View style={styles.segment}>
           <SegmentButton
-            label="Today's Stitches"
+            label="Today’s Stitches"
             active={activeTab === 'journal'}
             onPress={() => { tap(); setActiveTab('journal'); }}
           />

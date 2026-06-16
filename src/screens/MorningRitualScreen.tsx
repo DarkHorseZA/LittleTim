@@ -42,16 +42,16 @@ const STEPS: RitualStep[] = [
     icon: 'heart',
     tint: colors.loved,
     tintSoft: colors.lovedSoft,
-    body: 'Place your hand on your heart. Ask gently: "What do I feel right now?" Do not judge. Just feel.',
+    body: 'Place your hand on your heart. Ask gently: “What do I feel right now?” Do not judge. Just feel.',
   },
   {
     id: 'whisper',
     title: 'Whisper',
-    cue: '"Let there be…"',
+    cue: '“Let there be…”',
     icon: 'sparkles',
     tint: colors.clay,
     tintSoft: colors.claySoft,
-    body: 'Whisper your intention, a lover\'s whisper, not a shout. "Let there be ..." Let today\'s belief land as you say it.',
+    body: 'Whisper your intention, a lover’s whisper, not a shout. “Let there be …” Let today’s belief land as you say it.',
   },
   {
     id: 'touch',
@@ -69,16 +69,16 @@ const STEPS: RitualStep[] = [
     icon: 'leaf',
     tint: colors.health,
     tintSoft: colors.healthSoft,
-    body: 'Three slow breaths. Inhale: "I breathe the breath of lives." Exhale: "I am eternal. I am earth."',
+    body: 'Three slow breaths. Inhale: “I breathe the breath of lives.” Exhale: “I am eternal. I am earth.”',
   },
   {
     id: 'bless',
     title: 'Bless',
-    cue: '"I am blessed."',
+    cue: '“I am blessed.”',
     icon: 'sunny',
     tint: colors.wealth,
     tintSoft: colors.wealthSoft,
-    body: 'Hands on heart. Whisper: "I am blessed. I have permission to be me. I have the ability to create my Life."',
+    body: 'Hands on heart. Whisper: “I am blessed. I have permission to be me. I have the ability to create my Life.”',
   },
 ];
 
@@ -304,7 +304,7 @@ export function MorningRitualScreen({ navigation }: Props) {
 
             {step.id === 'whisper' ? (
               <View style={styles.beliefPanel}>
-                <Text style={styles.beliefLabel}>Today's belief</Text>
+                <Text style={styles.beliefLabel}>Today’s belief</Text>
                 <Text style={styles.beliefStatement}>
                   {`\u201C${belief.statement}\u201D`}
                 </Text>

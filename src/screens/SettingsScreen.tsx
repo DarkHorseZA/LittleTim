@@ -160,7 +160,7 @@ export function SettingsScreen({ navigation }: Props) {
             <Text style={styles.cardTitle}>Where are you in the book?</Text>
           </View>
           <Text style={styles.cardBody}>
-            When you set your chapter, today's belief and practice follow the
+            When you set your chapter, today’s belief and practice follow the
             chapter. Leave it blank to let the app rotate a different one
             each day.
           </Text>
@@ -208,7 +208,7 @@ export function SettingsScreen({ navigation }: Props) {
                   ]}
                   accessibilityRole="button"
                   accessibilityState={{ selected: on }}
-                  accessibilityLabel={`Reminder at ${h} o'clock`}
+                  accessibilityLabel={`Reminder at ${h} o’clock`}
                 >
                   <Text style={[styles.hourText, on && styles.hourTextOn]}>
                     {h}:00

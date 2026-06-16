@@ -64,4 +64,4 @@ effective date above will change.
 
 Questions about this policy can be sent to:
 
-**Theunis Pienaar** — tjpienaar1@gmail.com
+**Theunis Pienaar** — privacy@theunispienaar.com

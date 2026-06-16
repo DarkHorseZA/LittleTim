@@ -146,7 +146,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
               icon="sparkles-outline"
               time="Anytime"
               duration="1 min"
-              title="Today's belief"
+              title="Today’s belief"
               body="A statement and a somatic embedding, tied to where you are in the book."
             />
             <Rhythm
@@ -168,7 +168,7 @@ export function HowToUseScreen({ navigation, route }: Props) {
           <Section eyebrow="Where are you in the book?">
             <Body>
               Each chapter has its own belief, MSG, and SEE. In Settings, tell
-              the app which chapter you're reading, Today will follow that
+              the app which chapter you’re reading, Today will follow that
               chapter until you move on. Leave it on Auto to let the app
               rotate through all chapters.
             </Body>

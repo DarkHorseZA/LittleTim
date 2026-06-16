@@ -73,7 +73,7 @@ function StitchCard({ stitch }: { stitch: JournalStitch }) {
   );
 }
 
-// ─── Today's Stitches tab (inputs only) ──────────────────────────────────────
+// ─── Today’s Stitches tab (inputs only) ──────────────────────────────────────
 
 export function JournalContent() {
   const { addQuiltEntry } = useDay();
@@ -106,9 +106,9 @@ export function JournalContent() {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.inputSection}>
-        <Text style={styles.title}>Today's Stitches</Text>
+        <Text style={styles.title}>Today’s Stitches</Text>
         <Text style={styles.body}>
-          Two sentences. Don't try to be eloquent. Just be honest.
+          Two sentences. Don’t try to be eloquent. Just be honest.
         </Text>
 
         <View style={styles.card}>
@@ -183,7 +183,7 @@ export function JournalContent() {
 export function SavedStitches() {
   const [stitches, setStitches] = useState<JournalStitch[]>([]);
 
-  // Reload on focus so a stitch saved on the Today's Stitches tab shows up the
+  // Reload on focus so a stitch saved on the Today’s Stitches tab shows up the
   // moment the user switches to this tab (the component mounts fresh).
   useFocusEffect(
     useCallback(() => {
@@ -220,7 +220,7 @@ export function SavedStitches() {
   );
 }
 
-// ─── T's Journal tab (T's posts, fetched from the feed) ──────────────────────
+// ─── T’s Journal tab (T’s posts, fetched from the feed) ──────────────────────
 
 function PostCard({
   post,

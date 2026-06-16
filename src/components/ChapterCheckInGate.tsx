@@ -17,7 +17,7 @@ import { toast } from './Toast';
 // Gentle chapter check-in shown once per app open for a returning reader
 // (after onboarding, never on the very first launch). Reuses the exact Settings
 // chapter picker and the shared settings.currentChapter value. Tapping
-// "I've completed the book" sets settings.bookCompleted and never shows again.
+// "I’ve completed the book" sets settings.bookCompleted and never shows again.
 //
 // `active` should be true only when the user is actually inside the app (the
 // Tabs area), so the prompt does not cover the Welcome splash.
@@ -107,7 +107,7 @@ export function ChapterCheckInGate({ active }: { active: boolean }) {
       <Pressable
         onPress={handleCompleted}
         accessibilityRole="button"
-        accessibilityLabel="I've completed the book"
+        accessibilityLabel="I’ve completed the book"
         style={({ pressed, focused }: any) => [
           styles.completedLink,
           pressed && { opacity: 0.7 },

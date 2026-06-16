@@ -20,10 +20,10 @@ export function ChapterPicker({
   value: number | undefined;
   onChange: (id: number | undefined) => void;
   includeAuto?: boolean;
-  // When true, the chapter chips read as unselected and the "I've completed the
+  // When true, the chapter chips read as unselected and the "I’ve completed the
   // book" option is the active selection instead.
   bookCompleted?: boolean;
-  // Render the "I've completed the book" option at the end of the selector.
+  // Render the "I’ve completed the book" option at the end of the selector.
   showCompletedOption?: boolean;
   onCompleteBook?: () => void;
 }) {
@@ -90,7 +90,7 @@ export function ChapterPicker({
             label={'I’ve completed the book'}
             selected={!!bookCompleted}
             onPress={() => onCompleteBook?.()}
-            accessibilityLabel="I've completed the book"
+            accessibilityLabel="I’ve completed the book"
           />
         </View>
       )}

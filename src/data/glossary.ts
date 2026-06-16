@@ -5,7 +5,7 @@ export type GlossaryTerm = {
   definition: string;
 };
 
-// Short definitions in T's voice, distilled from the manuscript.
+// Short definitions in T’s voice, distilled from the manuscript.
 export const glossary: GlossaryTerm[] = [
   {
     id: 're-genesis',
@@ -89,7 +89,7 @@ export const glossary: GlossaryTerm[] = [
     id: 'let-there-be',
     term: '\u201CLet there be\u201D',
     definition:
-      'A creative whisper. Not a shout. A lover\'s instruction to the field. The second of the Five Gestures.',
+      'A creative whisper. Not a shout. A lover’s instruction to the field. The second of the Five Gestures.',
   },
   {
     id: 'i-am',

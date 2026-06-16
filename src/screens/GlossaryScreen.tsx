@@ -44,7 +44,7 @@ export function GlossaryScreen({ navigation }: Props) {
           </View>
           <Text style={styles.title}>Words from the book</Text>
           <Text style={styles.subtitle}>
-            Short definitions, in T's voice. Tap away anytime you need a
+            Short definitions, in T’s voice. Tap away anytime you need a
             reminder.
           </Text>
 
