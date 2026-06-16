@@ -299,7 +299,7 @@ const webStyles = StyleSheet.create({
     maxWidth: layout.maxWidth,
     backgroundColor: colors.bg,
     // Soft vertical edge so the phone viewport sits on the oat background.
-    shadowColor: '#2B1F0F',
+    shadowColor: colors.shadow,
     shadowOpacity: 0.08,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 0 },

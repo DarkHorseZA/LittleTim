@@ -71,6 +71,42 @@ export const colors = {
   onClaySoft: 'rgba(255,255,255,0.85)',
   onClayStrong: 'rgba(255,255,255,0.92)',
   onClayChip: 'rgba(255,255,255,0.22)',
+
+  // Shadow base (also referenced by the `shadows` presets below).
+  shadow: '#2B1F0F',
+
+  // Modal scrim behind bottom sheets / dialog backdrops.
+  scrim: 'rgba(43, 31, 15, 0.45)',
+
+  // Text input placeholder (a quiet hint, not readable body copy).
+  placeholder: '#9A9086', // alias of inkHush
+
+  // Warmth dial: cold end. The warm end is `clay`.
+  warmthCold: '#8aa0b0',
+
+  // Quilt fabric highlights — specular sheen + woven edges on sewn patches.
+  sheen: 'rgba(255,255,255,0.5)',
+  patchEdge: 'rgba(255,255,255,0.6)',
+  patchEdgeRich: 'rgba(255,253,248,0.7)',
+  patchStitch: 'rgba(255,253,248,0.6)',
+  thumbRing: 'rgba(255,255,255,0.8)',
+
+  // Quilt detail-card chips (neutral stitches vs. a "sewed with love" stitch).
+  chipNeutralBg: '#efe6d6',
+  chipNeutralFg: '#6a5f4f',
+  chipLoveBg: '#e4ead2',
+  chipLoveFg: '#566b34',
+
+  // Gentle-note surfaces (the quilt onboarding card).
+  noteBg: '#fdf5ee',
+  noteStar: '#f5e2d2',
+  notePill: '#f0d8c5',
+
+  // QuiltPreview decorative patch ramp (onboarding preview component only).
+  previewPatch1: '#E8C4A0',
+  previewPatch2: '#D4956A',
+  previewPatch3: '#C07040',
+  clayDeep30: 'rgba(142,63,31,0.30)', // clayDeep at 30% alpha
 };
 
 export type AreaColor =
@@ -112,21 +148,21 @@ export const iconSize = {
 
 export const shadows = {
   sm: {
-    shadowColor: '#2B1F0F',
+    shadowColor: colors.shadow,
     shadowOpacity: 0.05,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 1,
   },
   md: {
-    shadowColor: '#2B1F0F',
+    shadowColor: colors.shadow,
     shadowOpacity: 0.08,
     shadowRadius: 18,
     shadowOffset: { width: 0, height: 8 },
     elevation: 3,
   },
   lg: {
-    shadowColor: '#2B1F0F',
+    shadowColor: colors.shadow,
     shadowOpacity: 0.12,
     shadowRadius: 28,
     shadowOffset: { width: 0, height: 14 },

@@ -260,7 +260,7 @@ export function MorningRitualScreen({ navigation }: Props) {
                       { backgroundColor: step.tint },
                     ]}
                   >
-                    <Ionicons name={step.icon} size={36} color="#FFFFFF" />
+                    <Ionicons name={step.icon} size={36} color={colors.white} />
                   </View>
                 </>
               ) : (
@@ -281,7 +281,7 @@ export function MorningRitualScreen({ navigation }: Props) {
                       },
                     ]}
                   >
-                    <Ionicons name={step.icon} size={40} color="#FFFFFF" />
+                    <Ionicons name={step.icon} size={40} color={colors.white} />
                   </Animated.View>
                 </>
               )}
@@ -406,7 +406,7 @@ function CompletionView({
               ]}
             />
             <View style={styles.completionCore}>
-              <Ionicons name="checkmark" size={44} color="#FFFFFF" />
+              <Ionicons name="checkmark" size={44} color={colors.white} />
             </View>
           </View>
 
@@ -518,10 +518,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    fontFamily: fonts.serifBold,
-    fontSize: 40,
-    lineHeight: 48,
-    color: colors.ink,
+    ...text.hero,
     textAlign: 'center',
   },
   cue: {

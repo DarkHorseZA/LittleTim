@@ -31,8 +31,13 @@ import { QuiltEntry } from '../types';
 import { todayKey } from '../store/storage';
 import { CloseButton } from './CloseButton';
 
-const PATCH_TONES = ['#E8C4A0', '#D4956A', '#C07040', colors.clay] as const;
-const CLAY_DEEP_30 = 'rgba(142,63,31,0.30)';
+const PATCH_TONES = [
+  colors.previewPatch1,
+  colors.previewPatch2,
+  colors.previewPatch3,
+  colors.clay,
+] as const;
+const CLAY_DEEP_30 = colors.clayDeep30;
 
 function patchColor(count: number): string {
   if (count === 0) return colors.bgDeep;

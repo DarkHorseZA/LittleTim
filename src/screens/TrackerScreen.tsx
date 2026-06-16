@@ -45,7 +45,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Tracker'>;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const COOL_COLOR = '#8aa0b0';
+const COOL_COLOR = colors.warmthCold;
 
 type ZoneDef = {
   key: BodyZone;
@@ -188,7 +188,7 @@ const warmStyles = StyleSheet.create({
     height: THUMB_SIZE,
     borderRadius: THUMB_SIZE / 2,
     borderWidth: 2,
-    borderColor: 'rgba(255,255,255,0.8)',
+    borderColor: colors.thumbRing,
     ...shadows.md,
   },
   labels: {
@@ -676,10 +676,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   title: {
-    fontFamily: fonts.serifBold,
-    fontSize: 28,
-    lineHeight: 34,
-    color: colors.ink,
+    ...text.h1,
     marginBottom: 8,
   },
   intro: {

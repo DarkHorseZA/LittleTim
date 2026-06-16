@@ -13,6 +13,7 @@ import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { Button } from './Button';
 
 type Props = {
   storageKey: string;
@@ -114,18 +115,13 @@ export function TourCard({
         </View>
       ))}
 
-      <Pressable
-        onPress={() => { tap(); dismiss(); }}
-        accessibilityRole="button"
+      <Button
+        title="Got it"
+        variant="soft"
+        onPress={dismiss}
         accessibilityLabel="Got it, dismiss this tip"
-        style={({ pressed, focused }: any) => [
-          styles.gotItBtn,
-          pressed && pressScale,
-          focused && webFocus,
-        ]}
-      >
-        <Text style={styles.gotItText}>Got it</Text>
-      </Pressable>
+        style={styles.gotItBtn}
+      />
     </Animated.View>
   );
 }
@@ -196,16 +192,5 @@ const styles = StyleSheet.create({
   gotItBtn: {
     alignSelf: 'flex-end',
     marginTop: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: radius.pill,
-    backgroundColor: colors.claySoft,
-  },
-  gotItText: {
-    fontFamily: fonts.sansBold,
-    fontSize: 12,
-    letterSpacing: 1.2,
-    color: colors.clayDeep,
-    textTransform: 'uppercase',
   },
 });

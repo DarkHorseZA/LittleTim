@@ -20,10 +20,19 @@ export const text = {
     color: colors.inkFaint,
     textTransform: 'uppercase',
   } as TextStyle,
-  display: {
+  // Full-screen editorial hero titles (Baseline, Morning Ritual).
+  hero: {
     fontFamily: fonts.serifBold,
     fontSize: 40,
-    lineHeight: 46,
+    lineHeight: 48,
+    color: colors.ink,
+  } as TextStyle,
+  // Modal / detail screen titles, and the Today date. The single largest
+  // title most readers see day to day.
+  display: {
+    fontFamily: fonts.serifBold,
+    fontSize: 34,
+    lineHeight: 40,
     color: colors.ink,
   } as TextStyle,
   h1: {

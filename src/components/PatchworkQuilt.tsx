@@ -35,6 +35,7 @@ import { useDay } from '../store/DayContext';
 import { todayKey } from '../store/storage';
 import { QuiltEntry } from '../types';
 import { CloseButton } from './CloseButton';
+import { Button } from './Button';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -47,15 +48,15 @@ const RING_GAP = 1.5;
 const RING_WIDTH = 2.5;
 const RING_OFFSET = RING_GAP + RING_WIDTH; // 4px beyond patch edge
 
-const TODAY_RING_COLOR = '#b0542f';
+const TODAY_RING_COLOR = colors.q4;
 
 // Chip colours for the inline detail card
 const CHIP_CFG: Record<QuiltEntry['type'], { label: string; bg: string; fg: string; prefix: string }> = {
-  ritual:  { label: 'Five Gestures',   bg: '#efe6d6', fg: '#6a5f4f', prefix: '✦' },
-  msg:     { label: 'MSG',             bg: '#efe6d6', fg: '#6a5f4f', prefix: '✦' },
-  see:     { label: 'SEE',             bg: '#efe6d6', fg: '#6a5f4f', prefix: '✦' },
-  belief:  { label: 'Belief',          bg: '#efe6d6', fg: '#6a5f4f', prefix: '✦' },
-  journal: { label: 'Sewed with love', bg: '#e4ead2', fg: '#566b34', prefix: '♥' },
+  ritual:  { label: 'Five Gestures',   bg: colors.chipNeutralBg, fg: colors.chipNeutralFg, prefix: '✦' },
+  msg:     { label: 'MSG',             bg: colors.chipNeutralBg, fg: colors.chipNeutralFg, prefix: '✦' },
+  see:     { label: 'SEE',             bg: colors.chipNeutralBg, fg: colors.chipNeutralFg, prefix: '✦' },
+  belief:  { label: 'Belief',          bg: colors.chipNeutralBg, fg: colors.chipNeutralFg, prefix: '✦' },
+  journal: { label: 'Sewed with love', bg: colors.chipLoveBg,    fg: colors.chipLoveFg,    prefix: '♥' },
 };
 
 // Legend swatches: unsewn + 4 sewn levels
@@ -178,14 +179,7 @@ function GentleNote({ onDismiss }: { onDismiss: () => void }) {
       </Text>
 
       <View style={noteStyles.footer}>
-        <Pressable
-          onPress={onDismiss}
-          accessibilityRole="button"
-          accessibilityLabel="Got it"
-          style={({ pressed }: any) => [noteStyles.gotIt, pressed && { opacity: 0.8 }]}
-        >
-          <Text style={noteStyles.gotItText}>Got it</Text>
-        </Pressable>
+        <Button title="Got it" variant="soft" onPress={onDismiss} />
       </View>
     </View>
   );
@@ -193,7 +187,7 @@ function GentleNote({ onDismiss }: { onDismiss: () => void }) {
 
 const noteStyles = StyleSheet.create({
   card: {
-    backgroundColor: '#fdf5ee',
+    backgroundColor: colors.noteBg,
     borderRadius: radius.lg,
     padding: 18,
     marginBottom: 20,
@@ -208,7 +202,7 @@ const noteStyles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#f5e2d2',
+    backgroundColor: colors.noteStar,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
@@ -240,18 +234,6 @@ const noteStyles = StyleSheet.create({
   },
   footer: {
     alignItems: 'flex-end',
-  },
-  gotIt: {
-    backgroundColor: '#f0d8c5',
-    paddingHorizontal: 18,
-    paddingVertical: 9,
-    borderRadius: radius.pill,
-  },
-  gotItText: {
-    fontFamily: fonts.sansSemi,
-    fontSize: 13,
-    color: colors.clayDeep,
-    letterSpacing: 0.3,
   },
 });
 
@@ -654,8 +636,8 @@ export function PatchworkQuilt({ size = 'full' }: { size?: PatchworkQuiltSize })
                     borderColor: !sewn
                       ? colors.thread
                       : count >= 3
-                      ? 'rgba(255,253,248,0.7)'
-                      : 'rgba(255,255,255,0.6)',
+                      ? colors.patchEdgeRich
+                      : colors.patchEdge,
                   },
                 ]}
               >
@@ -665,7 +647,7 @@ export function PatchworkQuilt({ size = 'full' }: { size?: PatchworkQuiltSize })
                     style={[
                       styles.innerStitch,
                       {
-                        borderColor: 'rgba(255,253,248,0.6)',
+                        borderColor: colors.patchStitch,
                         borderRadius: 5,
                         borderWidth: 1.4,
                       },
@@ -675,7 +657,7 @@ export function PatchworkQuilt({ size = 'full' }: { size?: PatchworkQuiltSize })
 
                 {/* Fabric sheen — top-left radial approximation */}
                 <LinearGradient
-                  colors={['rgba(255,255,255,0.5)', 'transparent']}
+                  colors={[colors.sheen, 'transparent']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={[StyleSheet.absoluteFill, { opacity: 0.55, borderRadius: CELL_RADIUS }]}

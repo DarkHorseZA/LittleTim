@@ -184,7 +184,7 @@ export function ConnectScreen({ navigation }: Props) {
                 onValueChange={toggleNotify}
                 disabled={saving}
                 trackColor={{ false: colors.lineSoft, true: colors.clay }}
-                thumbColor="#FFFFFF"
+                thumbColor={colors.white}
               />
             </View>
 
@@ -392,10 +392,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    fontFamily: fonts.serifBold,
-    fontSize: 34,
-    lineHeight: 40,
-    color: colors.ink,
+    ...text.display,
     marginTop: 4,
   },
   intro: {

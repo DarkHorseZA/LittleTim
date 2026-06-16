@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   },
   segBtnActive: {
     backgroundColor: colors.surface,
-    shadowColor: '#2B1F0F',
+    shadowColor: colors.shadow,
     shadowOpacity: 0.06,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },

@@ -4,15 +4,14 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, radius, shadows } from '../theme/colors';
+import { colors, radius } from '../theme/colors';
 import { webFocus } from '../theme/interactions';
 import { fonts } from '../theme/type';
 import { useDay } from '../store/DayContext';
 import { ChapterPicker } from './ChapterPicker';
 import { Button } from './Button';
+import { BottomSheet } from './BottomSheet';
 import { toast } from './Toast';
 
 // Gentle chapter check-in shown once per app open for a returning reader
@@ -24,7 +23,6 @@ import { toast } from './Toast';
 // Tabs area), so the prompt does not cover the Welcome splash.
 export function ChapterCheckInGate({ active }: { active: boolean }) {
   const { ready, settings, updateSettings } = useDay();
-  const insets = useSafeAreaInsets();
 
   // Capture, once, whether this was already a returning reader at launch. If
   // onboarding completed earlier this same session, hasSeenHowTo flips to true
@@ -81,77 +79,50 @@ export function ChapterCheckInGate({ active }: { active: boolean }) {
   };
 
   return (
-    <View style={StyleSheet.absoluteFill}>
-      {/* Dim backdrop, tapping it dismisses without changing anything. */}
-      <Pressable
-        style={styles.backdrop}
-        accessibilityRole="button"
-        accessibilityLabel="Dismiss chapter check-in"
-        onPress={() => setOpen(false)}
+    <BottomSheet
+      onDismiss={() => setOpen(false)}
+      dismissLabel="Dismiss chapter check-in"
+    >
+      <Text style={styles.heading}>Where are you in the book?</Text>
+      <Text style={styles.subtext}>
+        {'Pick the chapter you’re sewing through right now. This helps us bring you the right practices.'}
+      </Text>
+
+      <ScrollView
+        style={styles.pickerScroll}
+        contentContainerStyle={styles.pickerContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <ChapterPicker value={selected} onChange={setSelected} />
+      </ScrollView>
+
+      <Button
+        title="Continue"
+        onPress={handleContinue}
+        size="lg"
+        haptic="success"
+        style={styles.continueBtn}
       />
 
-      <View style={styles.sheetWrap} pointerEvents="box-none">
-        <View style={[styles.sheet, { paddingBottom: 22 + insets.bottom }]}>
-          <Text style={styles.heading}>Where are you in the book?</Text>
-          <Text style={styles.subtext}>
-            {'Pick the chapter you’re sewing through right now. This helps us bring you the right practices.'}
-          </Text>
-
-          <ScrollView
-            style={styles.pickerScroll}
-            contentContainerStyle={styles.pickerContent}
-            showsVerticalScrollIndicator={false}
-          >
-            <ChapterPicker value={selected} onChange={setSelected} />
-          </ScrollView>
-
-          <Button
-            title="Continue"
-            onPress={handleContinue}
-            size="lg"
-            haptic="success"
-            style={styles.continueBtn}
-          />
-
-          <Pressable
-            onPress={handleCompleted}
-            accessibilityRole="button"
-            accessibilityLabel="I've completed the book"
-            style={({ pressed, focused }: any) => [
-              styles.completedLink,
-              pressed && { opacity: 0.7 },
-              focused && webFocus,
-            ]}
-          >
-            <Text style={styles.completedText}>
-              {'I’ve completed the book'}
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-    </View>
+      <Pressable
+        onPress={handleCompleted}
+        accessibilityRole="button"
+        accessibilityLabel="I've completed the book"
+        style={({ pressed, focused }: any) => [
+          styles.completedLink,
+          pressed && { opacity: 0.7 },
+          focused && webFocus,
+        ]}
+      >
+        <Text style={styles.completedText}>
+          {'I’ve completed the book'}
+        </Text>
+      </Pressable>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(43, 31, 15, 0.45)',
-  },
-  sheetWrap: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 22,
-    paddingTop: 26,
-    paddingBottom: 22,
-    maxHeight: '86%',
-    ...shadows.md,
-  },
   heading: {
     fontFamily: fonts.serifBold,
     fontSize: 24,

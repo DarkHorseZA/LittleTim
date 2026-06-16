@@ -121,7 +121,7 @@ export function HomeScreen({ navigation }: Props) {
             tips={[
               'Tap the Morning Ritual to begin the Five Gestures, under five minutes, the anchor of your day.',
               'Your streak grows when you complete the ritual, an MSG, or an SEE.',
-              'Tap today\'s belief card for its somatic embedding, a small thing to do with your body.',
+              'Tap today’s belief card for its somatic embedding, a small thing to do with your body.',
             ]}
           />
 
@@ -167,7 +167,7 @@ export function HomeScreen({ navigation }: Props) {
                 <Text style={styles.ritualCtaText}>
                   {ritualDone ? 'Practice again' : 'Begin'}
                 </Text>
-                <Ionicons name="arrow-forward" size={16} color="#FFFFFF" />
+                <Ionicons name="arrow-forward" size={16} color={colors.white} />
               </View>
             </LinearGradient>
           </Pressable>
@@ -201,8 +201,10 @@ export function HomeScreen({ navigation }: Props) {
               end={{ x: 1, y: 1 }}
               style={styles.beliefCard}
             >
-              <Text style={text.eyebrow}>Today's belief</Text>
-              <Text style={styles.beliefStatement}>"{belief.statement}"</Text>
+              <Text style={text.eyebrow}>{'Today’s belief'}</Text>
+              <Text style={styles.beliefStatement}>
+                {'“'}{belief.statement}{'”'}
+              </Text>
               <View style={styles.beliefFooter}>
                 <Text style={styles.beliefFooterText}>Open reminder</Text>
                 <Ionicons
@@ -485,8 +487,6 @@ const styles = StyleSheet.create({
   },
   date: {
     ...text.display,
-    fontSize: 34,
-    lineHeight: 40,
     marginTop: 2,
     marginBottom: 10,
   },

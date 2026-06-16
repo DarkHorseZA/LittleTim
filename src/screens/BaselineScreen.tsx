@@ -186,10 +186,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   title: {
-    fontFamily: fonts.serifBold,
-    fontSize: 40,
-    lineHeight: 48,
-    color: colors.ink,
+    ...text.hero,
   },
   subtitle: {
     fontFamily: fonts.serifItalic,

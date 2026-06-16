@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
@@ -15,6 +15,7 @@ import { fonts, text } from '../theme/type';
 import { webFocus } from '../theme/interactions';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
+import { BottomSheet } from '../components/BottomSheet';
 import { findPractice } from '../data/practices';
 import { useDay } from '../store/DayContext';
 
@@ -27,7 +28,6 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
   );
   const source = route.params.source;
   const { today, settings, updateToday, updateSettings, addQuiltEntry } = useDay();
-  const insets = useSafeAreaInsets();
   const [showHint, setShowHint] = useState(false);
 
   if (!practice) {
@@ -137,58 +137,43 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
 
       {/* Completion hint overlay — shown only on first Today-tab completion */}
       {showHint && (
-        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-          <Pressable
-            style={hintStyles.backdrop}
+        <BottomSheet onDismiss={dismissHint} dismissLabel="Dismiss">
+          <View style={hintStyles.iconWrap}>
+            <Ionicons name="leaf" size={26} color={colors.clay} />
+          </View>
+          <Text style={hintStyles.heading}>Beautifully sewn.</Text>
+          <Text style={hintStyles.body}>
+            {
+              'You can always return to earlier chapters’ practices anytime, in the Practice tab.'
+            }
+          </Text>
+
+          <Button
+            title="Got it"
             onPress={dismissHint}
-            accessibilityLabel="Dismiss"
+            size="lg"
+            haptic="success"
           />
-          <View
-            style={[
-              hintStyles.sheet,
-              { paddingBottom: Math.max(insets.bottom + 16, 32) },
+          <View style={{ height: 10 }} />
+          <Button
+            title="Take me there"
+            variant="ghost"
+            onPress={goToPractice}
+          />
+
+          <Pressable
+            onPress={disableHint}
+            accessibilityRole="button"
+            accessibilityLabel="Don’t show this again"
+            style={({ pressed, focused }: any) => [
+              hintStyles.dontShow,
+              pressed && { opacity: 0.6 },
+              focused && webFocus,
             ]}
           >
-            <View style={hintStyles.handle} />
-            <View style={hintStyles.iconWrap}>
-              <Ionicons name="leaf" size={26} color={colors.clay} />
-            </View>
-            <Text style={hintStyles.heading}>Beautifully sewn.</Text>
-            <Text style={hintStyles.body}>
-              {
-                'You can always return to earlier chapters’ practices anytime, in the Practice tab.'
-              }
-            </Text>
-
-            <Button
-              title="Got it"
-              onPress={dismissHint}
-              size="lg"
-              haptic="success"
-            />
-            <View style={{ height: 10 }} />
-            <Button
-              title="Take me there"
-              variant="ghost"
-              onPress={goToPractice}
-            />
-
-            <Pressable
-              onPress={disableHint}
-              accessibilityRole="button"
-              accessibilityLabel="Don't show this again"
-              style={({ pressed, focused }: any) => [
-                hintStyles.dontShow,
-                pressed && { opacity: 0.6 },
-                focused && webFocus,
-              ]}
-            >
-              <Text style={hintStyles.dontShowText}>
-                {'’'}Don‘t show this again
-              </Text>
-            </Pressable>
-          </View>
-        </View>
+            <Text style={hintStyles.dontShowText}>{'Don’t show this again'}</Text>
+          </Pressable>
+        </BottomSheet>
       )}
     </SafeAreaView>
   );
@@ -228,8 +213,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...text.display,
-    fontSize: 34,
-    lineHeight: 42,
   },
   metaRow: {
     flexDirection: 'row',
@@ -292,30 +275,6 @@ const styles = StyleSheet.create({
 });
 
 const hintStyles = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(43, 31, 15, 0.45)',
-  },
-  sheet: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: colors.surface,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    ...shadows.md,
-  },
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: colors.line,
-    alignSelf: 'center',
-    marginBottom: 20,
-  },
   iconWrap: {
     width: 52,
     height: 52,

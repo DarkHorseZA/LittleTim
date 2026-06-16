@@ -1,12 +1,13 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
+import { colors } from '../theme/colors';
 
 // Line-art pair of legs as an outlined silhouette, front view: wider hips,
 // thighs tapering to the knees, calves, narrow ankles, and small feet pointing
 // outward, with an open stance gap between the legs. Closed outline, no fill.
 export function LegsIcon({
   size = 20,
-  color = '#5e554b',
+  color = colors.inkSoft,
   strokeWidth = 1.3,
 }: {
   size?: number;

@@ -126,8 +126,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...text.display,
-    fontSize: 32,
-    lineHeight: 40,
   },
   metaRow: {
     flexDirection: 'row',

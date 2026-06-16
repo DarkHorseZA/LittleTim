@@ -216,10 +216,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   title: {
-    fontFamily: fonts.serifBold,
-    fontSize: 34,
-    lineHeight: 40,
-    color: colors.ink,
+    ...text.display,
     marginBottom: 10,
   },
   body: {

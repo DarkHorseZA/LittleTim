@@ -123,7 +123,7 @@ export function JournalContent() {
             value={sewedWithLove}
             onChangeText={setSewedWithLove}
             placeholder="Today I sewed with love when I..."
-            placeholderTextColor="#9c9183"
+            placeholderTextColor={colors.placeholder}
             multiline
             scrollEnabled={false}
             style={styles.input}
@@ -143,7 +143,7 @@ export function JournalContent() {
             value={oldThread}
             onChangeText={setOldThread}
             placeholder="Today, when the old thread pulled, I..."
-            placeholderTextColor="#9c9183"
+            placeholderTextColor={colors.placeholder}
             multiline
             scrollEnabled={false}
             style={styles.input}
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    color: '#2c2620',
+    color: colors.ink,
     minHeight: 72,
     paddingTop: 4,
     fontFamily: fonts.sans,
