@@ -13,6 +13,9 @@ export const BOOK_PAPERBACK_URL = ''; // Amazon / Takealot / author store
 
 export const NEWSLETTER_URL = ''; // opt-in for "new book" announcements
 
+// Public privacy policy. Shown as a link in Settings; blank hides the link.
+export const PRIVACY_POLICY_URL = 'https://theunispienaar.com/app-privacy.html';
+
 // T's Journal feed. A JSON list of T's posts, fetched and cached on-device.
 // Blank hides the "T's Journal" tab entirely (same pattern as the URLs above).
 export const JOURNAL_FEED_URL = 'https://theunispienaar.com/journal.json';

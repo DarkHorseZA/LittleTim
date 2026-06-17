@@ -84,6 +84,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bg,
   },
   container: {
+    flexGrow: 1,
+    justifyContent: 'center',
     padding: 20,
     paddingBottom: 40,
     width: '100%',

@@ -72,6 +72,8 @@ Companion to re-Genesis by Theunis Pienaar.
 
 ## Privacy policy hosting
 
-Play requires a publicly reachable URL. Easiest options:
-1. Host `PRIVACY.md` as a page on `theunispienaar.com`, or
-2. Publish it via the project's GitHub Pages site and link to that URL.
+**Live URL (paste this into Play Console):**
+`https://theunispienaar.com/app-privacy.html`
+
+Verified publicly reachable (HTTP 200), serving the policy from `PRIVACY.md`.
+If `PRIVACY.md` changes, update that hosted page too.

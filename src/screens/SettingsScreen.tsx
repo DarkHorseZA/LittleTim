@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Image,
+  Linking,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -15,7 +16,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, layout, radius, shadows } from '../theme/colors';
 import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
-import { APP_NAME, ATTRIBUTION } from '../config';
+import { APP_NAME, ATTRIBUTION, PRIVACY_POLICY_URL, hasUrl } from '../config';
 import { useDay } from '../store/DayContext';
 import { PulsingMark } from '../components/PulsingMark';
 import { BackButton } from '../components/BackButton';
@@ -301,6 +302,23 @@ export function SettingsScreen({ navigation }: Props) {
         <Text style={styles.footerFaint}>
           v0.4 · Local-only. Your entries stay on this device.
         </Text>
+        {hasUrl(PRIVACY_POLICY_URL) ? (
+          <Pressable
+            onPress={() => {
+              tap();
+              Linking.openURL(PRIVACY_POLICY_URL);
+            }}
+            accessibilityRole="link"
+            accessibilityLabel="Read the privacy policy"
+            style={({ pressed, focused }: any) => [
+              styles.privacyLink,
+              pressed && { opacity: 0.6 },
+              focused && webFocus,
+            ]}
+          >
+            <Text style={styles.privacyLinkText}>Privacy policy</Text>
+          </Pressable>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
@@ -447,5 +465,18 @@ const styles = StyleSheet.create({
   footerFaint: {
     ...text.caption,
     textAlign: 'center',
+  },
+  privacyLink: {
+    alignSelf: 'center',
+    marginTop: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: radius.pill,
+  },
+  privacyLinkText: {
+    fontFamily: fonts.sansSemi,
+    fontSize: 13,
+    color: colors.clayDeep,
+    textDecorationLine: 'underline',
   },
 });
