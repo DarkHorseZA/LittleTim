@@ -82,11 +82,35 @@ Pages path — update it if you move to a different path or a custom domain.
 ```bash
 eas build --platform android --profile preview      # installable .apk
 eas build --platform android --profile production    # Play Store .aab
-eas submit --platform android                        # upload to Play Console
+eas submit --platform android --profile production   # upload to Play Console
 ```
 
 The `preview` profile produces an APK you can send to anyone to sideload —
 ideal for testing without the Play Store.
+
+**Automated submit to the Closed testing track.** `eas.json` is configured to
+push production builds to the `alpha` (Closed testing) track via a Google Play
+service account. One-time setup:
+
+1. Play Console -> Setup -> API access -> link a Google Cloud project, then
+   create a service account and grant it access (Release manager role is
+   enough to upload to a testing track).
+2. In Google Cloud Console, create a JSON key for that service account and
+   download it.
+3. Save it in the repo root as `google-play-service-account.json`. It is
+   git-ignored, so it never gets committed. Keep a backup somewhere safe.
+
+After that, every release is just two commands:
+
+```bash
+eas build --platform android --profile production    # builds the .aab
+eas submit --platform android --profile production   # uploads to Closed testing
+```
+
+`appVersionSource: "remote"` + `autoIncrement` means EAS bumps the Android
+`versionCode` automatically, so you never hand-edit a version number. To target
+a different track, change `submit.production.android.track` in `eas.json`
+(`internal`, `alpha`, `beta`, `production`, or a custom track name).
 
 ### iOS (TestFlight / App Store)
 

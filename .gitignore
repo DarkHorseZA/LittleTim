@@ -11,6 +11,9 @@ android/
 package-lock.json
 .claude/
 
+# Google Play service-account key for `eas submit` — secret, never commit
+google-play-service-account.json
+
 # Manuscript, never commit the book to the repo
 *.docx
 Theunis Pienaar re-Genesis Proposal.docx
