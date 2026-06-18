@@ -31,6 +31,16 @@ async function saveCached(posts: JournalPost[]): Promise<void> {
   await AsyncStorage.setItem(KEY_JOURNAL_FEED, JSON.stringify(posts));
 }
 
+// The site serves a wrapped feed: { generated_at, posts: [...] }. We also accept
+// a bare array, so the app keeps working if the feed shape is ever simplified.
+type FeedShape = JournalPost[] | { posts?: JournalPost[] };
+
+function extractPosts(data: FeedShape): JournalPost[] {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.posts)) return data.posts;
+  throw new Error('Feed has no posts');
+}
+
 // Fetches T's posts from JOURNAL_FEED_URL, caches them, and returns them.
 // On any failure (offline, bad response) it falls back to the last good cache.
 // On a cold start with no cache, it returns an empty list.
@@ -40,10 +50,9 @@ export async function fetchJournal(): Promise<JournalPost[]> {
   try {
     const res = await fetch(JOURNAL_FEED_URL);
     if (!res.ok) throw new Error(`Feed responded ${res.status}`);
-    const data = (await res.json()) as JournalPost[];
-    if (!Array.isArray(data)) throw new Error('Feed is not a list');
-    await saveCached(data);
-    return data;
+    const posts = extractPosts((await res.json()) as FeedShape);
+    await saveCached(posts);
+    return posts;
   } catch {
     return loadCached();
   }
