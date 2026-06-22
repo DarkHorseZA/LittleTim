@@ -117,7 +117,7 @@ export function EmailSignupScreen({ navigation, route }: Props) {
               <Text style={styles.eyebrow}>Before we begin</Text>
               <Text style={styles.title}>Stay on the thread</Text>
               <Text style={styles.body}>
-                {APP_NAME} is the daily companion to {AUTHOR_NAME}'s book.
+                {APP_NAME} is the daily companion to {AUTHOR_NAME}’s book.
                 Leave your email and we’ll let you know when new tools, and
                 the next book, arrive.
               </Text>

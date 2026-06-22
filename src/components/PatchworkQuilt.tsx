@@ -342,11 +342,11 @@ function DetailCard({
           <Text style={detailStyles.subtitle}>a patch still waiting</Text>
           <View style={detailStyles.unsewnChip}>
             <Text style={detailStyles.unsewnChipText}>
-              unsewn — and that’s alright
+              unsewn, and that’s alright
             </Text>
           </View>
           <Text style={detailStyles.unsewnBody}>
-            No stitch here yet. You are not failing — the power is in the now, not the perfect.
+            No stitch here yet. You are not failing, the power is in the now, not the perfect.
           </Text>
         </>
       )}
