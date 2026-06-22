@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   NavigationContainer,
   LinkingOptions,
@@ -89,6 +90,11 @@ const tabIcon =
     );
 
 function TabsNavigator() {
+  // Respect the bottom safe-area inset so the tab bar clears the Android system
+  // nav (gesture pill / 3-button) and the iPhone home indicator. Edge-to-edge
+  // (Expo SDK 52 / Android 15) draws content under the system bars, so a fixed
+  // tabBarStyle height would otherwise let the system nav overlap the labels.
+  const insets = useSafeAreaInsets();
   return (
     <Tabs.Navigator
       screenOptions={{
@@ -99,8 +105,8 @@ function TabsNavigator() {
           backgroundColor: colors.surface,
           borderTopColor: colors.lineSoft,
           paddingTop: 6,
-          height: 68,
-          paddingBottom: 10,
+          height: 68 + insets.bottom,
+          paddingBottom: 10 + insets.bottom,
         },
         tabBarLabelStyle: {
           fontFamily: fonts.sansSemi,
