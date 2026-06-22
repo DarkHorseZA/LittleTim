@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 import { colors, gradients, layout, radius, shadows } from '../theme/colors';
@@ -29,7 +29,9 @@ import {
   COACHING_URL,
   NEWSLETTER_URL,
   READER_COMMUNITY_URL,
+  SOCIAL_LINKS,
   TALK_BOOKING_URL,
+  WEBSITE_URL,
   hasUrl,
 } from '../config';
 import { useDay } from '../store/DayContext';
@@ -49,6 +51,23 @@ export function ConnectScreen({ navigation }: Props) {
   const open = (url: string) => {
     if (!hasUrl(url)) return;
     Linking.openURL(url);
+  };
+
+  // Open an always-present external link (website / socials). On native this
+  // deep-links into an installed app for free; we still guard with canOpenURL
+  // and swallow any failure so a tap never throws.
+  const openExternal = async (url: string) => {
+    nav();
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        await Linking.openURL(url); // try anyway; web + most https always open
+      }
+    } catch {
+      // nothing we can do if the OS refuses to open it
+    }
   };
 
   const toggleNotify = async (next: boolean) => {
@@ -84,6 +103,12 @@ export function ConnectScreen({ navigation }: Props) {
             A quiet way to work with {AUTHOR_NAME}, find the book, and hear
             when the next one lands. All optional, always on your terms.
           </Text>
+
+          <SectionLabel>Find Theunis online</SectionLabel>
+
+          <WebsiteCard onPress={() => openExternal(WEBSITE_URL)} />
+
+          <SocialRow onPress={openExternal} />
 
           <SectionLabel>Work with {AUTHOR_NAME}</SectionLabel>
 
@@ -226,6 +251,77 @@ export function ConnectScreen({ navigation }: Props) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return <Text style={styles.sectionLabel}>{children}</Text>;
+}
+
+// Social handles, in display order. All icons come from FontAwesome6 brands
+// (Ionicons has no Threads logo and only the old Twitter bird), so the row
+// stays visually consistent. `x-twitter` is the proper X mark.
+type FA6Name = React.ComponentProps<typeof FontAwesome6>['name'];
+const SOCIALS: { key: string; label: string; icon: FA6Name; url: string }[] = [
+  { key: 'instagram', label: 'Instagram', icon: 'instagram', url: SOCIAL_LINKS.instagram },
+  { key: 'facebook', label: 'Facebook', icon: 'facebook', url: SOCIAL_LINKS.facebook },
+  { key: 'threads', label: 'Threads', icon: 'threads', url: SOCIAL_LINKS.threads },
+  { key: 'youtube', label: 'YouTube', icon: 'youtube', url: SOCIAL_LINKS.youtube },
+  { key: 'tiktok', label: 'TikTok', icon: 'tiktok', url: SOCIAL_LINKS.tiktok },
+  { key: 'x', label: 'X', icon: 'x-twitter', url: SOCIAL_LINKS.x },
+];
+
+function WebsiteCard({ onPress }: { onPress: () => void }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="link"
+      accessibilityLabel="Visit theunispienaar.com, the website"
+      style={({ pressed, focused }: any) => [
+        pressed && pressScale,
+        focused && webFocus,
+      ]}
+    >
+      <LinearGradient
+        colors={gradients.clay}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.webCard}
+      >
+        <View style={styles.webTop}>
+          <Text style={styles.webEyebrow}>The website</Text>
+          <View style={styles.webBadge}>
+            <Ionicons name="globe-outline" size={18} color={colors.white} />
+          </View>
+        </View>
+        <Text style={styles.webTitle}>theunispienaar.com</Text>
+        <Text style={styles.webBody}>
+          Books, news, and writing from {AUTHOR_NAME}.
+        </Text>
+        <View style={styles.webCta}>
+          <Text style={styles.webCtaText}>Visit the website</Text>
+          <Ionicons name="arrow-forward" size={16} color={colors.white} />
+        </View>
+      </LinearGradient>
+    </Pressable>
+  );
+}
+
+function SocialRow({ onPress }: { onPress: (url: string) => void }) {
+  return (
+    <View style={styles.socialRow}>
+      {SOCIALS.map((s) => (
+        <Pressable
+          key={s.key}
+          onPress={() => onPress(s.url)}
+          accessibilityRole="link"
+          accessibilityLabel={`Follow on ${s.label}`}
+          style={({ pressed, focused }: any) => [
+            styles.socialBtn,
+            pressed && pressScale,
+            focused && webFocus,
+          ]}
+        >
+          <FontAwesome6 name={s.icon} iconStyle="brand" size={20} color={colors.ink} />
+        </Pressable>
+      ))}
+    </View>
+  );
 }
 
 function ActionCard({
@@ -407,6 +503,75 @@ const styles = StyleSheet.create({
     ...text.eyebrow,
     marginTop: 18,
     marginBottom: 10,
+  },
+  webCard: {
+    borderRadius: radius.xl,
+    padding: 22,
+    overflow: 'hidden',
+    marginBottom: 16,
+    ...shadows.md,
+  },
+  webTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  webEyebrow: {
+    fontFamily: fonts.sansBold,
+    fontSize: 11,
+    letterSpacing: 2.2,
+    color: colors.onClaySoft,
+    textTransform: 'uppercase',
+  },
+  webBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colors.onClayChip,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  webTitle: {
+    fontFamily: fonts.serifBold,
+    fontSize: 26,
+    lineHeight: 32,
+    color: colors.white,
+    marginTop: 12,
+  },
+  webBody: {
+    fontFamily: fonts.sans,
+    fontSize: 14,
+    lineHeight: 20,
+    color: colors.onClayStrong,
+    marginTop: 8,
+  },
+  webCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  webCtaText: {
+    fontFamily: fonts.sansBold,
+    fontSize: 13,
+    letterSpacing: 1.2,
+    color: colors.white,
+    marginRight: 6,
+    textTransform: 'uppercase',
+  },
+  socialRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 2,
+    marginBottom: 8,
+  },
+  socialBtn: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: colors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.sm,
   },
   actionCard: {
     flexDirection: 'row',

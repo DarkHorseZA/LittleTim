@@ -20,6 +20,19 @@ export const PRIVACY_POLICY_URL = 'https://theunispienaar.com/app-privacy.html';
 // Blank hides the "T's Journal" tab entirely (same pattern as the URLs above).
 export const JOURNAL_FEED_URL = 'https://theunispienaar.com/journal.json';
 
+// Author website + social handles, surfaced on the Connect screen. Update a
+// handle here and it changes everywhere it is used.
+export const WEBSITE_URL = 'https://theunispienaar.com';
+
+export const SOCIAL_LINKS = {
+  instagram: 'https://instagram.com/theunispienaar.author',
+  facebook: 'https://facebook.com/theunispienaar.author',
+  threads: 'https://threads.net/@theunispienaar.author',
+  youtube: 'https://www.youtube.com/@TheunisPienaar.author',
+  tiktok: 'https://www.tiktok.com/@theunispienaar.author',
+  x: 'https://x.com/theunispienaar_',
+} as const;
+
 export const APP_NAME = 're-Genesis';
 export const APP_NAME_DISPLAY_CAPS = 'RE-GENESIS';
 export const APP_TAGLINE = 'Unravel. Resew. Live.';
