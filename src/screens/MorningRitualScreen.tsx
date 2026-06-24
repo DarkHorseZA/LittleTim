@@ -16,8 +16,11 @@ import { colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
+import { GuidedAudioControl } from '../components/GuidedAudioControl';
 import { beliefForDate } from '../data/beliefs';
+import type { GuidedAudio } from '../types';
 import { useDay } from '../store/DayContext';
+import { useGuidedAudio, stepIndexForTime } from '../hooks/useGuidedAudio';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MorningRitual'>;
@@ -32,6 +35,7 @@ type RitualStep = {
   tint: string;
   tintSoft: string;
   body: string;
+  audio?: GuidedAudio; // per-gesture recording; absent = no audio control
 };
 
 const STEPS: RitualStep[] = [
@@ -82,12 +86,36 @@ const STEPS: RitualStep[] = [
   },
 ];
 
+// Audio comes in one of two shapes, chosen purely by data (no code change):
+//   - Per-gesture (default): give each STEP its own `audio`. Each gesture plays
+//     its own short recording; the play button sits on the visible gesture.
+//   - Combined track: set RITUAL_AUDIO to one recording whose `pageMarkers`
+//     mark each gesture's start. Playback then auto-advances the visible
+//     gesture as the audio crosses each marker.
+// Build defaults to per-gesture; leave RITUAL_AUDIO undefined for that.
+const RITUAL_AUDIO: GuidedAudio | undefined = undefined;
+
 export function MorningRitualScreen({ navigation }: Props) {
   const [idx, setIdx] = useState(0);
   const [done, setDone] = useState(false);
   const { updateToday, addQuiltEntry, settings } = useDay();
   const reducedMotion = useReducedMotion();
   const step = STEPS[idx];
+
+  // Guided audio: a single combined track if configured, else this gesture's
+  // own recording. Inert (no control) until a recording is supplied.
+  const combined = RITUAL_AUDIO;
+  const activeAudio = combined ?? step.audio;
+  const guided = useGuidedAudio(activeAudio);
+  const markers = combined?.pageMarkers;
+  const synced = !!combined && !!markers && markers.length > 0;
+
+  // Combined-track mode: auto-advance the visible gesture across markers.
+  useEffect(() => {
+    if (!synced) return;
+    const i = stepIndexForTime(markers, guided.currentTime);
+    setIdx((prev) => (prev === i ? prev : i));
+  }, [synced, markers, guided.currentTime]);
 
   const belief = useMemo(
     () => beliefForDate(new Date(), settings.currentChapter),
@@ -192,7 +220,10 @@ export function MorningRitualScreen({ navigation }: Props) {
     // Haptic is fired by the Button (selection for step advance, success for
     // completion). No manual call needed here.
     if (idx < STEPS.length - 1) {
-      setIdx(idx + 1);
+      const ni = idx + 1;
+      setIdx(ni);
+      // In combined-track mode, keep the audio in step with the gesture.
+      if (synced && markers) guided.seekTo(markers[ni]);
     } else {
       await updateToday({ morningRitualDone: true });
       await addQuiltEntry({ type: 'ritual' });
@@ -308,6 +339,19 @@ export function MorningRitualScreen({ navigation }: Props) {
                 <Text style={styles.beliefStatement}>
                   {`\u201C${belief.statement}\u201D`}
                 </Text>
+              </View>
+            ) : null}
+
+            {guided.available ? (
+              <View style={styles.audioControl}>
+                <GuidedAudioControl
+                  isPlaying={guided.isPlaying}
+                  onToggle={guided.toggle}
+                  progress={
+                    guided.duration ? guided.currentTime / guided.duration : 0
+                  }
+                  label="guided ritual"
+                />
               </View>
             ) : null}
           </Animated.View>
@@ -536,6 +580,9 @@ const styles = StyleSheet.create({
     color: colors.ink,
     textAlign: 'center',
     paddingHorizontal: 12,
+  },
+  audioControl: {
+    marginTop: 24,
   },
   beliefPanel: {
     backgroundColor: colors.surface,
