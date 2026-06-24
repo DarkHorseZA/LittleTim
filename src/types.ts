@@ -2,13 +2,14 @@ import type { AudioSource } from 'expo-audio';
 
 export type PracticeKind = 'MSG' | 'SEE';
 
-// Optional guided-audio recording for a meditation (MSG / SEE / WHEN).
-// When omitted, the meditation renders with no audio control (unchanged UI).
-// Recordings + timings arrive separately; dropping one in is a data change.
-export type MeditationAudio = {
+// Optional guided-audio recording for any guided content: MSG / SEE / WHEN
+// meditations and the Daily 5 Gestures. When omitted, the content renders with
+// no audio control (unchanged UI). Recordings + timings arrive separately;
+// dropping one in is a data change, not a code change.
+export type GuidedAudio = {
   source: AudioSource;     // require(...) for bundled audio, or { uri } for remote
   duration: number;        // total length in seconds
-  pageMarkers?: number[];  // seconds at which each step begins; omit for single-page
+  pageMarkers?: number[];  // seconds at which each step/gesture begins; omit for single-page
 };
 
 export type FocusArea =
@@ -59,7 +60,7 @@ export type Practice = {
   durationMin: number;
   cue: string;
   steps: string[];
-  audio?: MeditationAudio; // optional guided recording; absent = no audio control
+  audio?: GuidedAudio; // optional guided recording; absent = no audio control
 };
 
 export type Belief = {
@@ -115,5 +116,5 @@ export type TriggerGesture = {
   durationMin: number;
   framing: string; // 2-3 lines in T's voice, setting the context
   steps: string[]; // 3-5 body-led steps, feel / whisper / touch / breathe / bless pattern
-  audio?: MeditationAudio; // optional guided recording; WHENs have none yet
+  audio?: GuidedAudio; // optional guided recording; WHENs have none yet
 };

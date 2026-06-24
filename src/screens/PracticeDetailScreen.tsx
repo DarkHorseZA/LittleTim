@@ -16,9 +16,9 @@ import { webFocus } from '../theme/interactions';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { BottomSheet } from '../components/BottomSheet';
-import { MeditationAudioControl } from '../components/MeditationAudioControl';
+import { GuidedAudioControl } from '../components/GuidedAudioControl';
 import { findPractice } from '../data/practices';
-import { useMeditationAudio, stepIndexForTime } from '../hooks/useMeditationAudio';
+import { useGuidedAudio, stepIndexForTime } from '../hooks/useGuidedAudio';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PracticeDetail'>;
@@ -35,7 +35,7 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
   // Optional guided audio. Inert (no control rendered) when the meditation has
   // no recording, so the screen looks identical to before for audio-less ones.
   const audio = practice?.audio;
-  const med = useMeditationAudio(audio);
+  const med = useGuidedAudio(audio);
   const markers = audio?.pageMarkers;
   const synced = med.available && !!markers && markers.length > 0;
   const [activeStep, setActiveStep] = useState(0);
@@ -141,7 +141,7 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
         </View>
 
         {med.available ? (
-          <MeditationAudioControl
+          <GuidedAudioControl
             isPlaying={med.isPlaying}
             onToggle={med.toggle}
             progress={med.duration ? med.currentTime / med.duration : 0}

@@ -5,7 +5,7 @@ import {
   useAudioPlayer,
   useAudioPlayerStatus,
 } from 'expo-audio';
-import type { MeditationAudio } from '../types';
+import type { GuidedAudio } from '../types';
 
 // Centralises all expo-audio specifics so screens never touch the library
 // directly. Pass a meditation's optional `audio`; when it is undefined the hook
@@ -23,7 +23,7 @@ import type { MeditationAudio } from '../types';
 
 let audioModeConfigured = false;
 
-export type MeditationAudioController = {
+export type GuidedAudioController = {
   available: boolean;
   isPlaying: boolean;
   currentTime: number;
@@ -34,9 +34,9 @@ export type MeditationAudioController = {
   seekTo: (seconds: number) => void;
 };
 
-export function useMeditationAudio(
-  audio?: MeditationAudio
-): MeditationAudioController {
+export function useGuidedAudio(
+  audio?: GuidedAudio
+): GuidedAudioController {
   // `useAudioPlayer` accepts a null source, so this stays unconditional even
   // when a meditation has no recording.
   const player = useAudioPlayer(audio?.source ?? null);

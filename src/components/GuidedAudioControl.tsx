@@ -7,13 +7,20 @@ import { pressScale, tap, webFocus } from '../theme/interactions';
 
 // A small, content-subordinate guided-audio control: a circular play/pause
 // button with a label and an optional thin progress line. No full scrubber yet.
+// `label` names the content type (e.g. "guided meditation", "guided ritual").
 type Props = {
   isPlaying: boolean;
   onToggle: () => void;
   progress?: number; // 0-1; renders a thin progress line when provided
+  label?: string; // the noun after Play/Playing; defaults to "guided meditation"
 };
 
-export function MeditationAudioControl({ isPlaying, onToggle, progress }: Props) {
+export function GuidedAudioControl({
+  isPlaying,
+  onToggle,
+  progress,
+  label = 'guided meditation',
+}: Props) {
   return (
     <View style={styles.wrap}>
       <View style={styles.row}>
@@ -24,7 +31,7 @@ export function MeditationAudioControl({ isPlaying, onToggle, progress }: Props)
           }}
           accessibilityRole="button"
           accessibilityLabel={
-            isPlaying ? 'Pause guided meditation' : 'Play guided meditation'
+            isPlaying ? `Pause ${label}` : `Play ${label}`
           }
           accessibilityState={{ selected: isPlaying }}
           hitSlop={8}
@@ -43,7 +50,7 @@ export function MeditationAudioControl({ isPlaying, onToggle, progress }: Props)
           />
         </Pressable>
         <Text style={styles.label}>
-          {isPlaying ? 'Playing guided meditation' : 'Play guided meditation'}
+          {isPlaying ? `Playing ${label}` : `Play ${label}`}
         </Text>
       </View>
 

@@ -8,9 +8,9 @@ import { colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
-import { MeditationAudioControl } from '../components/MeditationAudioControl';
+import { GuidedAudioControl } from '../components/GuidedAudioControl';
 import { findTrigger } from '../data/triggers';
-import { useMeditationAudio, stepIndexForTime } from '../hooks/useMeditationAudio';
+import { useGuidedAudio, stepIndexForTime } from '../hooks/useGuidedAudio';
 import { chapterById } from '../data/chapters';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TriggerDetail'>;
@@ -24,7 +24,7 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
   // Optional guided audio (WHENs have none yet; this stays inert until one
   // gets an `audio` field, at which point the control appears automatically).
   const audio = gesture?.audio;
-  const med = useMeditationAudio(audio);
+  const med = useGuidedAudio(audio);
   const markers = audio?.pageMarkers;
   const synced = med.available && !!markers && markers.length > 0;
   const [activeStep, setActiveStep] = useState(0);
@@ -95,7 +95,7 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
         </View>
 
         {med.available ? (
-          <MeditationAudioControl
+          <GuidedAudioControl
             isPlaying={med.isPlaying}
             onToggle={med.toggle}
             progress={med.duration ? med.currentTime / med.duration : 0}
