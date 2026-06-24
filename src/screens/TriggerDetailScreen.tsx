@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -8,7 +8,9 @@ import { colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
+import { MeditationAudioControl } from '../components/MeditationAudioControl';
 import { findTrigger } from '../data/triggers';
+import { useMeditationAudio, stepIndexForTime } from '../hooks/useMeditationAudio';
 import { chapterById } from '../data/chapters';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TriggerDetail'>;
@@ -18,6 +20,34 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
     () => findTrigger(route.params.triggerId),
     [route.params.triggerId]
   );
+
+  // Optional guided audio (WHENs have none yet; this stays inert until one
+  // gets an `audio` field, at which point the control appears automatically).
+  const audio = gesture?.audio;
+  const med = useMeditationAudio(audio);
+  const markers = audio?.pageMarkers;
+  const synced = med.available && !!markers && markers.length > 0;
+  const [activeStep, setActiveStep] = useState(0);
+  const scrollRef = useRef<ScrollView>(null);
+  const stepOffsets = useRef<number[]>([]);
+  const stepsCardY = useRef(0);
+
+  useEffect(() => {
+    if (!synced) return;
+    const idx = stepIndexForTime(markers, med.currentTime);
+    setActiveStep((prev) => (prev === idx ? prev : idx));
+  }, [synced, markers, med.currentTime]);
+
+  useEffect(() => {
+    if (!synced) return;
+    const y = stepOffsets.current[activeStep];
+    if (y != null) {
+      scrollRef.current?.scrollTo({
+        y: Math.max(stepsCardY.current + y - 90, 0),
+        animated: true,
+      });
+    }
+  }, [activeStep, synced]);
 
   if (!gesture) {
     return (
@@ -39,6 +69,7 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
         />
       </View>
       <ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.kindPill}>
           <Text style={styles.kindPillText}>WHEN</Text>
@@ -63,15 +94,55 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
           <Text style={styles.framing}>{gesture.framing}</Text>
         </View>
 
-        <View style={styles.stepsCard}>
-          {gesture.steps.map((step, i) => (
-            <View key={i} style={styles.step}>
-              <View style={styles.stepNumWrap}>
-                <Text style={styles.stepNum}>{i + 1}</Text>
+        {med.available ? (
+          <MeditationAudioControl
+            isPlaying={med.isPlaying}
+            onToggle={med.toggle}
+            progress={med.duration ? med.currentTime / med.duration : 0}
+          />
+        ) : null}
+
+        <View
+          style={styles.stepsCard}
+          onLayout={(e) => {
+            stepsCardY.current = e.nativeEvent.layout.y;
+          }}
+        >
+          {gesture.steps.map((step, i) => {
+            const isActive = synced && i === activeStep;
+            const onLayout = (e: any) => {
+              stepOffsets.current[i] = e.nativeEvent.layout.y;
+            };
+            const inner = (
+              <>
+                <View
+                  style={[styles.stepNumWrap, isActive && styles.stepNumWrapActive]}
+                >
+                  <Text style={styles.stepNum}>{i + 1}</Text>
+                </View>
+                <Text style={styles.stepText}>{step}</Text>
+              </>
+            );
+            return synced ? (
+              <Pressable
+                key={i}
+                onLayout={onLayout}
+                onPress={() => {
+                  med.seekTo(markers![i]);
+                  setActiveStep(i);
+                }}
+                accessibilityRole="button"
+                accessibilityLabel={`Jump to step ${i + 1}`}
+                style={[styles.step, isActive && styles.stepActive]}
+              >
+                {inner}
+              </Pressable>
+            ) : (
+              <View key={i} style={styles.step} onLayout={onLayout}>
+                {inner}
               </View>
-              <Text style={styles.stepText}>{step}</Text>
-            </View>
-          ))}
+            );
+          })}
         </View>
 
         <View style={{ height: 28 }} />
@@ -172,6 +243,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'flex-start',
   },
+  stepActive: {
+    backgroundColor: colors.clayWash,
+    borderRadius: radius.md,
+    marginHorizontal: -8,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    marginBottom: 8,
+  },
   stepNumWrap: {
     width: 28,
     height: 28,
@@ -181,6 +260,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 14,
     marginTop: 1,
+  },
+  stepNumWrapActive: {
+    backgroundColor: colors.clayDeep,
   },
   stepNum: {
     color: colors.white,

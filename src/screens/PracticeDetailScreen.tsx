@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -16,7 +16,9 @@ import { webFocus } from '../theme/interactions';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { BottomSheet } from '../components/BottomSheet';
+import { MeditationAudioControl } from '../components/MeditationAudioControl';
 import { findPractice } from '../data/practices';
+import { useMeditationAudio, stepIndexForTime } from '../hooks/useMeditationAudio';
 import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PracticeDetail'>;
@@ -29,6 +31,36 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
   const source = route.params.source;
   const { today, settings, updateToday, updateSettings, addQuiltEntry } = useDay();
   const [showHint, setShowHint] = useState(false);
+
+  // Optional guided audio. Inert (no control rendered) when the meditation has
+  // no recording, so the screen looks identical to before for audio-less ones.
+  const audio = practice?.audio;
+  const med = useMeditationAudio(audio);
+  const markers = audio?.pageMarkers;
+  const synced = med.available && !!markers && markers.length > 0;
+  const [activeStep, setActiveStep] = useState(0);
+  const scrollRef = useRef<ScrollView>(null);
+  const stepOffsets = useRef<number[]>([]);
+  const stepsCardY = useRef(0);
+
+  // Auto-advance the highlighted step as audio crosses each page marker.
+  useEffect(() => {
+    if (!synced) return;
+    const idx = stepIndexForTime(markers, med.currentTime);
+    setActiveStep((prev) => (prev === idx ? prev : idx));
+  }, [synced, markers, med.currentTime]);
+
+  // Keep the active step in view once it changes.
+  useEffect(() => {
+    if (!synced) return;
+    const y = stepOffsets.current[activeStep];
+    if (y != null) {
+      scrollRef.current?.scrollTo({
+        y: Math.max(stepsCardY.current + y - 90, 0),
+        animated: true,
+      });
+    }
+  }, [activeStep, synced]);
 
   if (!practice) {
     return (
@@ -93,6 +125,7 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
         />
       </View>
       <ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
         <View style={styles.kindPill}>
           <Text style={styles.kindPillText}>{practice.kind}</Text>
@@ -107,15 +140,55 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
           <Text style={styles.cue}>{practice.cue}</Text>
         </View>
 
-        <View style={styles.stepsCard}>
-          {practice.steps.map((step, i) => (
-            <View key={i} style={styles.step}>
-              <View style={styles.stepNumWrap}>
-                <Text style={styles.stepNum}>{i + 1}</Text>
+        {med.available ? (
+          <MeditationAudioControl
+            isPlaying={med.isPlaying}
+            onToggle={med.toggle}
+            progress={med.duration ? med.currentTime / med.duration : 0}
+          />
+        ) : null}
+
+        <View
+          style={styles.stepsCard}
+          onLayout={(e) => {
+            stepsCardY.current = e.nativeEvent.layout.y;
+          }}
+        >
+          {practice.steps.map((step, i) => {
+            const isActive = synced && i === activeStep;
+            const onLayout = (e: any) => {
+              stepOffsets.current[i] = e.nativeEvent.layout.y;
+            };
+            const inner = (
+              <>
+                <View
+                  style={[styles.stepNumWrap, isActive && styles.stepNumWrapActive]}
+                >
+                  <Text style={styles.stepNum}>{i + 1}</Text>
+                </View>
+                <Text style={styles.stepText}>{step}</Text>
+              </>
+            );
+            return synced ? (
+              <Pressable
+                key={i}
+                onLayout={onLayout}
+                onPress={() => {
+                  med.seekTo(markers![i]);
+                  setActiveStep(i);
+                }}
+                accessibilityRole="button"
+                accessibilityLabel={`Jump to step ${i + 1}`}
+                style={[styles.step, isActive && styles.stepActive]}
+              >
+                {inner}
+              </Pressable>
+            ) : (
+              <View key={i} style={styles.step} onLayout={onLayout}>
+                {inner}
               </View>
-              <Text style={styles.stepText}>{step}</Text>
-            </View>
-          ))}
+            );
+          })}
         </View>
 
         <View style={{ height: 28 }} />
@@ -250,6 +323,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'flex-start',
   },
+  stepActive: {
+    backgroundColor: colors.clayWash,
+    borderRadius: radius.md,
+    marginHorizontal: -8,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    marginBottom: 8,
+  },
   stepNumWrap: {
     width: 28,
     height: 28,
@@ -259,6 +340,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 14,
     marginTop: 1,
+  },
+  stepNumWrapActive: {
+    backgroundColor: colors.clayDeep,
   },
   stepNum: {
     color: colors.white,
