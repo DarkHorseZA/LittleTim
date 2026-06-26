@@ -108,11 +108,31 @@ export function GuidedAudioControl({
     </Pressable>
   );
 
+  const ReplayButton = onReplay ? (
+    <Pressable
+      onPress={() => {
+        tap();
+        onReplay();
+      }}
+      accessibilityRole="button"
+      accessibilityLabel={`Restart ${label} from the beginning`}
+      hitSlop={8}
+      style={({ pressed, focused }: any) => [
+        styles.replayBtn,
+        pressed && pressScale,
+        focused && webFocus,
+      ]}
+    >
+      <Ionicons name="refresh" size={18} color={colors.clayDeep} />
+    </Pressable>
+  ) : null;
+
   // ---- simple mode (no scrubber) ----
   if (!hasScrubber) {
     return (
       <View style={styles.wrap}>
         <View style={styles.row}>
+          {ReplayButton}
           {PlayButton}
           <Text style={styles.label}>
             {isPlaying ? `Playing ${label}` : `Play ${label}`}
@@ -170,24 +190,7 @@ export function GuidedAudioControl({
       </View>
 
       <View style={styles.controlsRow}>
-        {onReplay ? (
-          <Pressable
-            onPress={() => {
-              tap();
-              onReplay();
-            }}
-            accessibilityRole="button"
-            accessibilityLabel="Restart meditation from beginning"
-            hitSlop={8}
-            style={({ pressed, focused }: any) => [
-              styles.replayBtn,
-              pressed && pressScale,
-              focused && webFocus,
-            ]}
-          >
-            <Ionicons name="refresh" size={18} color={colors.clayDeep} />
-          </Pressable>
-        ) : null}
+        {ReplayButton}
         {PlayButton}
         <Text style={styles.label}>
           {isPlaying ? `Playing ${label}` : `Play ${label}`}

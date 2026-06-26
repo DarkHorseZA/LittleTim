@@ -253,6 +253,12 @@ export function MorningRitualScreen({ navigation }: Props) {
     }
   };
 
+  // Replay: back to the first gesture, and restart the audio from the top.
+  const replay = () => {
+    setIdx(0);
+    if (guided.available) guided.restart();
+  };
+
   const close = () => navigation.goBack();
 
   if (done) {
@@ -369,6 +375,7 @@ export function MorningRitualScreen({ navigation }: Props) {
                 <GuidedAudioControl
                   isPlaying={guided.isPlaying}
                   onToggle={guided.toggle}
+                  onReplay={replay}
                   progress={
                     guided.duration ? guided.currentTime / guided.duration : 0
                   }
