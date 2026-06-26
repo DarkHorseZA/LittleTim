@@ -1,11 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -17,6 +11,7 @@ import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { BottomSheet } from '../components/BottomSheet';
 import { GuidedAudioControl } from '../components/GuidedAudioControl';
+import { MeditationSteps } from '../components/MeditationSteps';
 import { findPractice } from '../data/practices';
 import { useGuidedAudio, stepIndexForTime } from '../hooks/useGuidedAudio';
 import { useDay } from '../store/DayContext';
@@ -36,19 +31,45 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
   // no recording, so the screen looks identical to before for audio-less ones.
   const audio = practice?.audio;
   const med = useGuidedAudio(audio);
+  const { available, isPlaying, currentTime, duration, toggle, seekTo, restart } =
+    med;
   const markers = audio?.pageMarkers;
-  const synced = med.available && !!markers && markers.length > 0;
+  const transcript = audio?.transcript;
+  const hasTranscript = !!transcript && transcript.length > 0;
+  const synced = available && !!markers && markers.length > 0;
+
+  const [activeSegIdx, setActiveSegIdx] = useState(-1);
   const [activeStep, setActiveStep] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
   const stepOffsets = useRef<number[]>([]);
   const stepsCardY = useRef(0);
 
-  // Auto-advance the highlighted step as audio crosses each page marker.
+  // Active highlighted segment: the one covering the current time. When no
+  // segment covers (a breath, an aside, or a paused player) the last segment
+  // stays highlighted, so the highlight never blinks out.
+  useEffect(() => {
+    if (!hasTranscript) return;
+    let cov = -1;
+    for (let k = 0; k < transcript!.length; k++) {
+      if (currentTime >= transcript![k].start && currentTime < transcript![k].end) {
+        cov = k;
+        break;
+      }
+    }
+    if (cov !== -1) setActiveSegIdx((prev) => (prev === cov ? prev : cov));
+  }, [hasTranscript, transcript, currentTime]);
+
+  // Which step is current (drives the subtle background + auto-scroll). With a
+  // transcript this follows the active segment's page; otherwise the markers.
   useEffect(() => {
     if (!synced) return;
-    const idx = stepIndexForTime(markers, med.currentTime);
-    setActiveStep((prev) => (prev === idx ? prev : idx));
-  }, [synced, markers, med.currentTime]);
+    const s = hasTranscript
+      ? activeSegIdx >= 0
+        ? transcript![activeSegIdx].pageIndex
+        : 0
+      : stepIndexForTime(markers, currentTime);
+    setActiveStep((prev) => (prev === s ? prev : s));
+  }, [synced, hasTranscript, transcript, activeSegIdx, markers, currentTime]);
 
   // Keep the active step in view once it changes.
   useEffect(() => {
@@ -61,6 +82,49 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
       });
     }
   }, [activeStep, synced]);
+
+  // Move the highlight to a step's first segment immediately on a user action
+  // (don't wait for the next status tick to catch up).
+  const jumpHighlightToStep = useCallback(
+    (stepIdx: number) => {
+      if (!hasTranscript) return;
+      const k = transcript!.findIndex((s) => s.pageIndex === stepIdx);
+      if (k >= 0) setActiveSegIdx(k);
+    },
+    [hasTranscript, transcript]
+  );
+
+  const handleStepPress = useCallback(
+    (i: number) => {
+      if (markers) seekTo(markers[i]);
+      setActiveStep(i);
+      jumpHighlightToStep(i);
+    },
+    [markers, seekTo, jumpHighlightToStep]
+  );
+
+  const handleSeek = useCallback(
+    (v: number) => {
+      seekTo(v);
+      const i = stepIndexForTime(markers, v);
+      setActiveStep(i);
+      jumpHighlightToStep(i);
+    },
+    [seekTo, markers, jumpHighlightToStep]
+  );
+
+  const handleReplay = useCallback(() => {
+    restart();
+    setActiveStep(0);
+    setActiveSegIdx(hasTranscript ? 0 : -1);
+  }, [restart, hasTranscript]);
+
+  const registerStepOffset = useCallback((i: number, y: number) => {
+    stepOffsets.current[i] = y;
+  }, []);
+  const handleCardLayout = useCallback((y: number) => {
+    stepsCardY.current = y;
+  }, []);
 
   if (!practice) {
     return (
@@ -126,7 +190,10 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
       </View>
       <ScrollView
         ref={scrollRef}
-        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.container}
+      >
         <View style={styles.kindPill}>
           <Text style={styles.kindPillText}>{practice.kind}</Text>
         </View>
@@ -140,56 +207,28 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
           <Text style={styles.cue}>{practice.cue}</Text>
         </View>
 
-        {med.available ? (
+        {available ? (
           <GuidedAudioControl
-            isPlaying={med.isPlaying}
-            onToggle={med.toggle}
-            progress={med.duration ? med.currentTime / med.duration : 0}
+            isPlaying={isPlaying}
+            onToggle={toggle}
+            onReplay={handleReplay}
+            onSeek={handleSeek}
+            currentTime={currentTime}
+            duration={duration}
+            markers={markers}
           />
         ) : null}
 
-        <View
-          style={styles.stepsCard}
-          onLayout={(e) => {
-            stepsCardY.current = e.nativeEvent.layout.y;
-          }}
-        >
-          {practice.steps.map((step, i) => {
-            const isActive = synced && i === activeStep;
-            const onLayout = (e: any) => {
-              stepOffsets.current[i] = e.nativeEvent.layout.y;
-            };
-            const inner = (
-              <>
-                <View
-                  style={[styles.stepNumWrap, isActive && styles.stepNumWrapActive]}
-                >
-                  <Text style={styles.stepNum}>{i + 1}</Text>
-                </View>
-                <Text style={styles.stepText}>{step}</Text>
-              </>
-            );
-            return synced ? (
-              <Pressable
-                key={i}
-                onLayout={onLayout}
-                onPress={() => {
-                  med.seekTo(markers![i]);
-                  setActiveStep(i);
-                }}
-                accessibilityRole="button"
-                accessibilityLabel={`Jump to step ${i + 1}`}
-                style={[styles.step, isActive && styles.stepActive]}
-              >
-                {inner}
-              </Pressable>
-            ) : (
-              <View key={i} style={styles.step} onLayout={onLayout}>
-                {inner}
-              </View>
-            );
-          })}
-        </View>
+        <MeditationSteps
+          steps={practice.steps}
+          transcript={transcript}
+          activeSegIdx={activeSegIdx}
+          activeStep={activeStep}
+          synced={synced}
+          onStepPress={handleStepPress}
+          registerStepOffset={registerStepOffset}
+          onCardLayout={handleCardLayout}
+        />
 
         <View style={{ height: 28 }} />
         <Button
@@ -311,50 +350,6 @@ const styles = StyleSheet.create({
   cue: {
     ...text.body,
     flexShrink: 1,
-  },
-  stepsCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    padding: 22,
-    ...shadows.sm,
-  },
-  step: {
-    flexDirection: 'row',
-    marginBottom: 16,
-    alignItems: 'flex-start',
-  },
-  stepActive: {
-    backgroundColor: colors.clayWash,
-    borderRadius: radius.md,
-    marginHorizontal: -8,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    marginBottom: 8,
-  },
-  stepNumWrap: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.clay,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 14,
-    marginTop: 1,
-  },
-  stepNumWrapActive: {
-    backgroundColor: colors.clayDeep,
-  },
-  stepNum: {
-    color: colors.white,
-    fontFamily: fonts.sansBold,
-    fontSize: 13,
-  },
-  stepText: {
-    flex: 1,
-    fontFamily: fonts.sans,
-    fontSize: 16,
-    lineHeight: 24,
-    color: colors.ink,
   },
 });
 
