@@ -169,23 +169,6 @@ export function GuidedAudioControl({
         ) : null}
       </View>
 
-      {hasTicks ? (
-        <View style={styles.numbersRow} pointerEvents="none">
-          {markers!.map((m, i) => (
-            <Text
-              key={i}
-              style={[
-                styles.sectionNum,
-                { left: pct(m) },
-                i + 1 === section && styles.sectionNumActive,
-              ]}
-            >
-              {i + 1}
-            </Text>
-          ))}
-        </View>
-      ) : null}
-
       <View style={styles.controlsRow}>
         {onReplay ? (
           <Pressable
@@ -280,25 +263,6 @@ const styles = StyleSheet.create({
   },
   tickActive: {
     opacity: 1,
-  },
-  numbersRow: {
-    height: 16,
-    marginTop: 2,
-    marginBottom: 4,
-    marginHorizontal: THUMB,
-  },
-  sectionNum: {
-    position: 'absolute',
-    width: 12,
-    marginLeft: -6,
-    textAlign: 'center',
-    fontFamily: fonts.sansMed,
-    fontSize: 11,
-    color: colors.inkFaint,
-  },
-  sectionNumActive: {
-    color: colors.clayDeep,
-    fontFamily: fonts.sansBold,
   },
   controlsRow: {
     flexDirection: 'row',
