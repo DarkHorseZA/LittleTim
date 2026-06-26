@@ -30,6 +30,16 @@ DURATIONS = {
     'msg-ch8': 378, 'msg-ch9': 322,
 }
 
+# Manual section-marker corrections (seconds), keyed by (id, stepIndex). The
+# auto-aligner occasionally snaps a step marker onto a repeated/similar phrase
+# from a neighbouring section; these pin it to where the step is actually spoken.
+# Applied before the segment-window filter so mis-snapped segments are dropped.
+MARKER_OVERRIDES = {
+    ('msg-ch7', 1): 100.4,  # "whisper, let there be" (was on step 0's "let whatever is there")
+    ('msg-ch9', 2): 81.3,   # "hands to your belly" (was late, on "Earth is my mother")
+    ('msg-ch6', 3): 149.2,  # "move your hands to your face" (was late, on "I am blessed")
+}
+
 # ---- 1. parse exact step strings for each msg id from practices.ts ----
 src = open(PRACTICES, encoding='utf-8').read()
 
@@ -265,6 +275,14 @@ def align(mid):
         if markers[i] < markers[i-1]:
             markers[i] = markers[i-1]
     markers = [round(m, 2) for m in markers]
+
+    # apply manual corrections, then re-enforce ascending order
+    for (omid, ostep), otime in MARKER_OVERRIDES.items():
+        if omid == mid and 0 <= ostep < len(markers):
+            markers[ostep] = otime
+    for i in range(1, len(markers)):
+        if markers[i] < markers[i - 1]:
+            markers[i] = markers[i - 1]
 
     # drop segments that fall in the wrong section (a repeated phrase that
     # matched an occurrence outside its own step's time window)
