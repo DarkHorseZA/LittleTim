@@ -6,10 +6,22 @@ export type PracticeKind = 'MSG' | 'SEE';
 // meditations and the Daily 5 Gestures. When omitted, the content renders with
 // no audio control (unchanged UI). Recordings + timings arrive separately;
 // dropping one in is a data change, not a code change.
+// One highlightable chunk of on-screen text, timed to the recording. Only text
+// that appears on screen gets a segment; extra spoken words (intros, asides,
+// breaths) are simply left uncovered, so the highlight rests on the last segment
+// until the next one begins. Phrase-level granularity (3-6 words) by default.
+export type TranscriptSegment = {
+  text: string;       // the word or short phrase exactly as it appears on screen
+  start: number;      // seconds into the recording
+  end: number;        // seconds into the recording
+  pageIndex: number;  // which step/page this segment belongs to (0-based)
+};
+
 export type GuidedAudio = {
   source: AudioSource;     // require(...) for bundled audio, or { uri } for remote
   duration: number;        // total length in seconds
   pageMarkers?: number[];  // seconds at which each step/gesture begins; omit for single-page
+  transcript?: TranscriptSegment[]; // timed segments for synced text highlighting
 };
 
 export type FocusArea =

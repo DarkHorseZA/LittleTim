@@ -1,4 +1,5 @@
 import { Practice } from '../types';
+import { msgTranscripts, msgPageMarkers } from './meditationTranscripts';
 
 // 10 MSGs and 10 SEEs, one of each per chapter (Introduction + Chapters 1-9).
 // Titles and step copy are distilled from the manuscript's practice sections.
@@ -21,6 +22,10 @@ export const msgPractices: Practice[] = [
       'Hands to your face, covering your eyes. Rub softly to your cheeks. Whisper: “Earth. I am earth.”',
       'Palms together at the heart. Three light claps. Whisper: “Let there be me.”',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-intro.mp3'),
+      duration: 194,
+    },
   },
   {
     id: 'msg-ch1',
@@ -37,6 +42,10 @@ export const msgPractices: Practice[] = [
       'Hands to face. Rub from eyes to chin. Bring palms together at the heart. Three claps. Whisper: “I am earth. I will earth. I let there be earth.”',
       'Open hands into a bowl and lift to eye height, receiving. Whisper: “I agree. I accept. I allow Love. I welcome Love.”',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch1.mp3'),
+      duration: 314,
+    },
   },
   {
     id: 'msg-ch2',
@@ -55,6 +64,10 @@ export const msgPractices: Practice[] = [
       'A palm on each cheek. Feel the temperature. Whisper.',
       'Palms together at the heart. Deep breath. Whisper one final time.',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch2.mp3'),
+      duration: 264,
+    },
   },
   {
     id: 'msg-ch3',
@@ -71,6 +84,10 @@ export const msgPractices: Practice[] = [
       'Each time the breath gathers behind your eyes, look. Notice a picture, a word, a colour, a texture.',
       'Feel your body relax. If nothing comes, no worry. Repetition is how we resew.',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch3.mp3'),
+      duration: 218,
+    },
   },
   {
     id: 'msg-ch4',
@@ -88,6 +105,10 @@ export const msgPractices: Practice[] = [
       'Breathe once more. Whisper: “I am wrapped in light.” Stay for a few breaths.',
       'Through your day, when you eat, whisper quietly: “It is awesome to be Earth.”',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch4.mp3'),
+      duration: 280,
+    },
   },
   {
     id: 'msg-ch5',
@@ -104,6 +125,10 @@ export const msgPractices: Practice[] = [
       'Repeat with “blame”. Out, then back in. Resew with Love.',
       'Feel the sensations. Feel the emotion shift. You are already writing a new story.',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch5.mp3'),
+      duration: 290,
+    },
   },
   {
     id: 'msg-ch6',
@@ -120,6 +145,10 @@ export const msgPractices: Practice[] = [
       'Breathe. Stay. Remember.',
       'Through your day, touch your face and let the cool of your hand remind you: “I am blessed, infused with permission and power.”',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch6.mp3'),
+      duration: 272,
+    },
   },
   {
     id: 'msg-ch7',
@@ -136,6 +165,10 @@ export const msgPractices: Practice[] = [
       'Hand on heart. Whisper: “I am blessed. I may. I can.”',
       'Open your eyes. Go sew your day.',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch7.mp3'),
+      duration: 292,
+    },
   },
   {
     id: 'msg-ch8',
@@ -152,6 +185,10 @@ export const msgPractices: Practice[] = [
       'Whisper: “I sew one stitch, right here, right now.”',
       'Other hand on your belly. Feel Love, feel Love’s warmth. See Love in that moment. A final breath. That was a stitch.',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch8.mp3'),
+      duration: 378,
+    },
   },
   {
     id: 'msg-ch9',
@@ -168,8 +205,22 @@ export const msgPractices: Practice[] = [
       'Reach one hand out beside you, as if touching Someone there. Whisper: “They are here. They are weaving with me.”',
       'Both hands back to your heart. Whisper: “I am Love, creating, and I am not alone.”',
     ],
+    audio: {
+      source: require('../../assets/audio/meditations/msg-ch9.mp3'),
+      duration: 322,
+    },
   },
 ];
+
+// Attach the generated timed transcripts + section markers to each MSG that has
+// a recording. Kept out-of-line (in meditationTranscripts.ts) because the data
+// is auto-generated and bulky; this keeps the practice definitions readable.
+for (const p of msgPractices) {
+  if (p.audio) {
+    p.audio.pageMarkers = msgPageMarkers[p.id];
+    p.audio.transcript = msgTranscripts[p.id];
+  }
+}
 
 export const seePractices: Practice[] = [
   {

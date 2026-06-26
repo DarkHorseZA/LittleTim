@@ -1,11 +1,17 @@
 import { useCallback, useEffect } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import {
   setAudioModeAsync,
   useAudioPlayer,
   useAudioPlayerStatus,
 } from 'expo-audio';
 import type { GuidedAudio } from '../types';
+
+// expo-audio's documented contract is seconds for currentTime/duration/seekTo,
+// and native honours that. Its *web* implementation, however, reports these in
+// milliseconds and expects seekTo() in milliseconds. We normalise to seconds
+// here so the rest of the app (and our seconds-based transcripts) is uniform.
+const MS = Platform.OS === 'web' ? 1000 : 1;
 
 // Centralises all expo-audio specifics so screens never touch the library
 // directly. Pass a meditation's optional `audio`; when it is undefined the hook
@@ -32,14 +38,17 @@ export type GuidedAudioController = {
   pause: () => void;
   toggle: () => void;
   seekTo: (seconds: number) => void;
+  restart: () => void;
 };
 
 export function useGuidedAudio(
   audio?: GuidedAudio
 ): GuidedAudioController {
   // `useAudioPlayer` accepts a null source, so this stays unconditional even
-  // when a meditation has no recording.
-  const player = useAudioPlayer(audio?.source ?? null);
+  // when a meditation has no recording. The 100ms update interval gives ~10fps
+  // status ticks: smooth enough for synced text highlighting, coarse enough to
+  // avoid re-rendering faster than the eye needs.
+  const player = useAudioPlayer(audio?.source ?? null, 100);
   const status = useAudioPlayerStatus(player);
 
   // Configure the audio session once: play through the silent switch.
@@ -85,21 +94,29 @@ export function useGuidedAudio(
   const seekTo = useCallback(
     (seconds: number) => {
       try {
-        player.seekTo(Math.max(0, seconds));
+        player.seekTo(Math.max(0, seconds) * MS);
       } catch {}
     },
     [player]
   );
 
+  const restart = useCallback(() => {
+    try {
+      player.seekTo(0);
+      player.play();
+    } catch {}
+  }, [player]);
+
   return {
     available: !!audio,
     isPlaying: !!status.playing,
-    currentTime: status.currentTime ?? 0,
-    duration: status.duration || audio?.duration || 0,
+    currentTime: (status.currentTime ?? 0) / MS,
+    duration: status.duration ? status.duration / MS : audio?.duration || 0,
     play,
     pause,
     toggle,
     seekTo,
+    restart,
   };
 }
 
