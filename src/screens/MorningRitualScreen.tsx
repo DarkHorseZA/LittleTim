@@ -99,11 +99,12 @@ const STEPS: RitualStep[] = [
 // uses, so the file is not duplicated in the assets folder.
 const ch7Audio = findPractice('msg-ch7')?.audio;
 
-// TODO(ch7-gesture-timestamps): PLACEHOLDER gesture start times (seconds) within
-// the Ch.7 recording, one per gesture in STEPS order (feel, whisper, touch,
-// breathe, bless). Replace these five values with the real timestamps when
-// provided. Must be ascending. Until then auto-advance fires at these guesses.
-const RITUAL_PAGE_MARKERS = [0, 58, 116, 175, 233];
+// Gesture start times (seconds) within the Ch.7 recording, one per gesture in
+// STEPS order (feel, whisper, touch, breathe, bless), aligned to where each
+// gesture's spoken cue begins ("let there be" ~100s, "now touch" ~137s,
+// "I breathe the breath of lives" ~171s, "the blessing, I am blessed" ~205s).
+// Must stay ascending. Fine-tune if the recording is re-cut.
+const RITUAL_PAGE_MARKERS = [0, 100, 137, 171, 205];
 
 const RITUAL_AUDIO: GuidedAudio | undefined = ch7Audio
   ? {
