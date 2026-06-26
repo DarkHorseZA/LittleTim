@@ -170,7 +170,7 @@ export function GuidedAudioControl({
           }}
           onValueChange={(v) => setDragVal(v)}
           onSlidingComplete={onComplete}
-          accessibilityLabel="Seek through meditation"
+          accessibilityLabel={`Seek through ${label.replace('guided ', '')}`}
           accessibilityValue={{ text: `Section ${section} of ${total}` }}
         />
         {hasTicks ? (

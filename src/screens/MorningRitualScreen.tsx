@@ -259,6 +259,12 @@ export function MorningRitualScreen({ navigation }: Props) {
     if (guided.available) guided.restart();
   };
 
+  // Scrub: seek the combined track and move the visible gesture to match.
+  const handleSeek = (seconds: number) => {
+    guided.seekTo(seconds);
+    if (markers) setIdx(stepIndexForTime(markers, seconds));
+  };
+
   const close = () => navigation.goBack();
 
   if (done) {
@@ -376,6 +382,10 @@ export function MorningRitualScreen({ navigation }: Props) {
                   isPlaying={guided.isPlaying}
                   onToggle={guided.toggle}
                   onReplay={replay}
+                  onSeek={synced ? handleSeek : undefined}
+                  currentTime={guided.currentTime}
+                  duration={guided.duration}
+                  markers={markers}
                   progress={
                     guided.duration ? guided.currentTime / guided.duration : 0
                   }
