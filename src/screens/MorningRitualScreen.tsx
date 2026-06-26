@@ -18,6 +18,7 @@ import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { GuidedAudioControl } from '../components/GuidedAudioControl';
 import { beliefForDate } from '../data/beliefs';
+import { findPractice } from '../data/practices';
 import type { GuidedAudio } from '../types';
 import { useDay } from '../store/DayContext';
 import { useGuidedAudio, stepIndexForTime } from '../hooks/useGuidedAudio';
@@ -87,13 +88,34 @@ const STEPS: RitualStep[] = [
 ];
 
 // Audio comes in one of two shapes, chosen purely by data (no code change):
-//   - Per-gesture (default): give each STEP its own `audio`. Each gesture plays
-//     its own short recording; the play button sits on the visible gesture.
-//   - Combined track: set RITUAL_AUDIO to one recording whose `pageMarkers`
-//     mark each gesture's start. Playback then auto-advances the visible
-//     gesture as the audio crosses each marker.
-// Build defaults to per-gesture; leave RITUAL_AUDIO undefined for that.
-const RITUAL_AUDIO: GuidedAudio | undefined = undefined;
+//   - Per-gesture: give each STEP its own `audio`. Each gesture plays its own
+//     short recording; the play button sits on the visible gesture.
+//   - Combined track (current): one recording whose `pageMarkers` mark each
+//     gesture's start. Playback auto-advances the visible gesture as the audio
+//     crosses each marker.
+//
+// The Daily 5 Gestures reuse the Chapter 7 recording ("The Five Gestures") as a
+// single combined track. We reference the exact same source the msg-ch7 practice
+// uses, so the file is not duplicated in the assets folder.
+const ch7Audio = findPractice('msg-ch7')?.audio;
+
+// TODO(ch7-gesture-timestamps): PLACEHOLDER gesture start times (seconds) within
+// the Ch.7 recording, one per gesture in STEPS order (feel, whisper, touch,
+// breathe, bless). Replace these five values with the real timestamps when
+// provided. Must be ascending. Until then auto-advance fires at these guesses.
+const RITUAL_PAGE_MARKERS = [0, 58, 116, 175, 233];
+
+const RITUAL_AUDIO: GuidedAudio | undefined = ch7Audio
+  ? {
+      source: ch7Audio.source, // same Ch.7 file, referenced once (not duplicated)
+      duration: ch7Audio.duration,
+      pageMarkers: RITUAL_PAGE_MARKERS,
+      // transcript intentionally omitted: the Ch.7 transcript is authored
+      // against the MSG step text, not these gesture bodies, so highlighting
+      // stays off here (graceful degradation) until a gesture-specific
+      // transcript exists. Drop a TranscriptSegment[] here to enable it.
+    }
+  : undefined;
 
 export function MorningRitualScreen({ navigation }: Props) {
   const [idx, setIdx] = useState(0);
