@@ -13,6 +13,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#F5EFE6"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.theunispienaar.regenesis"
@@ -33,7 +36,23 @@
       "baseUrl": "/LittleTim"
     },
     "plugins": [
-      "expo-asset",
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "./assets/audio/meditations/msg-intro.mp3",
+            "./assets/audio/meditations/msg-ch1.mp3",
+            "./assets/audio/meditations/msg-ch2.mp3",
+            "./assets/audio/meditations/msg-ch3.mp3",
+            "./assets/audio/meditations/msg-ch4.mp3",
+            "./assets/audio/meditations/msg-ch5.mp3",
+            "./assets/audio/meditations/msg-ch6.mp3",
+            "./assets/audio/meditations/msg-ch7.mp3",
+            "./assets/audio/meditations/msg-ch8.mp3",
+            "./assets/audio/meditations/msg-ch9.mp3"
+          ]
+        }
+      ],
       [
         "expo-build-properties",
         {
