@@ -6,13 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "littletim",
-    "newArchEnabled": true,
     "icon": "./assets/brand/icon.png",
-    "splash": {
-      "image": "./assets/brand/icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#F5EFE6"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -40,6 +34,14 @@
     },
     "plugins": [
       "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/brand/icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#F5EFE6"
+        }
+      ],
       [
         "expo-build-properties",
         {

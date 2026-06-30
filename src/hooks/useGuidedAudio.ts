@@ -48,7 +48,7 @@ export function useGuidedAudio(
   // when a meditation has no recording. The 100ms update interval gives ~10fps
   // status ticks: smooth enough for synced text highlighting, coarse enough to
   // avoid re-rendering faster than the eye needs.
-  const player = useAudioPlayer(audio?.source ?? null, 100);
+  const player = useAudioPlayer(audio?.source ?? null, { updateInterval: 100 });
   const status = useAudioPlayerStatus(player);
 
   // Configure the audio session once: play through the silent switch.

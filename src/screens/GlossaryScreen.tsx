@@ -72,7 +72,7 @@ export function GlossaryScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   hero: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute', top: 0, left: 0, right: 0,
     height: 260,
     bottom: undefined,
   },

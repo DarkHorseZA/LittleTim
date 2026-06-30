@@ -60,7 +60,7 @@ export function NotFoundScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   hero: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute', top: 0, left: 0, right: 0,
     height: 320,
     bottom: undefined,
   },
