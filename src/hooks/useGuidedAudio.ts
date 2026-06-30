@@ -1,17 +1,11 @@
 import { useCallback, useEffect } from 'react';
-import { AppState, Platform } from 'react-native';
+import { AppState } from 'react-native';
 import {
   setAudioModeAsync,
   useAudioPlayer,
   useAudioPlayerStatus,
 } from 'expo-audio';
 import type { GuidedAudio } from '../types';
-
-// expo-audio's documented contract is seconds for currentTime/duration/seekTo,
-// and native honours that. Its *web* implementation, however, reports these in
-// milliseconds and expects seekTo() in milliseconds. We normalise to seconds
-// here so the rest of the app (and our seconds-based transcripts) is uniform.
-const MS = Platform.OS === 'web' ? 1000 : 1;
 
 // Centralises all expo-audio specifics so screens never touch the library
 // directly. Pass a meditation's optional `audio`; when it is undefined the hook
@@ -94,7 +88,7 @@ export function useGuidedAudio(
   const seekTo = useCallback(
     (seconds: number) => {
       try {
-        player.seekTo(Math.max(0, seconds) * MS);
+        player.seekTo(Math.max(0, seconds));
       } catch {}
     },
     [player]
@@ -110,8 +104,8 @@ export function useGuidedAudio(
   return {
     available: !!audio,
     isPlaying: !!status.playing,
-    currentTime: (status.currentTime ?? 0) / MS,
-    duration: status.duration ? status.duration / MS : audio?.duration || 0,
+    currentTime: status.currentTime ?? 0,
+    duration: status.duration || audio?.duration || 0,
     play,
     pause,
     toggle,
