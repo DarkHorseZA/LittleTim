@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import {
   setAudioModeAsync,
   useAudioPlayer,
@@ -42,7 +42,16 @@ export function useGuidedAudio(
   // when a meditation has no recording. The 100ms update interval gives ~10fps
   // status ticks: smooth enough for synced text highlighting, coarse enough to
   // avoid re-rendering faster than the eye needs.
-  const player = useAudioPlayer(audio?.source ?? null, { updateInterval: 100 });
+  // On native, `downloadFirst` makes expo-audio extract the bundled require()'d
+  // asset to a real cached file before playing. Without it, native players get a
+  // null localUri / unplayable bundler URI and stay silent (Android res/raw
+  // assets, and iOS AVPlayer which also needs the asset type resolved). On web
+  // the direct asset URL already plays, and downloadFirst only adds an async
+  // null-source window that makes the first tap flaky — so keep it native-only.
+  const player = useAudioPlayer(audio?.source ?? null, {
+    updateInterval: 100,
+    downloadFirst: Platform.OS !== 'web',
+  });
   const status = useAudioPlayerStatus(player);
 
   // Configure the audio session once: play through the silent switch.
