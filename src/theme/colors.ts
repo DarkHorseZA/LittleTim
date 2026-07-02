@@ -133,7 +133,7 @@ export const layout = {
   screenTight: 16, // for dense pages
   screenLoose: 24, // for editorial / modal hero blocks
   maxWidth: 520, // cap content width on desktop/tablet web (phone-frame simulation)
-  contentMaxWidth: 640, // max content column width on native iPad / large screens
+  contentMaxWidth: 700, // max content column width on native iPad / large screens
 };
 
 // Icon circle sizes (avatar, list-item icon, hero icon, etc.).

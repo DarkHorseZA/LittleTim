@@ -12,9 +12,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors } from '../theme/colors';
+import { colors, layout } from '../theme/colors';
 import { fonts } from '../theme/type';
 import { Button } from '../components/Button';
+import { useLargeScreen } from '../hooks/useLargeScreen';
 import {
   APP_NAME,
   APP_NAME_DISPLAY_CAPS,
@@ -50,6 +51,12 @@ function tagForToday(): string {
 export function WelcomeScreen({ navigation }: Props) {
   const { settings } = useDay();
   const firstName = (settings.profile?.displayName ?? '').split(' ')[0];
+
+  const { isLarge } = useLargeScreen();
+  // roomier hero on tablets so it doesn't read as a small phone cluster
+  const symbol = isLarge ? 320 : SYMBOL;
+  const iconSize = isLarge ? 272 : 220;
+  const haloSize = isLarge ? 296 : 240;
 
   const reducedMotion = useReducedMotion();
 
@@ -140,14 +147,19 @@ export function WelcomeScreen({ navigation }: Props) {
 
       <SafeAreaView style={{ flex: 1 }}>
         <Animated.View style={[styles.content, { opacity: fade }]}>
+          <View style={{ flex: 1, minHeight: 24 }} />
+
           <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
 
-          <View style={styles.symbolWrap}>
+          <View style={[styles.symbolWrap, { width: symbol, height: symbol }]}>
             {/* Soft breathing halo behind the mark */}
             <Animated.View
               style={[
                 styles.halo,
                 {
+                  width: haloSize,
+                  height: haloSize,
+                  borderRadius: haloSize / 2,
                   transform: [{ scale: haloScale }],
                   opacity: haloOpacity,
                 },
@@ -159,14 +171,20 @@ export function WelcomeScreen({ navigation }: Props) {
               source={require('../../assets/brand/icon.png')}
               style={[
                 styles.iconImage,
-                { transform: [{ scale: iconScale }] },
+                {
+                  width: iconSize,
+                  height: iconSize,
+                  transform: [{ scale: iconScale }],
+                },
               ]}
               resizeMode="contain"
               accessibilityLabel="re-Genesis mark"
             />
           </View>
 
-          <Text style={styles.tagline}>{`\u201C${tagline}\u201D`}</Text>
+          <Text style={[styles.tagline, isLarge && styles.taglineLarge]}>
+            {`\u201C${tagline}\u201D`}
+          </Text>
           <Text style={styles.breathHint}>
             Inhale.  Settle.  Begin{firstName ? `, ${firstName}` : ''}.
           </Text>
@@ -225,8 +243,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: 28,
-    paddingTop: 24,
+    paddingTop: 8,
     paddingBottom: 28,
+    width: '100%',
+    maxWidth: layout.contentMaxWidth,
+    alignSelf: 'center',
   },
   brand: {
     fontFamily: fonts.sansBold,
@@ -267,6 +288,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 14,
     paddingHorizontal: 8,
+  },
+  taglineLarge: {
+    fontSize: 32,
+    lineHeight: 42,
   },
   breathHint: {
     fontFamily: fonts.sansMed,
