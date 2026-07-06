@@ -3,8 +3,8 @@
 // All external links are optional. Any URL left empty renders a friendly
 // "coming soon" state in the UI. Fill them in as T hands them over.
 
-export const COACHING_URL = '';
-export const TALK_BOOKING_URL = ''; // book T for a talk / event
+export const COACHING_URL = 'https://theunispienaar.com/coaching.html';
+export const TALK_BOOKING_URL = 'https://theunispienaar.com/speaking.html'; // book T for a talk / event
 export const READER_COMMUNITY_URL = ''; // Reader Circle — coming soon, will live at theunispienaar.com/circle
 
 export const BOOK_EBOOK_URL = ''; // Kindle / Apple Books / Google Play
