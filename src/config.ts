@@ -11,7 +11,9 @@ export const BOOK_EBOOK_URL = ''; // Kindle / Apple Books / Google Play
 export const BOOK_AUDIOBOOK_URL = ''; // Audible / Spotify / Libro.fm
 export const BOOK_PAPERBACK_URL = ''; // Amazon / Takealot / author store
 
-export const NEWSLETTER_URL = ''; // opt-in for "new book" announcements
+// Website newsletter signup. Anchor points to the signup form (falls back to
+// the homepage footer signup if the anchor isn't in place yet).
+export const NEWSLETTER_URL = 'https://theunispienaar.com/#newsletter';
 
 // Public privacy policy. Shown as a link in Settings; blank hides the link.
 export const PRIVACY_POLICY_URL = 'https://theunispienaar.com/app-privacy.html';

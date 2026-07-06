@@ -21,8 +21,12 @@ export type Settings = {
   seenTours?: Record<string, boolean>; // which per-tab tour cards have been dismissed
   baseline?: BaselineRecord; // first wellness reading, captured once for delta tracking
   lastCheckInDate?: string; // YYYY-MM-DD of most recent tracker completion
-  notifyOnNewBook?: boolean; // user opted in for future book announcements
-  hasSeenNewBookPrompt?: boolean; // dismissed the "new book" card at least once
+  // DORMANT: kept in the schema so existing users' stored values survive.
+  // The Connect tab now sends newsletter opt-in to the website form; these
+  // fields are no longer written. TODO(v1.1-supabase): migrate any leftover
+  // `notifyOnNewBook: true` into the Supabase subscription list, then remove.
+  notifyOnNewBook?: boolean;
+  hasSeenNewBookPrompt?: boolean;
   registeredEmail?: string; // set once the reader registers on first open
   registeredAt?: string; // ISO timestamp of registration
   bookCompleted?: boolean; // true once the reader taps "I've completed the book"; permanently hides the launch chapter check-in

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Image,
   Linking,
   Pressable,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   View,
 } from 'react-native';
@@ -34,17 +33,12 @@ import {
   WEBSITE_URL,
   hasUrl,
 } from '../config';
-import { useDay } from '../store/DayContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Connect'>;
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
 export function ConnectScreen({ navigation }: Props) {
-  const { settings, updateSettings } = useDay();
-  const notify = settings.notifyOnNewBook === true;
-  const [saving, setSaving] = useState(false);
-
   // When a destination URL isn't wired yet, the button is already visually
   // disabled (persistent "Coming soon" / "Soon" label), so tapping is a no-op.
   // No alert, no dead-end.
@@ -68,15 +62,6 @@ export function ConnectScreen({ navigation }: Props) {
     } catch {
       // nothing we can do if the OS refuses to open it
     }
-  };
-
-  const toggleNotify = async (next: boolean) => {
-    setSaving(true);
-    await updateSettings({
-      notifyOnNewBook: next,
-      hasSeenNewBookPrompt: true,
-    });
-    setSaving(false);
   };
 
   return (
@@ -185,58 +170,41 @@ export function ConnectScreen({ navigation }: Props) {
             />
           </View>
 
-          <SectionLabel>When the next book lands</SectionLabel>
+          <SectionLabel>Letters from the work</SectionLabel>
 
-          <View style={styles.notifyCard}>
-            <View style={styles.notifyHead}>
-              <View style={styles.iconCircle}>
-                <Ionicons
-                  name="sparkles-outline"
-                  size={16}
-                  color={colors.clay}
-                />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.notifyTitle}>
-                  Tell me about a new book
-                </Text>
-                <Text style={styles.notifySub}>
-                  We’ll let you know once, quietly, when the next one is ready.
-                </Text>
-              </View>
-              <Switch
-                value={notify}
-                onValueChange={toggleNotify}
-                disabled={saving}
-                trackColor={{ false: colors.lineSoft, true: colors.clay }}
-                thumbColor={colors.white}
+          <Pressable
+            onPress={() => open(NEWSLETTER_URL)}
+            accessibilityRole="link"
+            accessibilityLabel="Get an occasional note from Theunis — opens in your browser"
+            disabled={!hasUrl(NEWSLETTER_URL)}
+            style={({ pressed, focused }: any) => [
+              styles.newsletterRow,
+              pressed && pressScale,
+              focused && webFocus,
+            ]}
+          >
+            <View style={styles.iconCircle}>
+              <Ionicons
+                name="mail-outline"
+                size={16}
+                color={colors.clay}
               />
             </View>
-
-            {notify ? (
-              <View style={styles.notifyConfirm}>
-                <Ionicons
-                  name="checkmark-circle"
-                  size={16}
-                  color={colors.done}
-                />
-                <Text style={styles.notifyConfirmText}>
-                  You’re on the list. No noise, just the news.
-                </Text>
-              </View>
-            ) : null}
-
-            {hasUrl(NEWSLETTER_URL) ? (
-              <View style={{ marginTop: 14 }}>
-                <Button
-                  title="Or join the newsletter"
-                  variant="ghost"
-                  icon="mail-outline"
-                  onPress={() => open(NEWSLETTER_URL)}
-                />
-              </View>
-            ) : null}
-          </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.newsletterTitle}>
+                Get an occasional note from {AUTHOR_NAME.split(' ')[0]}
+              </Text>
+              <Text style={styles.newsletterSub}>
+                Sign up on the website, no noise, just the occasional letter
+                when something new is ready.
+              </Text>
+            </View>
+            <Ionicons
+              name="open-outline"
+              size={16}
+              color={colors.inkFaint}
+            />
+          </Pressable>
 
           <View style={{ height: 30 }} />
           <Text style={styles.footer}>
@@ -704,42 +672,26 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.clayDeep,
   },
-  notifyCard: {
+  newsletterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: 18,
     ...shadows.sm,
   },
-  notifyHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  notifyTitle: {
+  newsletterTitle: {
     fontFamily: fonts.serifBold,
     fontSize: 16,
     color: colors.ink,
   },
-  notifySub: {
+  newsletterSub: {
     fontFamily: fonts.sans,
     fontSize: 13,
     lineHeight: 18,
     color: colors.inkSoft,
     marginTop: 2,
-    marginRight: 10,
-  },
-  notifyConfirm: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 14,
-    paddingTop: 14,
-    borderTopWidth: 1,
-    borderTopColor: colors.lineSoft,
-  },
-  notifyConfirmText: {
-    fontFamily: fonts.sans,
-    fontSize: 13,
-    color: colors.inkSoft,
-    marginLeft: 8,
   },
   footer: {
     fontFamily: fonts.serifItalic,
