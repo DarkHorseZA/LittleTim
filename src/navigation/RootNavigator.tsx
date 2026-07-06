@@ -32,6 +32,7 @@ import { MoreScreen } from '../screens/MoreScreen';
 import { ChapterCheckInGate } from '../components/ChapterCheckInGate';
 import { colors, layout } from '../theme/colors';
 import { fonts } from '../theme/type';
+import { useLargeScreen } from '../hooks/useLargeScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tabs = createBottomTabNavigator<TabsParamList>();
@@ -78,13 +79,38 @@ const linking: LinkingOptions<RootStackParamList> = {
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
+// Icon size gets a mild bump on large screens so tab icons don't read as
+// undersized alongside iPad-sized labels. React Navigation's own `size` arg
+// is a phone-sized ~24pt; ignore it and pick our own.
+function TabBarIcon({
+  active,
+  inactive,
+  focused,
+  color,
+}: {
+  active: IconName;
+  inactive: IconName;
+  focused: boolean;
+  color: string;
+}) {
+  const { isLarge } = useLargeScreen();
+  return (
+    <Ionicons
+      name={focused ? active : inactive}
+      size={isLarge ? 28 : 22}
+      color={color}
+    />
+  );
+}
+
 const tabIcon =
   (active: IconName, inactive: IconName) =>
-  ({ focused, color, size }: { focused: boolean; color: string; size: number }) =>
+  ({ focused, color }: { focused: boolean; color: string; size: number }) =>
     (
-      <Ionicons
-        name={focused ? active : inactive}
-        size={size - 2}
+      <TabBarIcon
+        active={active}
+        inactive={inactive}
+        focused={focused}
         color={color}
       />
     );
@@ -95,6 +121,10 @@ function TabsNavigator() {
   // (Expo SDK 52 / Android 15) draws content under the system bars, so a fixed
   // tabBarStyle height would otherwise let the system nav overlap the labels.
   const insets = useSafeAreaInsets();
+  // On tablets the tab bar's phone-sized labels and 24pt icons read as toy;
+  // scale height, label size, and icon size so they meet the roomier canvas.
+  const { isLarge } = useLargeScreen();
+  const barBase = isLarge ? 78 : 68;
   return (
     <Tabs.Navigator
       screenOptions={{
@@ -104,16 +134,17 @@ function TabsNavigator() {
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.lineSoft,
-          paddingTop: 6,
-          height: 68 + insets.bottom,
+          paddingTop: isLarge ? 8 : 6,
+          height: barBase + insets.bottom,
           paddingBottom: 10 + insets.bottom,
         },
         tabBarLabelStyle: {
           fontFamily: fonts.sansSemi,
-          fontSize: 11,
+          fontSize: isLarge ? 13 : 11,
           letterSpacing: 0.6,
           marginTop: 2,
         },
+        tabBarIconStyle: isLarge ? { marginTop: 2 } : undefined,
       }}
     >
       <Tabs.Screen

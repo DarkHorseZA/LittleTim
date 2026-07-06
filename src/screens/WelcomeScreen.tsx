@@ -54,9 +54,9 @@ export function WelcomeScreen({ navigation }: Props) {
 
   const { isLarge } = useLargeScreen();
   // roomier hero on tablets so it doesn't read as a small phone cluster
-  const symbol = isLarge ? 320 : SYMBOL;
-  const iconSize = isLarge ? 272 : 220;
-  const haloSize = isLarge ? 296 : 240;
+  const symbol = isLarge ? 460 : SYMBOL;
+  const iconSize = isLarge ? 400 : 220;
+  const haloSize = isLarge ? 440 : 240;
 
   const reducedMotion = useReducedMotion();
 
