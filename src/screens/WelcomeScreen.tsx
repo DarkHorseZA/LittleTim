@@ -53,10 +53,12 @@ export function WelcomeScreen({ navigation }: Props) {
   const firstName = (settings.profile?.displayName ?? '').split(' ')[0];
 
   const { isLarge } = useLargeScreen();
-  // roomier hero on tablets so it doesn't read as a small phone cluster
-  const symbol = isLarge ? 460 : SYMBOL;
-  const iconSize = isLarge ? 400 : 220;
-  const haloSize = isLarge ? 440 : 240;
+  // Full-canvas hero on tablets. The mark, breath halo, and both text blocks
+  // all step up so the composition owns the 13" iPad, not a phone-sized cluster
+  // marooned in the middle.
+  const symbol = isLarge ? 560 : SYMBOL;
+  const iconSize = isLarge ? 480 : 220;
+  const haloSize = isLarge ? 540 : 240;
 
   const reducedMotion = useReducedMotion();
 
@@ -149,7 +151,9 @@ export function WelcomeScreen({ navigation }: Props) {
         <Animated.View style={[styles.content, { opacity: fade }]}>
           <View style={{ flex: 1, minHeight: 24 }} />
 
-          <Text style={styles.brand}>{APP_NAME_DISPLAY_CAPS}</Text>
+          <Text style={[styles.brand, isLarge && styles.brandLarge]}>
+            {APP_NAME_DISPLAY_CAPS}
+          </Text>
 
           <View style={[styles.symbolWrap, { width: symbol, height: symbol }]}>
             {/* Soft breathing halo behind the mark */}
@@ -185,10 +189,10 @@ export function WelcomeScreen({ navigation }: Props) {
           <Text style={[styles.tagline, isLarge && styles.taglineLarge]}>
             {`\u201C${tagline}\u201D`}
           </Text>
-          <Text style={styles.breathHint}>
+          <Text style={[styles.breathHint, isLarge && styles.breathHintLarge]}>
             Inhale.  Settle.  Begin{firstName ? `, ${firstName}` : ''}.
           </Text>
-          <Text style={styles.attribution}>
+          <Text style={[styles.attribution, isLarge && styles.attributionLarge]}>
             Companion to {APP_NAME} by {AUTHOR_NAME}
           </Text>
 
@@ -256,6 +260,11 @@ const styles = StyleSheet.create({
     color: colors.clayDeep,
     marginBottom: 28,
   },
+  brandLarge: {
+    fontSize: 16,
+    letterSpacing: 8,
+    marginBottom: 40,
+  },
   symbolWrap: {
     width: SYMBOL,
     height: SYMBOL,
@@ -290,8 +299,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   taglineLarge: {
-    fontSize: 32,
-    lineHeight: 42,
+    fontSize: 44,
+    lineHeight: 56,
+    marginBottom: 22,
   },
   breathHint: {
     fontFamily: fonts.sansMed,
@@ -301,11 +311,19 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     textAlign: 'center',
   },
+  breathHintLarge: {
+    fontSize: 16,
+    letterSpacing: 3,
+  },
   attribution: {
     fontFamily: fonts.serifItalic,
     fontSize: 12,
     color: colors.inkFaint,
     textAlign: 'center',
     marginTop: 16,
+  },
+  attributionLarge: {
+    fontSize: 18,
+    marginTop: 24,
   },
 });
