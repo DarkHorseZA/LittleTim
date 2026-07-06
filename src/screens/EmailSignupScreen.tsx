@@ -41,6 +41,7 @@ export function EmailSignupScreen({ navigation, route }: Props) {
 
   const fade = useRef(new Animated.Value(0)).current;
   const rise = useRef(new Animated.Value(16)).current;
+  const emailRef = useRef<TextInput>(null);
 
   useEffect(() => {
     Animated.parallel([
@@ -99,9 +100,10 @@ export function EmailSignupScreen({ navigation, route }: Props) {
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         >
           <ScrollView
-        showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
           >
             <Animated.View
               style={{ opacity: fade, transform: [{ translateY: rise }] }}
@@ -132,12 +134,15 @@ export function EmailSignupScreen({ navigation, route }: Props) {
                   style={styles.input}
                   autoCapitalize="words"
                   returnKeyType="next"
+                  onSubmitEditing={() => emailRef.current?.focus()}
+                  blurOnSubmit={false}
                 />
 
                 <View style={styles.divider} />
 
                 <Text style={styles.label}>Email</Text>
                 <TextInput
+                  ref={emailRef}
                   value={email}
                   onChangeText={setEmail}
                   onBlur={() => setTouched(true)}

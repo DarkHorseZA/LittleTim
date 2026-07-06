@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Alert,
+  Keyboard,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -37,6 +38,7 @@ export function AccountScreen({ navigation }: Props) {
   const profile = settings.profile ?? {};
   const [name, setName] = useState(profile.displayName ?? '');
   const [email, setEmail] = useState(profile.email ?? '');
+  const emailRef = useRef<TextInput>(null);
   const signedIn = !!profile.displayName;
 
   const save = async () => {
@@ -91,7 +93,12 @@ export function AccountScreen({ navigation }: Props) {
         </View>
 
         <ScrollView
-        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+        >
           <View style={styles.avatarWrap}>
             <View style={styles.avatar}>
               {initials(name) ? (
@@ -121,6 +128,8 @@ export function AccountScreen({ navigation }: Props) {
               style={styles.input}
               autoCapitalize="words"
               returnKeyType="next"
+              onSubmitEditing={() => emailRef.current?.focus()}
+              blurOnSubmit={false}
               accessibilityLabel="Display name"
             />
 
@@ -128,6 +137,7 @@ export function AccountScreen({ navigation }: Props) {
 
             <Text style={styles.label}>Email (optional)</Text>
             <TextInput
+              ref={emailRef}
               value={email}
               onChangeText={setEmail}
               placeholder="you@example.com"
@@ -136,6 +146,8 @@ export function AccountScreen({ navigation }: Props) {
               autoCapitalize="none"
               keyboardType="email-address"
               autoCorrect={false}
+              returnKeyType="done"
+              onSubmitEditing={Keyboard.dismiss}
               accessibilityLabel="Email address, optional"
             />
             <Text style={styles.caption}>

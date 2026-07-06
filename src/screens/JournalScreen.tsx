@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import {
+  Keyboard,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -87,6 +88,7 @@ export function JournalContent() {
 
   const handleSave = async () => {
     if (!hasInput) return;
+    Keyboard.dismiss();
 
     const stitch: JournalStitch = {
       id: Date.now().toString(),
@@ -103,9 +105,21 @@ export function JournalContent() {
     toast("Stitch saved, your quilt grows.", "success");
   };
 
+  // The multiline inputs offer no return-key dismissal (return = newline), so
+  // the keyboard needs two exits: drag the scroll, or tap any empty space
+  // (the wrapping Pressable catches taps that no child claims).
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.inputSection}>
+    <ScrollView
+      style={{ flex: 1 }}
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
+      showsVerticalScrollIndicator={false}
+    >
+      <Pressable
+        onPress={Keyboard.dismiss}
+        accessible={false}
+        style={styles.inputSection}
+      >
         <Text style={styles.title}>Today’s Stitches</Text>
         <Text style={styles.body}>
           Two sentences. Don’t try to be eloquent. Just be honest.
@@ -173,8 +187,8 @@ export function JournalContent() {
             {hasInput ? 'Save Stitch' : 'Maybe later'}
           </Text>
         </Pressable>
-      </View>
-    </View>
+      </Pressable>
+    </ScrollView>
   );
 }
 

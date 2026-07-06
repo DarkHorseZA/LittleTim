@@ -464,6 +464,7 @@ export function TrackerScreen({ navigation }: Props) {
         style={{ flex: 1 }}
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
       >
           {/* Back button */}

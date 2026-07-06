@@ -72,7 +72,12 @@ export function FocusAreaScreen({ navigation, route }: Props) {
         </View>
 
         <ScrollView
-        showsVerticalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.container}>
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+        >
           <View style={[styles.emojiCircle, { backgroundColor: tintSoft }]}>
             <Text style={styles.emoji}>{fa.emoji}</Text>
           </View>
