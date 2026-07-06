@@ -12,6 +12,7 @@ import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius } from '../theme/colors';
 import { fonts } from '../theme/type';
+import { useLargeScreen } from '../hooks/useLargeScreen';
 
 // Haptic vocabulary, mapped to Expo Haptics primitives. Expo Haptics on web
 // is a no-op, so these calls are safe to fire unconditionally.
@@ -88,6 +89,9 @@ export function Button({
   haptic,
 }: Props) {
   const palette = palettes[variant];
+  // On tablets every button gets bigger padding, bigger label, and bigger
+  // leading/trailing icons so the interactive surface matches the iPad canvas.
+  const { isLarge } = useLargeScreen();
   const resolvedHaptic: ButtonHaptic =
     haptic ?? (variant === 'ghost' ? 'none' : 'selection');
   const handlePress = () => {
@@ -95,6 +99,7 @@ export function Button({
     fireHaptic(resolvedHaptic);
     onPress();
   };
+  const iconSize = isLarge ? 22 : 18;
   return (
     <Pressable
       onPress={handlePress}
@@ -106,6 +111,7 @@ export function Button({
       style={({ pressed, focused }: any) => [
         styles.btn,
         size === 'lg' && styles.btnLg,
+        isLarge && (size === 'lg' ? styles.btnLgLarge : styles.btnLarge),
         {
           backgroundColor: palette.bg,
           borderColor: palette.border,
@@ -123,16 +129,24 @@ export function Button({
           {icon ? (
             <Ionicons
               name={icon}
-              size={18}
+              size={iconSize}
               color={palette.fg}
               style={{ marginRight: 8 }}
             />
           ) : null}
-          <Text style={[styles.label, { color: palette.fg }]}>{title}</Text>
+          <Text
+            style={[
+              styles.label,
+              isLarge && styles.labelLarge,
+              { color: palette.fg },
+            ]}
+          >
+            {title}
+          </Text>
           {trailingIcon ? (
             <Ionicons
               name={trailingIcon}
-              size={18}
+              size={iconSize}
               color={palette.fg}
               style={{ marginLeft: 8 }}
             />
@@ -178,6 +192,14 @@ const styles = StyleSheet.create({
   btnLg: {
     paddingVertical: 16,
   },
+  btnLarge: {
+    paddingVertical: 18,
+    paddingHorizontal: 28,
+  },
+  btnLgLarge: {
+    paddingVertical: 22,
+    paddingHorizontal: 32,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -186,5 +208,9 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansSemi,
     fontSize: 15,
     letterSpacing: 0.2,
+  },
+  labelLarge: {
+    fontSize: 19,
+    letterSpacing: 0.3,
   },
 });
