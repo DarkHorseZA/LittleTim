@@ -28,7 +28,7 @@ export const WEBSITE_URL = 'https://theunispienaar.com';
 
 export const SOCIAL_LINKS = {
   instagram: 'https://instagram.com/theunispienaar.author',
-  facebook: 'https://facebook.com/theunispienaar.author',
+  facebook: 'https://www.facebook.com/people/Theunis-Pienaar-Author/61590716790834/',
   threads: 'https://threads.net/@theunispienaar.author',
   youtube: 'https://www.youtube.com/@TheunisPienaar.author',
   tiktok: 'https://www.tiktok.com/@theunispienaar.author',
