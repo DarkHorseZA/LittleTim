@@ -134,15 +134,7 @@ export function Button({
               style={{ marginRight: 8 }}
             />
           ) : null}
-          <Text
-            style={[
-              styles.label,
-              isLarge && styles.labelLarge,
-              { color: palette.fg },
-            ]}
-          >
-            {title}
-          </Text>
+          <Text style={[styles.label, { color: palette.fg }]}>{title}</Text>
           {trailingIcon ? (
             <Ionicons
               name={trailingIcon}
@@ -208,9 +200,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansSemi,
     fontSize: 15,
     letterSpacing: 0.2,
-  },
-  labelLarge: {
-    fontSize: 19,
-    letterSpacing: 0.3,
   },
 });
