@@ -85,17 +85,25 @@ function WarmthBar({
   value,
   onFirstTouch,
   onChange,
+  onDragStateChange,
 }: {
   value: number;
   onFirstTouch: () => void;
   onChange: (v: number) => void;
+  // Fires true while a drag is in flight, false when it ends. The screen uses
+  // this to freeze the parent ScrollView, since on iOS the native scroll
+  // recogniser keeps running alongside this JS PanResponder and a slightly
+  // diagonal drag would otherwise scroll the page mid-adjust.
+  onDragStateChange?: (dragging: boolean) => void;
 }) {
   const barWidthRef = useRef(0);
   const touchedRef  = useRef(false);
   const onFirstRef  = useRef(onFirstTouch);
   const onChangeRef = useRef(onChange);
+  const onDragRef   = useRef(onDragStateChange);
   useEffect(() => { onFirstRef.current  = onFirstTouch; }, [onFirstTouch]);
   useEffect(() => { onChangeRef.current = onChange;    }, [onChange]);
+  useEffect(() => { onDragRef.current   = onDragStateChange; }, [onDragStateChange]);
 
   const clampedX = (raw: number) =>
     Math.min(Math.max(raw - THUMB_SIZE / 2, 0), barWidthRef.current - THUMB_SIZE);
@@ -114,6 +122,7 @@ function WarmthBar({
       onPanResponderTerminationRequest: () => false,
       onShouldBlockNativeResponder: () => true,
       onPanResponderGrant: (e) => {
+        onDragRef.current?.(true);
         if (!touchedRef.current) {
           touchedRef.current = true;
           onFirstRef.current();
@@ -129,6 +138,8 @@ function WarmthBar({
         const x = clampedX(e.nativeEvent.locationX);
         onChangeRef.current(Math.round((x / w) * 100));
       },
+      onPanResponderRelease:   () => onDragRef.current?.(false),
+      onPanResponderTerminate: () => onDragRef.current?.(false),
     })
   ).current;
 
@@ -377,6 +388,9 @@ export function TrackerScreen({ navigation }: Props) {
   // Step 3 — warmth
   const [warmth, setWarmth]           = useState(50);
   const [warmthTouched, setWarmthTouched] = useState(false);
+  // Freezes the scroll while the warmth dial is being dragged, so a diagonal
+  // pull adjusts the value instead of scrolling the page.
+  const [warmthDragging, setWarmthDragging] = useState(false);
   // Step 4 — reflection
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt>(PROMPTS[0]);
   const [reflection, setReflection]   = useState('');
@@ -447,6 +461,7 @@ export function TrackerScreen({ navigation }: Props) {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
+        scrollEnabled={!warmthDragging}
       >
           {/* Back button */}
           <View style={styles.navRow}>
@@ -539,6 +554,7 @@ export function TrackerScreen({ navigation }: Props) {
                 value={warmth}
                 onFirstTouch={() => setWarmthTouched(true)}
                 onChange={setWarmth}
+                onDragStateChange={setWarmthDragging}
               />
             </View>
           </Section>
