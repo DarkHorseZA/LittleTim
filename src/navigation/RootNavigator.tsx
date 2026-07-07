@@ -252,11 +252,16 @@ export function RootNavigator() {
         <Stack.Screen
           name="Tracker"
           component={TrackerScreen}
-          // Swipe-back is disabled here: the warmth dial is a horizontal-drag
-          // control and the interactive pop gesture kept stealing the drag and
-          // popping the screen. The screen has a visible back button, so no
-          // navigation affordance is lost.
-          options={{ animation: 'slide_from_right', gestureEnabled: false }}
+          // Presented as a full-screen modal so it renders ABOVE whatever opened
+          // it — critically Settings, which is itself a modal (a plain card
+          // pushed from a modal renders behind it). This also removes the
+          // left-edge pop gesture entirely, which is why the horizontal warmth
+          // dial no longer fights a swipe-back. The screen has a back button.
+          options={{
+            presentation: 'fullScreenModal',
+            animation: 'slide_from_right',
+            gestureEnabled: false,
+          }}
         />
         <Stack.Screen
           name="FocusArea"
