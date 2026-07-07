@@ -85,31 +85,26 @@ function WarmthBar({
   value,
   onFirstTouch,
   onChange,
-  onDragStateChange,
 }: {
   value: number;
   onFirstTouch: () => void;
   onChange: (v: number) => void;
-  // Lets the screen suspend the navigator's swipe-back gesture while a drag is
-  // in flight, so a horizontal pull on the bar never pops the screen.
-  onDragStateChange?: (dragging: boolean) => void;
 }) {
   const barWidthRef = useRef(0);
   const touchedRef  = useRef(false);
   const onFirstRef  = useRef(onFirstTouch);
   const onChangeRef = useRef(onChange);
-  const onDragRef   = useRef(onDragStateChange);
   useEffect(() => { onFirstRef.current  = onFirstTouch; }, [onFirstTouch]);
   useEffect(() => { onChangeRef.current = onChange;    }, [onChange]);
-  useEffect(() => { onDragRef.current   = onDragStateChange; }, [onDragStateChange]);
 
   const clampedX = (raw: number) =>
     Math.min(Math.max(raw - THUMB_SIZE / 2, 0), barWidthRef.current - THUMB_SIZE);
 
   const panResponder = useRef(
     PanResponder.create({
-      // Claim the touch in the capture phase so neither the parent ScrollView
-      // nor the navigator's pan gets first refusal.
+      // Claim the touch in the capture phase so the parent ScrollView doesn't
+      // get first refusal. (The stack's swipe-back gesture is disabled for this
+      // screen in the navigator, so the drag can't pop the screen.)
       onStartShouldSetPanResponderCapture: () => true,
       onMoveShouldSetPanResponderCapture:  () => true,
       onStartShouldSetPanResponder: () => true,
@@ -117,10 +112,8 @@ function WarmthBar({
       // Never surrender the responder mid-drag (the vertical ScrollView asks
       // for it as soon as the finger wanders a few points off-axis).
       onPanResponderTerminationRequest: () => false,
-      // Keep native recognisers (scroll view, edge-pop) from taking over.
       onShouldBlockNativeResponder: () => true,
       onPanResponderGrant: (e) => {
-        onDragRef.current?.(true);
         if (!touchedRef.current) {
           touchedRef.current = true;
           onFirstRef.current();
@@ -136,8 +129,6 @@ function WarmthBar({
         const x = clampedX(e.nativeEvent.locationX);
         onChangeRef.current(Math.round((x / w) * 100));
       },
-      onPanResponderRelease:  () => onDragRef.current?.(false),
-      onPanResponderTerminate: () => onDragRef.current?.(false),
     })
   ).current;
 
@@ -426,16 +417,6 @@ export function TrackerScreen({ navigation }: Props) {
 
   const goToToday = () => navigation.navigate('Tabs', { screen: 'Today' });
 
-  // While the warmth bar is being dragged, pause the stack's swipe-back
-  // gesture so a horizontal pull on the bar can't pop the screen. Restored on
-  // release/terminate; swiping anywhere else still navigates as usual.
-  const handleWarmthDrag = useCallback(
-    (dragging: boolean) => {
-      navigation.setOptions({ gestureEnabled: !dragging });
-    },
-    [navigation]
-  );
-
   const handleSave = async () => {
     Keyboard.dismiss();
     if (!hasAnyInput) {
@@ -558,7 +539,6 @@ export function TrackerScreen({ navigation }: Props) {
                 value={warmth}
                 onFirstTouch={() => setWarmthTouched(true)}
                 onChange={setWarmth}
-                onDragStateChange={handleWarmthDrag}
               />
             </View>
           </Section>

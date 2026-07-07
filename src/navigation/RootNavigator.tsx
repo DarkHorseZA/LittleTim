@@ -252,7 +252,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="Tracker"
           component={TrackerScreen}
-          options={{ animation: 'slide_from_right' }}
+          // Swipe-back is disabled here: the warmth dial is a horizontal-drag
+          // control and the interactive pop gesture kept stealing the drag and
+          // popping the screen. The screen has a visible back button, so no
+          // navigation affordance is lost.
+          options={{ animation: 'slide_from_right', gestureEnabled: false }}
         />
         <Stack.Screen
           name="FocusArea"
