@@ -429,7 +429,17 @@ export function TrackerScreen({ navigation }: Props) {
     );
   }, []);
 
-  const goToToday = () => navigation.navigate('Tabs', { screen: 'Today' });
+  // Reset (not navigate) so Tabs/Today becomes the fresh root. On first run the
+  // stack is [Welcome, EmailSignup, HowToUse, Tracker] with no Tabs beneath, so
+  // navigate('Tabs') would PUSH a plain card on top of this fullScreenModal —
+  // which native-stack renders BEHIND the modal, leaving Tracker covering the
+  // screen (the buttons appear to do nothing). Reset tears the modal down and
+  // lands cleanly on Today. Works identically when reached via Settings.
+  const goToToday = () =>
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Tabs', params: { screen: 'Today' } }],
+    });
 
   const handleSave = async () => {
     Keyboard.dismiss();
