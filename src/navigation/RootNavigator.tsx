@@ -6,6 +6,8 @@ import {
   LinkingOptions,
   useNavigationContainerRef,
 } from '@react-navigation/native';
+import * as ExpoLinking from 'expo-linking';
+import * as Notifications from 'expo-notifications';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -74,6 +76,34 @@ const linking: LinkingOptions<RootStackParamList> = {
       // Welcome. Unrecognised URLs fall back to Welcome via initialRouteName.
       NotFound: 'not-found',
     },
+  },
+  // Combine the default URL sources with notification taps: when a scheduled
+  // belief notification is opened, its `data.url` (littletim://belief) is fed
+  // to the same linking pipeline, so the Belief modal opens from a cold start
+  // or while running.
+  async getInitialURL() {
+    const url = await ExpoLinking.getInitialURL();
+    if (url != null) return url;
+    if (Platform.OS !== 'web') {
+      const response = await Notifications.getLastNotificationResponseAsync();
+      const notifUrl = response?.notification.request.content.data?.url;
+      if (typeof notifUrl === 'string') return notifUrl;
+    }
+    return null;
+  },
+  subscribe(listener) {
+    const onReceiveURL = ({ url }: { url: string }) => listener(url);
+    const urlSub = ExpoLinking.addEventListener('url', onReceiveURL);
+    const notifSub = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        const url = response.notification.request.content.data?.url;
+        if (typeof url === 'string') listener(url);
+      }
+    );
+    return () => {
+      urlSub.remove();
+      notifSub.remove();
+    };
   },
 };
 

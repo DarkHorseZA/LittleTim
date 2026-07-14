@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Linking,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -17,6 +18,7 @@ import { colors, layout, radius, shadows } from '../theme/colors';
 import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { APP_NAME, ATTRIBUTION, PRIVACY_POLICY_URL, hasUrl } from '../config';
+import { getNotificationStatus } from '../notifications';
 import { useDay } from '../store/DayContext';
 import { PulsingMark } from '../components/PulsingMark';
 import { BackButton } from '../components/BackButton';
@@ -39,6 +41,22 @@ export function SettingsScreen({ navigation }: Props) {
   const { settings, updateSettings } = useDay();
   const profile = settings.profile ?? {};
   const signedIn = !!profile.displayName;
+
+  // Offer a jump to the OS notification settings when the app can't post
+  // notifications (denied or not yet asked). Web has no such settings page.
+  const [notifStatus, setNotifStatus] = useState<string | null>(null);
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    let alive = true;
+    getNotificationStatus().then((s) => {
+      if (alive) setNotifStatus(s);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+  const showOpenSystemSettings =
+    Platform.OS !== 'web' && notifStatus !== null && notifStatus !== 'granted';
 
   const handleCompleteBook = () => {
     updateSettings({ bookCompleted: true });
@@ -219,6 +237,49 @@ export function SettingsScreen({ navigation }: Props) {
             })}
           </View>
         </View>
+
+        {showOpenSystemSettings ? (
+          <>
+            <View style={{ height: 14 }} />
+            <Pressable
+              onPress={() => {
+                tap();
+                Linking.openSettings();
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Open system settings to allow notifications for re-Genesis"
+              style={({ pressed, focused }: any) => [
+                pressed && pressScale,
+                focused && webFocus,
+              ]}
+            >
+              <View style={styles.card}>
+                <View style={styles.cardHead}>
+                  <View style={styles.iconCircle}>
+                    <Ionicons
+                      name="notifications-off-outline"
+                      size={16}
+                      color={colors.clay}
+                    />
+                  </View>
+                  <Text style={styles.cardTitle}>
+                    Notifications not showing?
+                  </Text>
+                  <View style={{ flex: 1 }} />
+                  <Ionicons
+                    name="chevron-forward"
+                    size={18}
+                    color={colors.inkFaint}
+                  />
+                </View>
+                <Text style={styles.cardBody}>
+                  Some devices, like Xiaomi, quiet notifications by default. Tap
+                  here to open your system settings and allow them for re-Genesis.
+                </Text>
+              </View>
+            </Pressable>
+          </>
+        ) : null}
 
         <View style={{ height: 14 }} />
 
