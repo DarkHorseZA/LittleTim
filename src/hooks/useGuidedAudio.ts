@@ -5,7 +5,15 @@ import {
   useAudioPlayer,
   useAudioPlayerStatus,
 } from 'expo-audio';
+import {
+  activateKeepAwakeAsync,
+  deactivateKeepAwake,
+} from 'expo-keep-awake';
 import type { GuidedAudio } from '../types';
+import { useDay } from '../store/DayContext';
+
+// Distinct keep-awake tag so audio playback never fights another feature's lock.
+const KEEP_AWAKE_TAG = 'audio';
 
 // Centralises all expo-audio specifics so screens never touch the library
 // directly. Pass a meditation's optional `audio`; when it is undefined the hook
@@ -53,6 +61,8 @@ export function useGuidedAudio(
     downloadFirst: Platform.OS !== 'web',
   });
   const status = useAudioPlayerStatus(player);
+  const { settings } = useDay();
+  const keepAwake = !!settings.keepScreenAwakeDuringAudio;
 
   // Configure the audio session once: play through the silent switch.
   useEffect(() => {
@@ -74,6 +84,22 @@ export function useGuidedAudio(
     });
     return () => sub.remove();
   }, [player]);
+
+  // Hold the screen on while a practice plays, but only when the reader has
+  // opted in (Settings). We re-evaluate on every play/pause and when the setting
+  // changes mid-playback, and always release on unmount so the lock can never
+  // outlive the meditation. The distinct `'audio'` tag keeps this independent of
+  // any other keep-awake usage.
+  useEffect(() => {
+    if (keepAwake && status.playing) {
+      activateKeepAwakeAsync(KEEP_AWAKE_TAG).catch(() => {});
+    } else {
+      deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
+    }
+    return () => {
+      deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
+    };
+  }, [keepAwake, status.playing]);
 
   const play = useCallback(() => {
     try {

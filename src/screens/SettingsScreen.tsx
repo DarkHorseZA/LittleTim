@@ -225,6 +225,36 @@ export function SettingsScreen({ navigation }: Props) {
         <View style={styles.card}>
           <View style={styles.cardHead}>
             <View style={styles.iconCircle}>
+              <Ionicons
+                name="phone-portrait-outline"
+                size={16}
+                color={colors.clay}
+              />
+            </View>
+            <Text style={styles.cardTitle}>While a practice plays</Text>
+          </View>
+          <View style={styles.toggleRow}>
+            <Text style={styles.toggleBody}>
+              Keep the screen on while a practice is playing.
+            </Text>
+            <Switch
+              value={!!settings.keepScreenAwakeDuringAudio}
+              onValueChange={(enabled) =>
+                updateSettings({ keepScreenAwakeDuringAudio: enabled })
+              }
+              trackColor={{ false: colors.line, true: colors.clay }}
+              thumbColor={colors.white}
+              accessibilityLabel="Keep the screen on while a practice is playing"
+              accessibilityRole="switch"
+            />
+          </View>
+        </View>
+
+        <View style={{ height: 14 }} />
+
+        <View style={styles.card}>
+          <View style={styles.cardHead}>
+            <View style={styles.iconCircle}>
               <Ionicons name="sparkles-outline" size={16} color={colors.clay} />
             </View>
             <Text style={styles.cardTitle}>Practice reminders</Text>

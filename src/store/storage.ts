@@ -14,6 +14,7 @@ export type Profile = {
 
 export type Settings = {
   reminderHour: number; // 0-23, when the daily belief pops up in-app
+  keepScreenAwakeDuringAudio?: boolean; // opt-in: hold the screen on while a practice plays
   lastBeliefSeenOn?: string; // YYYY-MM-DD
   profile?: Profile;
   currentChapter?: number; // 0 = Introduction, 1-9 = chapters. Undefined = day-of-year rotation.
@@ -36,6 +37,7 @@ export type Settings = {
 
 const defaultSettings: Settings = {
   reminderHour: 8,
+  keepScreenAwakeDuringAudio: false,
   profile: {},
   currentChapter: undefined,
   hasSeenHowTo: false,
