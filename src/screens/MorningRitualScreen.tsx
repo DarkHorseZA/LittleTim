@@ -129,7 +129,7 @@ export function MorningRitualScreen({ navigation }: Props) {
   // own recording. Inert (no control) until a recording is supplied.
   const combined = RITUAL_AUDIO;
   const activeAudio = combined ?? step.audio;
-  const guided = useGuidedAudio(activeAudio);
+  const guided = useGuidedAudio(activeAudio, 'The Five Gestures');
   const markers = combined?.pageMarkers;
   const synced = !!combined && !!markers && markers.length > 0;
 

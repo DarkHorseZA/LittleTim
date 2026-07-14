@@ -11,6 +11,7 @@ import {
 } from 'expo-keep-awake';
 import type { GuidedAudio } from '../types';
 import { useDay } from '../store/DayContext';
+import { APP_NAME } from '../config';
 
 // Distinct keep-awake tag so audio playback never fights another feature's lock.
 const KEEP_AWAKE_TAG = 'audio';
@@ -29,11 +30,14 @@ const KEEP_AWAKE_TAG = 'audio';
 //     native background-audio capability, which the expo-audio config plugin
 //     wires up (iOS UIBackgroundModes: audio; Android FOREGROUND_SERVICE +
 //     FOREGROUND_SERVICE_MEDIA_PLAYBACK). Those are also declared explicitly in
-//     app.json. On Android, sustained background playback beyond a few minutes
-//     ultimately depends on the media foreground service the plugin registers.
+//     app.json.
+//   - while playing, the player is promoted to a lock-screen / media session
+//     (`setActiveForLockScreen`). On Android this is REQUIRED for sustained
+//     background playback: without it the OS stops background audio after
+//     ~3 minutes, and our practices run 3-6 minutes. It also gives lock-screen
+//     play/pause controls on both platforms, labelled with the practice title.
 //
-// Out of scope (follow-ups): lock-screen transport controls, remote-audio
-// download management, sleep timer.
+// Out of scope (follow-ups): remote-audio download management, sleep timer.
 
 let audioModeConfigured = false;
 
@@ -50,7 +54,8 @@ export type GuidedAudioController = {
 };
 
 export function useGuidedAudio(
-  audio?: GuidedAudio
+  audio?: GuidedAudio,
+  title?: string
 ): GuidedAudioController {
   // `useAudioPlayer` accepts a null source, so this stays unconditional even
   // when a meditation has no recording. The 100ms update interval gives ~10fps
@@ -100,6 +105,31 @@ export function useGuidedAudio(
       deactivateKeepAwake(KEEP_AWAKE_TAG).catch(() => {});
     };
   }, [keepAwake, status.playing]);
+
+  // Promote the player to a lock-screen / foreground media session while it
+  // plays (native only). On Android this keeps background playback alive past
+  // the ~3 minute OS cap; on both platforms it surfaces lock-screen play/pause
+  // controls labelled with the practice. Released on pause, stop, and unmount.
+  useEffect(() => {
+    if (Platform.OS === 'web') return;
+    try {
+      if (status.playing) {
+        player.setActiveForLockScreen(true, {
+          title: title ?? 'Guided practice',
+          artist: APP_NAME,
+        });
+      } else {
+        player.setActiveForLockScreen(false);
+      }
+    } catch {
+      // player may not support lock-screen controls or is already released
+    }
+    return () => {
+      try {
+        player.setActiveForLockScreen(false);
+      } catch {}
+    };
+  }, [player, status.playing, title]);
 
   const play = useCallback(() => {
     try {

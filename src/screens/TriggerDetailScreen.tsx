@@ -24,7 +24,7 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
   // Optional guided audio (WHENs have none yet; this stays inert until one
   // gets an `audio` field, at which point the control appears automatically).
   const audio = gesture?.audio;
-  const med = useGuidedAudio(audio);
+  const med = useGuidedAudio(audio, gesture?.title);
   const markers = audio?.pageMarkers;
   const synced = med.available && !!markers && markers.length > 0;
   const [activeStep, setActiveStep] = useState(0);

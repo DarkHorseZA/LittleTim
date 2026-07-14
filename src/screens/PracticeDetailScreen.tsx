@@ -30,7 +30,7 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
   // Optional guided audio. Inert (no control rendered) when the meditation has
   // no recording, so the screen looks identical to before for audio-less ones.
   const audio = practice?.audio;
-  const med = useGuidedAudio(audio);
+  const med = useGuidedAudio(audio, practice?.title);
   const { available, isPlaying, currentTime, duration, toggle, seekTo, restart } =
     med;
   const markers = audio?.pageMarkers;
