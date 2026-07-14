@@ -2,7 +2,7 @@
   "expo": {
     "name": "re-Genesis",
     "slug": "re-genesis",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "littletim",
@@ -15,11 +15,18 @@
       "bundleIdentifier": "com.theunispienaar.regenesis",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "UIBackgroundModes": ["audio"]
       }
     },
     "android": {
       "package": "com.theunispienaar.regenesis",
       "versionCode": 1,
+      "permissions": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/brand/icon.png",
         "backgroundColor": "#F5EFE6"

@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { AppState, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import {
   setAudioModeAsync,
   useAudioPlayer,
@@ -23,11 +23,17 @@ const KEEP_AWAKE_TAG = 'audio';
 //   - `useAudioPlayer` releases the native player automatically on unmount, so
 //     leaving a meditation stops and frees its audio (one session at a time).
 //   - audio plays even when the device is on silent (meditation content).
-//   - playback pauses when the app goes to the background; resume is the user's
-//     choice (we never auto-resume).
+//   - playback continues when the screen locks or the app is backgrounded, so a
+//     practice runs to the end with the phone in a pocket. This needs the audio
+//     session configured for background (`shouldPlayInBackground`) AND the
+//     native background-audio capability, which the expo-audio config plugin
+//     wires up (iOS UIBackgroundModes: audio; Android FOREGROUND_SERVICE +
+//     FOREGROUND_SERVICE_MEDIA_PLAYBACK). Those are also declared explicitly in
+//     app.json. On Android, sustained background playback beyond a few minutes
+//     ultimately depends on the media foreground service the plugin registers.
 //
-// Out of scope (follow-ups): background playback when the app is closed,
-// lock-screen controls, remote-audio download management, sleep timer.
+// Out of scope (follow-ups): lock-screen transport controls, remote-audio
+// download management, sleep timer.
 
 let audioModeConfigured = false;
 
@@ -64,26 +70,20 @@ export function useGuidedAudio(
   const { settings } = useDay();
   const keepAwake = !!settings.keepScreenAwakeDuringAudio;
 
-  // Configure the audio session once: play through the silent switch.
+  // Configure the audio session once: play through the silent switch and keep
+  // playing when the app is backgrounded or the screen locks. `interruptionMode:
+  // 'doNotMix'` takes exclusive focus (the meditation is the foreground sound)
+  // and is also what lets the OS associate background/lock-screen playback with
+  // this session. We deliberately do NOT pause on background any more.
   useEffect(() => {
     if (audioModeConfigured) return;
     audioModeConfigured = true;
-    setAudioModeAsync({ playsInSilentMode: true }).catch(() => {});
+    setAudioModeAsync({
+      playsInSilentMode: true,
+      shouldPlayInBackground: true,
+      interruptionMode: 'doNotMix',
+    }).catch(() => {});
   }, []);
-
-  // Pause when the app leaves the foreground. The user resumes manually.
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', (state) => {
-      if (state !== 'active') {
-        try {
-          player.pause();
-        } catch {
-          // player may already be released
-        }
-      }
-    });
-    return () => sub.remove();
-  }, [player]);
 
   // Hold the screen on while a practice plays, but only when the reader has
   // opted in (Settings). We re-evaluate on every play/pause and when the setting
