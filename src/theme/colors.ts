@@ -170,11 +170,45 @@ export const shadows = {
   },
 } as const;
 
+// Mixes two solid hex colours (`#rgb` or `#rrggbb`) in RGB space. `t` is the
+// weight of `b` (0 = all `a`, 1 = all `b`). Use it to synthesise an intermediate
+// stop for a runtime two-colour gradient so the ramp stays smooth and band-free
+// on Android. Alpha and non-hex values (e.g. `transparent`) are not supported,
+// so only pass solid hex colours.
+export function blend(a: string, b: string, t: number): string {
+  const parse = (hex: string) => {
+    let h = hex.replace('#', '');
+    if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+    return {
+      r: parseInt(h.slice(0, 2), 16),
+      g: parseInt(h.slice(2, 4), 16),
+      b: parseInt(h.slice(4, 6), 16),
+    };
+  };
+  const pa = parse(a);
+  const pb = parse(b);
+  const mix = (x: number, y: number) => Math.round(x + (y - x) * t);
+  return (
+    '#' +
+    [mix(pa.r, pb.r), mix(pa.g, pb.g), mix(pa.b, pb.b)]
+      .map((n) => n.toString(16).padStart(2, '0'))
+      .join('')
+  );
+}
+
+// Every ramp carries 3+ intermediate stops. Two-stop gradients band visibly on
+// Android; the extra stops (plus expo-linear-gradient's `dither`, on by default)
+// keep the transition smooth. It costs nothing on iOS or web.
+//
+// `dawn`, `dawnDeep`, `heart`, and `sage` resolve to `colors.bg` at their final
+// stop. That is deliberate: the fixed-height hero bands on Today, Account, and
+// Connect sit on a `colors.bg` page, so ending the wash on the page colour is
+// what removes the hard horizontal seam where the band met the scroll body.
 export const gradients = {
-  dawn: ['#FBE9DB', '#F5EFE6'] as const,
-  dawnDeep: ['#F5D1B1', '#EDE3D1'] as const,
-  dusk: ['#E9D5B8', '#D6AD85'] as const,
-  clay: ['#CF7148', '#A8441D'] as const,
-  heart: ['#F4D2DC', '#F5EFE6'] as const,
-  sage: ['#D9E6CF', '#F5EFE6'] as const,
+  dawn: ['#FBE9DB', '#FAEBDE', '#F8ECE1', '#F7EEE3', colors.bg] as const,
+  dawnDeep: ['#F5D1B1', '#F5D9BE', '#F5E0CC', '#F5E8D9', colors.bg] as const,
+  dusk: ['#E9D5B8', '#E4CBAB', '#E0C19F', '#DBB792', '#D6AD85'] as const,
+  clay: ['#CF7148', '#C5663D', '#BC5B33', '#B24F28', '#A8441D'] as const,
+  heart: ['#F4D2DC', '#F4D9DF', '#F5E0E1', '#F5E8E4', colors.bg] as const,
+  sage: ['#D9E6CF', '#E0E8D5', '#E7EBDB', '#EEEDE0', colors.bg] as const,
 };

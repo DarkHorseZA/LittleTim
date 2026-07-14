@@ -12,7 +12,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
-import { colors, gradients, layout, radius, shadows } from '../theme/colors';
+import { blend, colors, gradients, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
@@ -275,7 +275,7 @@ export function MorningRitualScreen({ navigation }: Props) {
   return (
     <View style={styles.root}>
       <LinearGradient
-        colors={[step.tintSoft, colors.bg]}
+        colors={[step.tintSoft, blend(step.tintSoft, colors.bg, 0.5), colors.bg]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0.6, y: 1 }}
         style={StyleSheet.absoluteFill}

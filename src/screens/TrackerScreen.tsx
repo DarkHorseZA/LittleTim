@@ -27,7 +27,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StackActions } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/types';
-import { colors, layout, radius, shadows } from '../theme/colors';
+import { blend, colors, layout, radius, shadows } from '../theme/colors';
 import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { BackButton } from '../components/BackButton';
@@ -164,7 +164,7 @@ function WarmthBar({
         accessibilityValue={{ min: 0, max: 100, now: value }}
       >
         <LinearGradient
-          colors={[COOL_COLOR, colors.clay]}
+          colors={[COOL_COLOR, blend(COOL_COLOR, colors.clay, 0.5), colors.clay]}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
           style={warmStyles.track}

@@ -80,8 +80,12 @@ export function HomeScreen({ navigation }: Props) {
     <View style={styles.root}>
       <LinearGradient
         colors={gradients.dawnDeep}
+        // Vertical (not diagonal): a diagonal wash leaves the band's bottom edge
+        // a non-uniform colour, which reads as a hard seam where the fixed hero
+        // band meets the cream page. Vertical keeps the whole bottom row on
+        // `colors.bg` (dawnDeep's final stop), so the join is invisible.
         start={{ x: 0, y: 0 }}
-        end={{ x: 0.9, y: 1 }}
+        end={{ x: 0, y: 1 }}
         style={styles.hero}
       />
       <SafeAreaView style={{ flex: 1 }} edges={['top']}>
