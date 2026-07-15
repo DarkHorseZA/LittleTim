@@ -24,8 +24,10 @@ export function GlossaryScreen({ navigation }: Props) {
     <View style={styles.root}>
       <LinearGradient
         colors={gradients.dawn}
+        // Vertical so the fixed hero band's bottom edge stays uniformly on
+        // `colors.bg` and leaves no hard seam where it meets the cream page.
         start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+        end={{ x: 0, y: 1 }}
         style={styles.hero}
       />
       <SafeAreaView style={{ flex: 1 }}>
