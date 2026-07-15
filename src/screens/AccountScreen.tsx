@@ -20,7 +20,9 @@ import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { PulsingMark } from '../components/PulsingMark';
+import { toast } from '../components/Toast';
 import { useDay } from '../store/DayContext';
+import { clearAllData } from '../store/storage';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Account'>;
 
@@ -34,7 +36,7 @@ function initials(name?: string): string | null {
 }
 
 export function AccountScreen({ navigation }: Props) {
-  const { settings, updateSettings } = useDay();
+  const { settings, updateSettings, refresh } = useDay();
   const profile = settings.profile ?? {};
   const [name, setName] = useState(profile.displayName ?? '');
   const [email, setEmail] = useState(profile.email ?? '');
@@ -70,6 +72,34 @@ export function AccountScreen({ navigation }: Props) {
             setName('');
             setEmail('');
             await updateSettings({ profile: {} });
+          },
+        },
+      ]
+    );
+  };
+
+  // Account deletion (App Store Guideline 5.1.1(v)). Everything this app knows
+  // lives on-device (the email is never sent anywhere), so deletion is simply
+  // clearing the whole littletim:* namespace and returning to the first-run
+  // flow. A single confirmation is all Apple asks for; no support-request
+  // friction.
+  const deleteData = () => {
+    Alert.alert(
+      'Delete your data',
+      'Are you sure? Once deleted, your quilt cannot be brought back.',
+      [
+        { text: 'Keep my stitches', style: 'cancel' },
+        {
+          text: 'Delete everything',
+          style: 'destructive',
+          onPress: async () => {
+            await clearAllData();
+            // refresh() re-reads the now-empty store, resetting context to
+            // defaults. The ready guard stays true, so the first-run writes on
+            // Welcome/EmailSignup persist normally.
+            await refresh();
+            toast('Your data is cleared.', 'success');
+            navigation.reset({ index: 0, routes: [{ name: 'Welcome' }] });
           },
         },
       ]
@@ -195,6 +225,25 @@ export function AccountScreen({ navigation }: Props) {
               onPress={() => navigation.goBack()}
             />
           )}
+
+          <View style={styles.deleteDivider} />
+
+          <Text style={[text.eyebrow, styles.sectionEyebrow]}>
+            Delete your data
+          </Text>
+          <Text style={styles.deleteBody}>
+            This clears everything stored on this device: your entries,
+            settings, quilt, and reflections. It cannot be undone.
+          </Text>
+          <Button
+            title="Delete my data"
+            variant="primary"
+            style={styles.deleteButton}
+            onPress={deleteData}
+            haptic="warning"
+            accessibilityLabel="Delete my data"
+            accessibilityHint="Clears everything stored on this device and returns to the start"
+          />
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -315,6 +364,19 @@ const styles = StyleSheet.create({
   },
   sectionEyebrow: {
     marginBottom: 10,
+  },
+  deleteDivider: {
+    height: 1,
+    backgroundColor: colors.line,
+    marginTop: 32,
+    marginBottom: 24,
+  },
+  deleteBody: {
+    ...text.body,
+    marginBottom: 16,
+  },
+  deleteButton: {
+    backgroundColor: colors.danger,
   },
   provider: {
     flexDirection: 'row',

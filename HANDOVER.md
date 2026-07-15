@@ -153,6 +153,14 @@ Love and Fear where they carry meaning.
 - **Storage keys are `littletim:*:v1`.** The brand renamed from "LittleTim" to
   "re-Genesis" but the keys stayed for back-compat. Do not rename them or you
   orphan existing users' saved data.
+- **Account deletion (App Store Guideline 5.1.1(v)).** The Account modal's
+  "Delete my data" flow clears every `littletim:*` AsyncStorage key (via
+  `clearAllData()` in `src/store/storage.ts`), resets `DayContext` through
+  `refresh()`, and `navigation.reset`s back to the Welcome first-run flow. It
+  does not unsubscribe from any newsletter, because the signup email is stored
+  on-device only and is never sent anywhere. If the site later adds a
+  `/unsubscribe` endpoint and the app starts transmitting the email off-device,
+  wire that unsubscribe call into `AccountScreen.tsx`'s delete flow.
 - **Don't remove the `ready` hydration guard** in `src/store/DayContext.tsx`. It
   prevents cold-start writes from wiping stored data.
 - **Git author identity.** Commits currently show

@@ -91,6 +91,18 @@ export async function upsertEntry(entry: DailyEntry): Promise<void> {
   await saveEntries(entries);
 }
 
+// Deletes every key this app owns: the whole `littletim:*` namespace. Backs the
+// account-deletion flow (App Store Guideline 5.1.1(v)). Reads all keys and
+// multiRemoves the matching ones, so it stays correct even if new `littletim:*`
+// keys are added later. The whole namespace goes, nothing is preserved.
+export async function clearAllData(): Promise<void> {
+  const keys = await AsyncStorage.getAllKeys();
+  const ours = keys.filter((k) => k.startsWith('littletim:'));
+  if (ours.length > 0) {
+    await AsyncStorage.multiRemove(ours);
+  }
+}
+
 export async function loadSettings(): Promise<Settings> {
   const raw = await AsyncStorage.getItem(KEY_SETTINGS);
   if (!raw) return defaultSettings;
