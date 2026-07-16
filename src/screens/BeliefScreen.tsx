@@ -22,6 +22,18 @@ export function BeliefScreen({ navigation }: Props) {
     [settings.currentChapter]
   );
 
+  // Leave the screen. Normally Belief is a modal over Tabs, so goBack() works.
+  // But when it is opened cold from a notification deep link it is the only
+  // screen in the stack, and goBack() would do nothing, so send the reader into
+  // the app instead of a dead end.
+  const dismiss = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else {
+      navigation.reset({ index: 0, routes: [{ name: 'Tabs' }] });
+    }
+  };
+
   const acknowledge = async () => {
     // Completion haptic fired by the Button (haptic="success"). No manual call.
     await updateToday({
@@ -29,7 +41,7 @@ export function BeliefScreen({ navigation }: Props) {
       beliefAcknowledged: true,
     });
     await addQuiltEntry({ type: 'belief' });
-    navigation.goBack();
+    dismiss();
   };
 
   const already = today.beliefAcknowledged && today.beliefId === belief.id;
@@ -44,7 +56,7 @@ export function BeliefScreen({ navigation }: Props) {
       />
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.closeRow}>
-          <BackButton onPress={() => navigation.goBack()} />
+          <BackButton onPress={dismiss} />
           <CloseButton
             onPress={() => navigation.navigate('Glossary')}
             icon="help-circle-outline"
@@ -83,7 +95,7 @@ export function BeliefScreen({ navigation }: Props) {
           <Button
             title="Not now"
             variant="ghost"
-            onPress={() => navigation.goBack()}
+            onPress={dismiss}
           />
         </ScrollView>
       </SafeAreaView>
