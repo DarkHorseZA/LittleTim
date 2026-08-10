@@ -1,0 +1,24 @@
+# EAS Build upload ignore. When this file is present, EAS uses it INSTEAD of
+# .gitignore to decide what to upload, so it must mirror .gitignore and then add
+# the large untracked folders that would otherwise bloat the build archive.
+
+# --- mirror of .gitignore ---
+node_modules/
+.expo/
+dist/
+web-build/
+*.log
+.DS_Store
+.env
+.env.local
+ios/
+android/
+package-lock.json
+.claude/
+google-play-service-account.json
+*.docx
+Theunis Pienaar re-Genesis Proposal.docx
+
+# --- large untracked folders, not needed for the build ---
+re-Genesis app/
+screenshots/
