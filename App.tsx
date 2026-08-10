@@ -17,6 +17,7 @@ import {
 } from '@expo-google-fonts/inter';
 import { RootNavigator } from './src/navigation/RootNavigator';
 import { DayProvider } from './src/store/DayContext';
+import { DiscoveryProvider } from './src/store/DiscoveryContext';
 import { colors } from './src/theme/colors';
 import { ToastHost } from './src/components/Toast';
 import { NotificationsManager } from './src/components/NotificationsManager';
@@ -51,10 +52,12 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <DayProvider>
-        <StatusBar style="dark" />
-        <RootNavigator />
-        <ToastHost />
-        <NotificationsManager />
+        <DiscoveryProvider>
+          <StatusBar style="dark" />
+          <RootNavigator />
+          <ToastHost />
+          <NotificationsManager />
+        </DiscoveryProvider>
       </DayProvider>
     </SafeAreaProvider>
   );

@@ -12,14 +12,18 @@ import { CloseButton } from '../components/CloseButton';
 import { BackButton } from '../components/BackButton';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
+import { useDiscovery } from '../store/DiscoveryContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Belief'>;
 
 export function BeliefScreen({ navigation }: Props) {
   const { today, updateToday, addQuiltEntry, settings } = useDay();
+  const discovery = useDiscovery();
+  // A completed reader sees the same fresh belief the Today screen drew this
+  // open; everyone else follows the current chapter as before.
   const belief = useMemo(
-    () => beliefForDate(new Date(), settings.currentChapter),
-    [settings.currentChapter]
+    () => discovery?.belief ?? beliefForDate(new Date(), settings.currentChapter),
+    [discovery, settings.currentChapter]
   );
 
   // Leave the screen. Normally Belief is a modal over Tabs, so goBack() works.

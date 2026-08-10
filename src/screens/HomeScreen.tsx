@@ -25,6 +25,7 @@ import { beliefForDate } from '../data/beliefs';
 import { msgPractices, seePractices } from '../data/practices';
 import { Practice } from '../types';
 import { useDay } from '../store/DayContext';
+import { useDiscovery } from '../store/DiscoveryContext';
 import { todayKey } from '../store/storage';
 
 type Props = CompositeScreenProps<
@@ -43,10 +44,14 @@ function prettyDate(d: Date): string {
 
 export function HomeScreen({ navigation }: Props) {
   const { ready, today, settings, updateSettings } = useDay();
+  const discovery = useDiscovery();
   const now = useMemo(() => new Date(), []);
+  // Once the book is complete, `discovery` carries a fresh random draw (belief,
+  // MSG, SEE, and a featured WHEN gesture) that re-rolls on each open. Until
+  // then it is null and today's belief follows the current chapter as before.
   const belief = useMemo(
-    () => beliefForDate(now, settings.currentChapter),
-    [now, settings.currentChapter]
+    () => discovery?.belief ?? beliefForDate(now, settings.currentChapter),
+    [discovery, now, settings.currentChapter]
   );
   const firstName = (settings.profile?.displayName ?? '').split(' ')[0];
 
@@ -71,10 +76,10 @@ export function HomeScreen({ navigation }: Props) {
   const bookCompleted = !!settings.bookCompleted;
   const whenUnlocked = currentChapter === 9 || bookCompleted;
 
-  // The practice for today is the one matching the current chapter, or the
-  // Introduction practice as a fallback when no chapter is selected.
-  const todayMsg = practiceForChapter(msgPractices, currentChapter);
-  const todaySee = practiceForChapter(seePractices, currentChapter);
+  // For completed readers these are a fresh random draw; otherwise the practice
+  // matching the current chapter (falling back to the Introduction practice).
+  const todayMsg = discovery?.msg ?? practiceForChapter(msgPractices, currentChapter);
+  const todaySee = discovery?.see ?? practiceForChapter(seePractices, currentChapter);
 
   return (
     <View style={styles.root}>
@@ -230,8 +235,12 @@ export function HomeScreen({ navigation }: Props) {
 
           <PracticeTile
             kind="MSG"
-            title="Meditative Somatic Gestures"
-            body="Gentle, repeatable shapes the body remembers."
+            title={discovery ? todayMsg.title : 'Meditative Somatic Gestures'}
+            body={
+              discovery
+                ? todayMsg.cue
+                : 'Gentle, repeatable shapes the body remembers.'
+            }
             done={msgDone}
             onPress={() =>
               navigation.navigate('PracticeDetail', { practiceId: todayMsg.id, source: 'today' })
@@ -240,8 +249,12 @@ export function HomeScreen({ navigation }: Props) {
           <View style={{ height: 12 }} />
           <PracticeTile
             kind="SEE"
-            title="Somatic Experiencing Exercises"
-            body="Complete what the body started. Rebuild capacity."
+            title={discovery ? todaySee.title : 'Somatic Experiencing Exercises'}
+            body={
+              discovery
+                ? todaySee.cue
+                : 'Complete what the body started. Rebuild capacity.'
+            }
             done={seeDone}
             onPress={() =>
               navigation.navigate('PracticeDetail', { practiceId: todaySee.id, source: 'today' })
@@ -250,15 +263,30 @@ export function HomeScreen({ navigation }: Props) {
           {whenUnlocked && (
             <>
               <View style={{ height: 12 }} />
-              <PracticeTile
-                kind="WHEN"
-                title="For the moment"
-                body="Trigger-specific gestures. A gesture for every kind of ache."
-                done={false}
-                onPress={() =>
-                  navigation.navigate('Practice', { initialKind: 'WHEN' })
-                }
-              />
+              {discovery?.when ? (
+                // A fresh gesture from the WHEN library, opened directly.
+                <PracticeTile
+                  kind="WHEN"
+                  title={discovery.when.title}
+                  body={discovery.when.trigger}
+                  done={false}
+                  onPress={() =>
+                    navigation.navigate('TriggerDetail', {
+                      triggerId: discovery.when.id,
+                    })
+                  }
+                />
+              ) : (
+                <PracticeTile
+                  kind="WHEN"
+                  title="For the moment"
+                  body="Trigger-specific gestures. A gesture for every kind of ache."
+                  done={false}
+                  onPress={() =>
+                    navigation.navigate('Practice', { initialKind: 'WHEN' })
+                  }
+                />
+              )}
             </>
           )}
 
