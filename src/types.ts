@@ -90,7 +90,7 @@ export type FocusAreaPrompt = {
   coachingTeaser: string;
 };
 
-export type QuiltEntryType = 'ritual' | 'msg' | 'see' | 'journal' | 'belief';
+export type QuiltEntryType = 'ritual' | 'msg' | 'see' | 'journal' | 'belief' | 'when';
 
 export type JournalStitch = {
   id: string;               // timestamp string used as unique key

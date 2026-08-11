@@ -49,6 +49,7 @@ const CHIP: Record<QuiltEntry['type'], { label: string; bg: string; fg: string }
   msg:     { label: 'MSG',             bg: colors.health,    fg: colors.white },
   see:     { label: 'SEE',             bg: colors.happiness, fg: colors.ink   },
   belief:  { label: 'Belief',          bg: colors.loved,     fg: colors.white },
+  when:    { label: 'WHEN',            bg: colors.wealth,    fg: colors.white },
   journal: { label: 'Sewed with love', bg: colors.done,      fg: colors.white },
 };
 

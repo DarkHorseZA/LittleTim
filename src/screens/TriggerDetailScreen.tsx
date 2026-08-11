@@ -9,6 +9,8 @@ import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { GuidedAudioControl } from '../components/GuidedAudioControl';
+import { toast } from '../components/Toast';
+import { useDay } from '../store/DayContext';
 import { findTrigger } from '../data/triggers';
 import { useGuidedAudio, stepIndexForTime } from '../hooks/useGuidedAudio';
 import { chapterById } from '../data/chapters';
@@ -16,10 +18,20 @@ import { chapterById } from '../data/chapters';
 type Props = NativeStackScreenProps<RootStackParamList, 'TriggerDetail'>;
 
 export function TriggerDetailScreen({ navigation, route }: Props) {
+  const { addQuiltEntry } = useDay();
   const gesture = useMemo(
     () => findTrigger(route.params.triggerId),
     [route.params.triggerId]
   );
+
+  // WHEN gestures are in-the-moment tools, so completing one sews a stitch
+  // rather than ticking a once-a-day box; it can be done again whenever the
+  // moment calls. The quilt dedupes to one WHEN stitch per day.
+  const complete = async () => {
+    await addQuiltEntry({ type: 'when' });
+    toast('Beautifully sewn.', 'success');
+    navigation.goBack();
+  };
 
   // Optional guided audio (WHENs have none yet; this stays inert until one
   // gets an `audio` field, at which point the control appears automatically).
@@ -146,6 +158,14 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
         </View>
 
         <View style={{ height: 28 }} />
+        <Button
+          title="Mark complete"
+          icon="checkmark-circle"
+          onPress={complete}
+          size="lg"
+          haptic="success"
+        />
+        <View style={{ height: 10 }} />
         <Button
           title="Close"
           variant="ghost"

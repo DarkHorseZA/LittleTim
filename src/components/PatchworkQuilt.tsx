@@ -56,6 +56,7 @@ const CHIP_CFG: Record<QuiltEntry['type'], { label: string; bg: string; fg: stri
   msg:     { label: 'MSG',             bg: colors.chipNeutralBg, fg: colors.chipNeutralFg, prefix: '✦' },
   see:     { label: 'SEE',             bg: colors.chipNeutralBg, fg: colors.chipNeutralFg, prefix: '✦' },
   belief:  { label: 'Belief',          bg: colors.chipNeutralBg, fg: colors.chipNeutralFg, prefix: '✦' },
+  when:    { label: 'WHEN',            bg: colors.chipNeutralBg, fg: colors.chipNeutralFg, prefix: '✦' },
   journal: { label: 'Sewed with love', bg: colors.chipLoveBg,    fg: colors.chipLoveFg,    prefix: '♥' },
 };
 
