@@ -17,3 +17,13 @@ google-play-service-account.json
 # Manuscript, never commit the book to the repo
 *.docx
 Theunis Pienaar re-Genesis Proposal.docx
+
+# Store build artifacts — kept locally for upload, never in source history
+*.aab
+*.apk
+*.ipa
+
+# Local captures & marketing/deliverable assets (screenshots, logos, QR, video)
+*.mov
+screenshots/
+re-Genesis app/
