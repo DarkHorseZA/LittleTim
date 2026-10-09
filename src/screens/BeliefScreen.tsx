@@ -10,6 +10,7 @@ import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { CloseButton } from '../components/CloseButton';
 import { BackButton } from '../components/BackButton';
+import { toast } from '../components/Toast';
 import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
 import { useDiscovery } from '../store/DiscoveryContext';
@@ -45,6 +46,9 @@ export function BeliefScreen({ navigation }: Props) {
       beliefAcknowledged: true,
     });
     await addQuiltEntry({ type: 'belief' });
+    // The screen closes on acknowledge, so confirm the stitch with a calm
+    // toast. The Button already fired the confirm feel, so this is visual-only.
+    toast('Beautifully sewn.', 'success', { haptic: 'none' });
     dismiss();
   };
 

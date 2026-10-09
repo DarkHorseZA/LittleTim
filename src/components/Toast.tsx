@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadows } from '../theme/colors';
 import { fonts } from '../theme/type';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { savedFeedback, confirmFeedback } from './feedback';
 
 // Lightweight imperative toast. Keeps two concerns in one file:
 //   1. A module-level queue (`toast`, `dismiss`) so any call site can raise
@@ -19,8 +20,9 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 //      subscribed to the queue, that renders the messages.
 //
 // Designed to be quiet: bottom-centered pill, single line, auto-dismisses
-// after ~4s, respects reduced-motion, tap-to-dismiss. No swipe gestures so
-// it never fights scroll.
+// after ~2.5s, respects reduced-motion, tap-to-dismiss. No swipe gestures so
+// it never fights scroll. Success toasts pair with a gentle haptic (see
+// `toast` below); errors stay silent.
 
 export type ToastVariant = 'error' | 'success' | 'info';
 
@@ -35,17 +37,35 @@ type Listener = (messages: ToastMessage[]) => void;
 const listeners = new Set<Listener>();
 let queue: ToastMessage[] = [];
 let nextId = 1;
-const AUTO_DISMISS_MS = 4000;
+const AUTO_DISMISS_MS = 2500;
+
+// How a success toast should feel. A completion that closes a screen gets the
+// warmer `confirm`; an ordinary save gets the gentle `saved` nod. `none` opts a
+// success message out entirely. Errors and info never buzz — a toast that
+// reports a problem should not also tap the hand.
+export type ToastHaptic = 'saved' | 'confirm' | 'none';
 
 function emit() {
   const snapshot = [...queue];
   listeners.forEach((l) => l(snapshot));
 }
 
-export function toast(text: string, variant: ToastVariant = 'info') {
+export function toast(
+  text: string,
+  variant: ToastVariant = 'info',
+  opts?: { haptic?: ToastHaptic },
+) {
   const id = nextId++;
   queue = [...queue, { id, text, variant }];
   emit();
+  // Pair the feel with the message at the moment it is raised, so the hand and
+  // the eye agree. Only success toasts are allowed a feel; `feedback` is itself
+  // gated by the reader's Haptics toggle, so this stays silent when they ask.
+  if (variant === 'success') {
+    const feel = opts?.haptic ?? 'saved';
+    if (feel === 'confirm') confirmFeedback();
+    else if (feel === 'saved') savedFeedback();
+  }
   // Fire-and-forget; if the user has already dismissed, `dismiss` is a no-op.
   setTimeout(() => dismiss(id), AUTO_DISMISS_MS);
 }

@@ -74,7 +74,10 @@ export function ChapterCheckInGate({ active }: { active: boolean }) {
 
   const handleCompleted = () => {
     updateSettings({ bookCompleted: true });
-    toast('Lovely. You can always pick a chapter again in Settings.', 'success');
+    // Same milestone as the Settings path, so the same warmer confirm feel.
+    toast('Lovely. You can always pick a chapter again in Settings.', 'success', {
+      haptic: 'confirm',
+    });
     setOpen(false);
   };
 

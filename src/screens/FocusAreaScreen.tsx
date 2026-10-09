@@ -17,6 +17,7 @@ import { blend, colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
+import { toast } from '../components/Toast';
 import { focusAreas } from '../data/focusAreas';
 import { COACHING_URL, hasCoachingUrl } from '../config';
 import { useDay } from '../store/DayContext';
@@ -125,7 +126,13 @@ export function FocusAreaScreen({ navigation, route }: Props) {
             title="Save & close"
             variant="ghost"
             onPress={async () => {
+              // Only confirm a save that actually happened: saveReflection is a
+              // no-op without a tracker, so a toast then would be a false
+              // promise. The ghost button fires no haptic, so the toast owns
+              // the gentle saved feel.
+              const saved = !!today.tracker;
               await saveReflection();
+              if (saved) toast('Your reflection is kept.', 'success');
               navigation.popToTop();
             }}
           />

@@ -10,6 +10,7 @@ import { webFocus } from '../theme/interactions';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { BottomSheet } from '../components/BottomSheet';
+import { toast } from '../components/Toast';
 import { GuidedAudioControl } from '../components/GuidedAudioControl';
 import { MeditationSteps } from '../components/MeditationSteps';
 import { findPractice } from '../data/practices';
@@ -159,6 +160,11 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
       await updateSettings({ practiceHintSeen: true });
       setShowHint(true);
     } else {
+      // Returning readers skip the hint sheet, so the screen would otherwise
+      // close with no acknowledgement. A calm toast confirms the stitch; the
+      // Mark-complete button already fired the confirm feel, so this is
+      // visual-only (no second buzz).
+      toast('Beautifully sewn.', 'success', { haptic: 'none' });
       navigation.goBack();
     }
   };

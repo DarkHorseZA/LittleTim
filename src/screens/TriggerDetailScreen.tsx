@@ -29,7 +29,9 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
   // moment calls. The quilt dedupes to one WHEN stitch per day.
   const complete = async () => {
     await addQuiltEntry({ type: 'when' });
-    toast('Beautifully sewn.', 'success');
+    // The Mark-complete button already fired the confirm feel on press, so the
+    // toast is visual-only here (no second buzz as the screen closes).
+    toast('Beautifully sewn.', 'success', { haptic: 'none' });
     navigation.goBack();
   };
 

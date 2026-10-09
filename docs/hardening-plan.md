@@ -57,12 +57,19 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   by default, off on web; synced via `HapticsSync`), fire-and-forget + swallow.
   `interactions.ts` `tap` now delegates here, `nav` is SILENT (navigation gets no
   haptic), and `Button` routes through it with no warning/error buzz. Tested:
-  gating on/off + confirm mapping + never-throws. `confirmFeedback`/`snapFeedback`
-  are wired into actions in the toasts cluster.
+  gating on/off + confirm mapping + never-throws. `confirmFeedback`/`savedFeedback`
+  are wired into completion/save actions via the toasts cluster; `snapFeedback`
+  stays reserved for toggle/segmented controls (consistency-pass audit).
 
 ### UI
-- ☐ Confirmation toasts on every completion/save that closes a screen, in the
-  re-Genesis style (light, calm), paired with the matching haptic.
+- ☑ Confirmation toasts on every completion/save that closes a screen, in the
+  re-Genesis style (light, calm): the `toast` queue now pairs a feel with every
+  success message (gentle `saved` by default, warmer `confirm` for the one
+  milestone — finishing the book — `none` when the press already fired a feel so
+  the screen never double-buzzes). Dwell softened 4s → 2.5s. Added where a screen
+  closed silently: Practice complete (returning readers), WHEN complete, Belief
+  acknowledge, Focus-area reflection save. Morning ritual keeps its full-screen
+  completion view (no toast — already visible). Errors/info never buzz. Tested.
 - ☐ Notifications asked at an earned moment (not on launch); "Not now" preserves
   the one-time iOS ask; lives in Settings afterward.
 - ☐ Ratings asked late (`expo-store-review` — **new native module, this build**),

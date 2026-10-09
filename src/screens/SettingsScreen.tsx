@@ -60,9 +60,12 @@ export function SettingsScreen({ navigation }: Props) {
 
   const handleCompleteBook = () => {
     updateSettings({ bookCompleted: true });
+    // Finishing the book is the one true milestone, so it earns the warmer
+    // confirm feel (once).
     toast(
       'Lovely. The check-in won’t appear on open anymore. You can still pick a chapter here anytime.',
-      'success'
+      'success',
+      { haptic: 'confirm' }
     );
   };
 
