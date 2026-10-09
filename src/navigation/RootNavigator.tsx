@@ -32,6 +32,7 @@ import { ConnectScreen } from '../screens/ConnectScreen';
 import { NotFoundScreen } from '../screens/NotFoundScreen';
 import { MoreScreen } from '../screens/MoreScreen';
 import { ChapterCheckInGate } from '../components/ChapterCheckInGate';
+import { ReminderOptInGate } from '../components/ReminderOptInGate';
 import { colors, layout } from '../theme/colors';
 import { fonts } from '../theme/type';
 import { useLargeScreen } from '../hooks/useLargeScreen';
@@ -340,7 +341,12 @@ export function RootNavigator() {
     </NavigationContainer>
   );
 
-  const gate = <ChapterCheckInGate active={topRoute === 'Tabs'} />;
+  const gate = (
+    <>
+      <ChapterCheckInGate active={topRoute === 'Tabs'} />
+      <ReminderOptInGate active={topRoute === 'Tabs'} />
+    </>
+  );
 
   // On web, center a phone-sized viewport so the app feels like an app, not a
   // stretched web page. On native, this wrapper is transparent. The gate sits

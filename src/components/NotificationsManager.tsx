@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { useDay } from '../store/DayContext';
 import { beliefForDate } from '../data/beliefs';
 import {
-  ensureNotificationPermission,
+  getNotificationStatus,
   syncDailyBeliefNotification,
 } from '../notifications';
 
@@ -11,6 +11,11 @@ import {
 // DayProvider so it can read the reminder hour and the current belief, and it
 // only acts once hydration has finished (the `ready` guard), so a cold start
 // never schedules from default settings.
+//
+// It never ASKS for permission; that would fire iOS's one-time dialog on
+// launch. Permission is requested only at an earned moment (ReminderOptInGate)
+// or from Settings. Here we just read the current status and keep the schedule
+// in sync when the reader has already granted it.
 export function NotificationsManager() {
   const { ready, settings } = useDay();
   const reminderHour = settings.reminderHour;
@@ -19,11 +24,11 @@ export function NotificationsManager() {
 
   useEffect(() => {
     // Web keeps the in-app prompt as its reminder; scheduled local
-    // notifications aren't delivered there, so we never ask for permission.
+    // notifications aren't delivered there.
     if (!ready || Platform.OS === 'web') return;
     let cancelled = false;
     (async () => {
-      const status = await ensureNotificationPermission();
+      const status = await getNotificationStatus();
       if (cancelled || status !== 'granted') return;
       await syncDailyBeliefNotification(reminderHour, belief);
     })();

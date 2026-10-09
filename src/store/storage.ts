@@ -34,6 +34,8 @@ export type Settings = {
   bookCompleted?: boolean; // true once the reader taps "I've completed the book"; permanently hides the launch chapter check-in
   practiceHintSeen?: boolean;     // true once the "earlier chapters" hint has been shown after a Today-tab completion
   practiceHintDisabled?: boolean; // true = permanent opt-out; hint never shows regardless of practiceHintSeen
+  notifyOffered?: boolean;        // true once we've offered the daily reminder at an earned moment, so we never nag again
+  ratingAsked?: boolean;          // true once the in-app store rating has been requested, so we ask at most once
 };
 
 const defaultSettings: Settings = {
@@ -51,6 +53,8 @@ const defaultSettings: Settings = {
   bookCompleted: false,
   practiceHintSeen: false,
   practiceHintDisabled: false,
+  notifyOffered: false,
+  ratingAsked: false,
 };
 
 export function todayKey(d: Date = new Date()): string {

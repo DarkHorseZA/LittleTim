@@ -16,8 +16,9 @@ zustand, **@expo/vector-icons** — not lucide, no payments, offline-first,
 Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ deferred (see backlog)
 
 ### Foundation
-- ☐ Test runner (jest-expo), ESLint (eslint-config-expo), knip
-- ☐ CLAUDE.md rules added
+- ☑ Test runner (jest-expo + @react-native/jest-preset, AsyncStorage mock),
+  ESLint (eslint-config-expo flat), knip. Scripts: `test`, `lint`, `deadcode`.
+- ☑ CLAUDE.md rules added ("Hardening rules (Next Entry standard)").
 
 ### Security & resilience
 - ☑ Calm error screens: root `ErrorBoundary` + production-only
@@ -70,10 +71,21 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   closed silently: Practice complete (returning readers), WHEN complete, Belief
   acknowledge, Focus-area reflection save. Morning ritual keeps its full-screen
   completion view (no toast — already visible). Errors/info never buzz. Tested.
-- ☐ Notifications asked at an earned moment (not on launch); "Not now" preserves
-  the one-time iOS ask; lives in Settings afterward.
-- ☐ Ratings asked late (`expo-store-review` — **new native module, this build**),
-  only after a good moment, never after a failure.
+- ☑ Notifications asked at an earned moment, never on launch. `NotificationsManager`
+  no longer calls `ensureNotificationPermission` (it only reads status and
+  schedules when already granted). A new `ReminderOptInGate` (overlay above the
+  nav tree, with the same leave-Tabs auto-close as the chapter gate) offers the
+  daily reminder once, only after the reader has sewn a stitch and only while the
+  OS is still undetermined; "Not now" never calls the OS, so iOS's one-time ask is
+  preserved for Settings. Settings gained a "Turn on daily reminder" card for the
+  undetermined state (asks on tap) and keeps the "open system settings" card for
+  denied. Logic is the pure, tested `shouldOfferReminder`.
+- ☑ Ratings asked late via `expo-store-review` (new native module, this build).
+  `ReviewManager` asks once, only when a *fresh* stitch pushes the quilt past a
+  few days of use (`reachedReviewMoment`, tested) — never on launch (baseline
+  captured on first ready render) and never after a failure (it only reacts to
+  the quilt growing). Best-effort: unavailable/error is silent. No custom
+  "please rate" prompt in front of the OS sheet.
 - ⊘ "What's new" after an update — re-Genesis has no OTA updates.
 - ☐ Onboarding before the account screen: swap the order so the value is shown
   before the email ask. Onboarding offers "skip & take the tour"; after either

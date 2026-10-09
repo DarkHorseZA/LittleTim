@@ -22,6 +22,7 @@ import { colors } from './src/theme/colors';
 import { ToastHost } from './src/components/Toast';
 import { UnsavedNotice } from './src/components/UnsavedNotice';
 import { NotificationsManager } from './src/components/NotificationsManager';
+import { ReviewManager } from './src/components/ReviewManager';
 import { HapticsSync } from './src/components/HapticsSync';
 import { ErrorBoundary } from './src/components/ErrorBoundary';
 import { FatalErrorHandler } from './src/components/FatalErrorHandler';
@@ -74,6 +75,7 @@ function AppInner() {
         <ToastHost />
         <UnsavedNotice />
         <NotificationsManager />
+        <ReviewManager />
         <HapticsSync />
       </DiscoveryProvider>
     </DayProvider>

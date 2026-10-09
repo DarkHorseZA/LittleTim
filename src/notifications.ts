@@ -35,6 +35,26 @@ export async function getNotificationStatus(): Promise<string> {
   }
 }
 
+// Whether to offer the daily reminder now. Pure so it can be unit-tested and
+// read the same way from the gate. We only ever offer once, only when the OS
+// has not yet been asked (so "Not now" preserves iOS's single permission
+// prompt for later), only on native, and only after the reader has sewn at
+// least one stitch, so the offer lands on a moment they earned rather than on
+// launch.
+export function shouldOfferReminder(args: {
+  ready: boolean;
+  isWeb: boolean;
+  status: string;
+  notifyOffered: boolean;
+  stitches: number;
+}): boolean {
+  const { ready, isWeb, status, notifyOffered, stitches } = args;
+  if (!ready || isWeb) return false;
+  if (notifyOffered) return false;
+  if (status !== 'undetermined') return false;
+  return stitches >= 1;
+}
+
 // Ask for permission only when it has not been decided yet. Returns the status.
 export async function ensureNotificationPermission(): Promise<string> {
   try {

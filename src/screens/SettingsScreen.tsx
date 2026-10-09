@@ -18,7 +18,12 @@ import { colors, layout, radius, shadows } from '../theme/colors';
 import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { APP_NAME, APP_VERSION, ATTRIBUTION, PRIVACY_POLICY_URL, hasUrl } from '../config';
-import { getNotificationStatus } from '../notifications';
+import {
+  ensureNotificationPermission,
+  getNotificationStatus,
+  syncDailyBeliefNotification,
+} from '../notifications';
+import { beliefForDate } from '../data/beliefs';
 import { useDay } from '../store/DayContext';
 import { PulsingMark } from '../components/PulsingMark';
 import { BackButton } from '../components/BackButton';
@@ -42,8 +47,10 @@ export function SettingsScreen({ navigation }: Props) {
   const profile = settings.profile ?? {};
   const signedIn = !!profile.displayName;
 
-  // Offer a jump to the OS notification settings when the app can't post
-  // notifications (denied or not yet asked). Web has no such settings page.
+  // Reminder controls key off the live OS status. Web has no such settings page.
+  //   undetermined -> offer an in-app "turn on" (asks permission on tap)
+  //   denied       -> offer a jump to the OS settings to allow them
+  //   granted      -> the hour picker above is the control; no extra card
   const [notifStatus, setNotifStatus] = useState<string | null>(null);
   useEffect(() => {
     if (Platform.OS === 'web') return;
@@ -55,8 +62,26 @@ export function SettingsScreen({ navigation }: Props) {
       alive = false;
     };
   }, []);
+  const showEnableReminder =
+    Platform.OS !== 'web' && notifStatus === 'undetermined';
   const showOpenSystemSettings =
-    Platform.OS !== 'web' && notifStatus !== null && notifStatus !== 'granted';
+    Platform.OS !== 'web' && notifStatus === 'denied';
+
+  // Ask for permission at this intentional moment (never on launch). On a grant,
+  // schedule immediately; either way mark it offered so the earned-moment gate
+  // never re-asks.
+  const enableReminders = async () => {
+    const result = await ensureNotificationPermission();
+    setNotifStatus(result);
+    if (result === 'granted') {
+      const belief = beliefForDate(new Date(), settings.currentChapter);
+      await syncDailyBeliefNotification(settings.reminderHour, belief);
+      toast('Lovely. Today’s belief will find you each morning.', 'success', {
+        haptic: 'confirm',
+      });
+    }
+    await updateSettings({ notifyOffered: true });
+  };
 
   const handleCompleteBook = () => {
     updateSettings({ bookCompleted: true });
@@ -240,6 +265,47 @@ export function SettingsScreen({ navigation }: Props) {
             })}
           </View>
         </View>
+
+        {showEnableReminder ? (
+          <>
+            <View style={{ height: 14 }} />
+            <Pressable
+              onPress={() => {
+                tap();
+                enableReminders();
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Turn on the daily belief reminder"
+              style={({ pressed, focused }: any) => [
+                pressed && pressScale,
+                focused && webFocus,
+              ]}
+            >
+              <View style={styles.card}>
+                <View style={styles.cardHead}>
+                  <View style={styles.iconCircle}>
+                    <Ionicons
+                      name="notifications-outline"
+                      size={16}
+                      color={colors.clay}
+                    />
+                  </View>
+                  <Text style={styles.cardTitle}>Daily belief reminder</Text>
+                  <View style={{ flex: 1 }} />
+                  <Ionicons
+                    name="chevron-forward"
+                    size={18}
+                    color={colors.inkFaint}
+                  />
+                </View>
+                <Text style={styles.cardBody}>
+                  Turn on a gentle daily reminder and the day’s belief will find
+                  you each morning. Change the time above, or turn it off anytime.
+                </Text>
+              </View>
+            </Pressable>
+          </>
+        ) : null}
 
         {showOpenSystemSettings ? (
           <>
