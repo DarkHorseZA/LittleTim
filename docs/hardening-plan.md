@@ -51,11 +51,14 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
 - ☐ Dead code — knip to zero.
 
 ### Haptics
-- ☐ `src/components/feedback.ts` owns every feel, named by moment
-  (`tapFeedback` / `confirmFeedback` / `savedFeedback` / snap / achievement),
-  Android `performAndroidHapticsAsync`, a Settings "Haptics" toggle (on by
-  default, off on web), fire-and-forget. Remove haptics baked into generic
-  components. (expo-haptics already installed — no new native module.)
+- ☑ `src/components/feedback.ts` owns every feel, named by moment (`tapFeedback`,
+  `savedFeedback`, `confirmFeedback`, `snapFeedback`, `achievementFeedback`),
+  Android `performAndroidHapticsAsync`, gated by a Settings "Haptics" toggle (on
+  by default, off on web; synced via `HapticsSync`), fire-and-forget + swallow.
+  `interactions.ts` `tap` now delegates here, `nav` is SILENT (navigation gets no
+  haptic), and `Button` routes through it with no warning/error buzz. Tested:
+  gating on/off + confirm mapping + never-throws. `confirmFeedback`/`snapFeedback`
+  are wired into actions in the toasts cluster.
 
 ### UI
 - ☐ Confirmation toasts on every completion/save that closes a screen, in the

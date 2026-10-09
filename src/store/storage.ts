@@ -15,6 +15,7 @@ export type Profile = {
 export type Settings = {
   reminderHour: number; // 0-23, when the daily belief pops up in-app
   keepScreenAwakeDuringAudio?: boolean; // opt-in: hold the screen on while a practice plays
+  hapticsEnabled?: boolean; // soft haptic feedback; on by default, off on web
   lastBeliefSeenOn?: string; // YYYY-MM-DD
   profile?: Profile;
   currentChapter?: number; // 0 = Introduction, 1-9 = chapters. Undefined = day-of-year rotation.
@@ -38,6 +39,7 @@ export type Settings = {
 const defaultSettings: Settings = {
   reminderHour: 8,
   keepScreenAwakeDuringAudio: false,
+  hapticsEnabled: true,
   profile: {},
   currentChapter: undefined,
   hasSeenHowTo: false,

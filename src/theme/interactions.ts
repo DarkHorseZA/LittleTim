@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { colors } from './colors';
+import { tapFeedback } from '../components/feedback';
 
 // Unified interaction primitives so every tappable surface (cards, rows,
 // segment buttons, icon pills) feels identical:
@@ -21,34 +21,21 @@ import { colors } from './colors';
 //
 //   <Pressable onPress={tapThen(doThing)} ... />
 
-// Fire a subtle selection tick. Use for toggles, chips, segment buttons,
-// anything where the tap changes a value within the current screen.
-// Native-only; on web Haptics no-ops, and we swallow any device/permission
-// errors so a tap never throws up to the user.
-export function tap() {
-  try {
-    Haptics.selectionAsync();
-  } catch {
-    /* no haptic engine on this device, swallow */
-  }
-}
+// The selection tick for choosing within a screen (toggles, chips, segments).
+// All haptics live in `components/feedback.ts`; this is just the call-site name.
+export const tap = tapFeedback;
 
-// Fire a gentle impact. Use for taps that navigate (open a modal, push a
-// screen, dive into a tile). Slightly more substantial than `tap()` so the
-// body reads "something is happening" vs "I toggled a thing". Light by
-// default to stay inside re-Genesis' calm tone.
+// Plain navigation (open a modal, push a screen, a row tap) is intentionally
+// SILENT, per the feel rules: a haptic is for choosing and for what matters, not
+// for moving around. Kept as a no-op so existing call sites read clearly.
 export function nav() {
-  try {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  } catch {
-    /* no haptic engine on this device, swallow */
-  }
+  /* navigation is silent */
 }
 
-// Convenience: wrap an onPress so it fires a tick first, then the handler.
+// Convenience: wrap an onPress so it fires the selection tick first.
 export function tapThen(fn: () => void | Promise<void>) {
   return () => {
-    tap();
+    tapFeedback();
     return fn();
   };
 }

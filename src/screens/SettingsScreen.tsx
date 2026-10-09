@@ -316,6 +316,30 @@ export function SettingsScreen({ navigation }: Props) {
         <View style={styles.card}>
           <View style={styles.cardHead}>
             <View style={styles.iconCircle}>
+              <Ionicons name="pulse-outline" size={16} color={colors.clay} />
+            </View>
+            <Text style={styles.cardTitle}>Haptics</Text>
+          </View>
+          <View style={styles.toggleRow}>
+            <Text style={styles.toggleBody}>
+              Soft, gentle feedback when you choose and complete things.
+            </Text>
+            <Switch
+              value={settings.hapticsEnabled !== false}
+              onValueChange={(enabled) => updateSettings({ hapticsEnabled: enabled })}
+              trackColor={{ false: colors.line, true: colors.clay }}
+              thumbColor={colors.white}
+              accessibilityLabel="Haptic feedback"
+              accessibilityRole="switch"
+            />
+          </View>
+        </View>
+
+        <View style={{ height: 14 }} />
+
+        <View style={styles.card}>
+          <View style={styles.cardHead}>
+            <View style={styles.iconCircle}>
               <Ionicons name="sparkles-outline" size={16} color={colors.clay} />
             </View>
             <Text style={styles.cardTitle}>Practice reminders</Text>
