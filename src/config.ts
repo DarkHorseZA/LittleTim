@@ -39,6 +39,22 @@ export const APP_NAME = 're-Genesis';
 export const APP_NAME_DISPLAY_CAPS = 'RE-GENESIS';
 export const APP_TAGLINE = 'Unravel. Resew. Live.';
 
+// Where a reader's "send this to us" problem report is addressed. Change this to
+// your preferred support inbox. Only ever receives app/version/platform/error
+// info the reader chooses to send, never their data.
+export const SUPPORT_EMAIL = 'tjpienaar1@gmail.com';
+
+// The shipped app version, read from app.json at bundle time (no expo-constants
+// dependency). Falls back to '' if unavailable.
+export const APP_VERSION: string = (() => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return String(require('../app.json').expo.version || '');
+  } catch {
+    return '';
+  }
+})();
+
 // The live web address of the app. Used for the QR code printed in the book
 // and for embedding on an author website.
 export const APP_URL = 'https://darkhorseza.github.io/LittleTim/';

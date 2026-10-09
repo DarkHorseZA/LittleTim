@@ -20,9 +20,12 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
 - ☐ CLAUDE.md rules added
 
 ### Security & resilience
-- ☐ Calm error screens: root `ErrorBoundary`, production `ErrorUtils.setGlobalHandler`
-  modal, a calm `NotFound`, a "send this to us" report (no user data), a hidden
-  test-error trigger. (Adapted to React Navigation; no Expo Router boundary.)
+- ☑ Calm error screens: root `ErrorBoundary` + production-only
+  `ErrorUtils.setGlobalHandler` modal (`FatalErrorHandler`), a self-contained
+  `ErrorScreen` (no theme/fonts), a "send this to us" report (no user data,
+  shortened stack), a hidden long-press trigger on the Settings version row.
+  `NotFoundScreen` already calm. Tested: shortenStack/buildReport. (On-device:
+  long-press the version row on the TestFlight build to see the screen.)
 - ☐ Saves never fail silently: optimistic write + retry (0.5s, 1s) + an unsaved
   queue + a calm notice, retried on foreground. Tested with a failing fake store.
 - ⊘ Untrusted files — no import/restore/upload exists. **See backlog.**

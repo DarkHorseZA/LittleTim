@@ -17,7 +17,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, layout, radius, shadows } from '../theme/colors';
 import { nav, pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
-import { APP_NAME, ATTRIBUTION, PRIVACY_POLICY_URL, hasUrl } from '../config';
+import { APP_NAME, APP_VERSION, ATTRIBUTION, PRIVACY_POLICY_URL, hasUrl } from '../config';
 import { getNotificationStatus } from '../notifications';
 import { useDay } from '../store/DayContext';
 import { PulsingMark } from '../components/PulsingMark';
@@ -410,6 +410,22 @@ export function SettingsScreen({ navigation }: Props) {
             <Text style={styles.privacyLinkText}>Privacy policy</Text>
           </Pressable>
         ) : null}
+
+        <Pressable
+          onLongPress={() => {
+            // Hidden check (hold ~0.6s) so the calm error screen can be verified
+            // on a real device. In a release build this routes to the global
+            // handler and shows the screen; in dev it hits the red box.
+            throw new Error('Test error from the version row (intentional).');
+          }}
+          delayLongPress={600}
+          accessibilityLabel={`${APP_NAME} version ${APP_VERSION}`}
+          style={styles.versionRow}
+        >
+          <Text style={styles.versionText}>
+            {APP_NAME} v{APP_VERSION}
+          </Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -569,5 +585,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.clayDeep,
     textDecorationLine: 'underline',
+  },
+  versionRow: {
+    alignItems: 'center',
+    marginTop: 28,
+    paddingVertical: 10,
+  },
+  versionText: {
+    fontFamily: fonts.sansMed,
+    fontSize: 12,
+    color: colors.inkFaint,
+    letterSpacing: 0.3,
   },
 });

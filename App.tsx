@@ -21,8 +21,23 @@ import { DiscoveryProvider } from './src/store/DiscoveryContext';
 import { colors } from './src/theme/colors';
 import { ToastHost } from './src/components/Toast';
 import { NotificationsManager } from './src/components/NotificationsManager';
+import { ErrorBoundary } from './src/components/ErrorBoundary';
+import { FatalErrorHandler } from './src/components/FatalErrorHandler';
 
 export default function App() {
+  return (
+    <SafeAreaProvider>
+      <ErrorBoundary>
+        <AppInner />
+      </ErrorBoundary>
+      {/* Catches non-render crashes (taps, timers) in production and shows the
+          same calm screen instead of closing the app. */}
+      <FatalErrorHandler />
+    </SafeAreaProvider>
+  );
+}
+
+function AppInner() {
   const [loaded] = useFraunces({
     Fraunces_400Regular,
     Fraunces_400Regular_Italic,
@@ -50,15 +65,13 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <DayProvider>
-        <DiscoveryProvider>
-          <StatusBar style="dark" />
-          <RootNavigator />
-          <ToastHost />
-          <NotificationsManager />
-        </DiscoveryProvider>
-      </DayProvider>
-    </SafeAreaProvider>
+    <DayProvider>
+      <DiscoveryProvider>
+        <StatusBar style="dark" />
+        <RootNavigator />
+        <ToastHost />
+        <NotificationsManager />
+      </DiscoveryProvider>
+    </DayProvider>
   );
 }
