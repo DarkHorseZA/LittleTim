@@ -28,7 +28,9 @@ module.exports = [
       'babel.config.js',
       'metro.config.js',
       'jest.config.js',
+      'jest.setup.js',
       'eslint.config.js',
+      'knip.json',
     ],
   },
 ];

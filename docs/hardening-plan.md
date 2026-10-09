@@ -26,8 +26,12 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   shortened stack), a hidden long-press trigger on the Settings version row.
   `NotFoundScreen` already calm. Tested: shortenStack/buildReport. (On-device:
   long-press the version row on the TestFlight build to see the screen.)
-- ☐ Saves never fail silently: optimistic write + retry (0.5s, 1s) + an unsaved
-  queue + a calm notice, retried on foreground. Tested with a failing fake store.
+- ☑ Saves never fail silently: `store/persist.ts` — optimistic in-memory update
+  first, then a background write retried (0.5s, 1s), each attempt re-reading the
+  newest value via refs (an older write can't clobber a newer edit). Parks failed
+  keys as "unsaved" and shows the calm `UnsavedNotice` with "Try again", also
+  retried on foreground. DayContext rewritten to use it. Tested: persist retry +
+  latest-value + DayContext hydrate/optimistic/ready-guard (react-test-renderer).
 - ⊘ Untrusted files — no import/restore/upload exists. **See backlog.**
 - ◑ User text is never code — RN `Text` is safe; no `dangerouslySetInnerHTML`; no
   CSV export today. **See backlog** for export. (Backend already parameterised.)

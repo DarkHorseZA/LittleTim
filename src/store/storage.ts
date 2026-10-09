@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BaselineRecord, DailyEntry, JournalStitch, QuiltEntry, ReflectionEntry } from '../types';
 
-const KEY_ENTRIES = 'littletim:entries:v1';
-const KEY_SETTINGS = 'littletim:settings:v1';
-const KEY_QUILT = 'littletim:quilt:v1';
+export const KEY_ENTRIES = 'littletim:entries:v1';
+export const KEY_SETTINGS = 'littletim:settings:v1';
+export const KEY_QUILT = 'littletim:quilt:v1';
 const KEY_REFLECTION = 'littletim:reflection:v1';
 const KEY_STITCHES  = 'littletim:stitches:v1';
 

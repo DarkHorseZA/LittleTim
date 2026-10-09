@@ -4,21 +4,22 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { DailyEntry, QuiltEntry } from '../types';
 import {
-  addQuiltEntry as addQuiltEntryStorage,
   getEntry,
+  KEY_ENTRIES,
+  KEY_QUILT,
+  KEY_SETTINGS,
   loadEntries,
   loadQuiltEntries,
   loadSettings,
-  saveSettings,
   Settings,
   todayKey,
-  upsertEntry,
 } from './storage';
-import { toast } from '../components/Toast';
+import { persist } from './persist';
 
 type DayContextValue = {
   ready: boolean;
@@ -45,17 +46,25 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
   });
   const [settings, setSettings] = useState<Settings>({ reminderHour: 8 });
 
+  // Refs mirror the latest state so a retried write always serialises the
+  // newest value (an older write can never clobber a newer edit).
+  const entriesRef = useRef(entries);
+  const quiltRef = useRef(quiltEntries);
+  const settingsRef = useRef(settings);
+
   const refresh = useCallback(async () => {
     const [allEntries, s, allQuilt] = await Promise.all([
       loadEntries(),
       loadSettings(),
       loadQuiltEntries(),
     ]);
+    entriesRef.current = allEntries;
+    settingsRef.current = s;
+    quiltRef.current = allQuilt;
     setEntries(allEntries);
     setSettings(s);
     setQuiltEntries(allQuilt);
-    const t = await getEntry(todayKey());
-    setToday(t);
+    setToday(await getEntry(todayKey()));
   }, []);
 
   useEffect(() => {
@@ -67,49 +76,42 @@ export function DayProvider({ children }: { children: React.ReactNode }) {
 
   const updateToday = useCallback(
     async (patch: Partial<DailyEntry>) => {
-      // Never persist before the initial load has hydrated state, otherwise a
-      // mount-time write (e.g. on a cold-start deep link) would overwrite the
-      // stored entry with near-initial defaults.
+      // Hydration guard: never persist before the initial load, or a cold-start
+      // mount-time write would overwrite the stored entry with defaults.
       if (!ready) return;
-      const next = { ...today, ...patch, date: todayKey() };
-      try {
-        await upsertEntry(next);
-        setToday(next);
-        setEntries((prev) => ({ ...prev, [next.date]: next }));
-      } catch {
-        toast("Couldn't save your entry. Your device storage may be full.", 'error');
-      }
+      const date = todayKey();
+      const base = entriesRef.current[date] ?? { date, msgDone: false, seeDone: false };
+      const next = { ...base, ...patch, date };
+      const nextEntries = { ...entriesRef.current, [date]: next };
+      entriesRef.current = nextEntries;
+      setToday(next); // optimistic: the screen updates first
+      setEntries(nextEntries);
+      persist(KEY_ENTRIES, () => JSON.stringify(entriesRef.current));
     },
-    [today, ready]
+    [ready]
   );
 
   const updateSettings = useCallback(
     async (patch: Partial<Settings>) => {
-      // Hydration guard: do not write settings until the initial load has run.
-      // This prevents a cold-start mount-time write from clobbering the stored
-      // settings (chapter, onboarding flags, registration) with defaults.
       if (!ready) return;
-      const next = { ...settings, ...patch };
-      try {
-        await saveSettings(next);
-        setSettings(next);
-      } catch {
-        toast("Couldn't save your settings. Your device storage may be full.", 'error');
-      }
+      const next = { ...settingsRef.current, ...patch };
+      settingsRef.current = next;
+      setSettings(next); // optimistic
+      persist(KEY_SETTINGS, () => JSON.stringify(settingsRef.current));
     },
-    [settings, ready]
+    [ready]
   );
 
   const addQuiltEntry = useCallback(
     async (entry: Omit<QuiltEntry, 'date'>) => {
       if (!ready) return;
       const full: QuiltEntry = { date: todayKey(), ...entry };
-      try {
-        const next = await addQuiltEntryStorage(full);
-        setQuiltEntries(next);
-      } catch {
-        toast("Couldn't save your stitch. Your device storage may be full.", 'error');
-      }
+      // One patch per day per type — don't stack duplicates.
+      if (quiltRef.current.some((e) => e.date === full.date && e.type === full.type)) return;
+      const next = [...quiltRef.current, full];
+      quiltRef.current = next;
+      setQuiltEntries(next); // optimistic
+      persist(KEY_QUILT, () => JSON.stringify(quiltRef.current));
     },
     [ready]
   );

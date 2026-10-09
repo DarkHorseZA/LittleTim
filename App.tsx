@@ -20,6 +20,7 @@ import { DayProvider } from './src/store/DayContext';
 import { DiscoveryProvider } from './src/store/DiscoveryContext';
 import { colors } from './src/theme/colors';
 import { ToastHost } from './src/components/Toast';
+import { UnsavedNotice } from './src/components/UnsavedNotice';
 import { NotificationsManager } from './src/components/NotificationsManager';
 import { ErrorBoundary } from './src/components/ErrorBoundary';
 import { FatalErrorHandler } from './src/components/FatalErrorHandler';
@@ -70,6 +71,7 @@ function AppInner() {
         <StatusBar style="dark" />
         <RootNavigator />
         <ToastHost />
+        <UnsavedNotice />
         <NotificationsManager />
       </DiscoveryProvider>
     </DayProvider>
