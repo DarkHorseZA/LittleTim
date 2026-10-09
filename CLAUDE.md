@@ -150,3 +150,33 @@ consistent.
   on fetch failure. Posts open in an in-app WebView; on web this is an iframe
   with a `window.open` fallback. Don't try to write posts from the app; the
   site owns the journal.
+
+## Hardening rules (Next Entry standard)
+
+See `docs/hardening-plan.md` for the full plan and the deferred security backlog.
+
+- **Replace, don't layer.** Change things in place and delete the old code. No V2
+  beside V1, no fallbacks to old paths. The only compatibility code allowed is for
+  data already on users' phones (migrations, settings readers).
+- **Push, don't poll.** Nothing asks a server on a timer. Clocks tick only on the
+  screen in view (pause when hidden); never read the clock during render.
+- **Untrusted input.** Files from outside are untrusted (size check, validate
+  structure, image filename + magic-byte checks, transactional restore). User
+  text is never code (no `dangerouslySetInnerHTML`; CSV cells starting with
+  `= + - @`/tab/CR get a leading `'`). Verify every webhook before it changes
+  anything. No secrets in the bundle (server-side keys; hashes on device).
+- **Never require an account to use the app.** Onboarding always comes before the
+  account screen; onboarding answers carry over into the account.
+- **Loading is a skeleton** with a gentle shimmer (respect Reduce Motion), never a
+  spinner or a frozen screen. Empty states say what will appear + the one action.
+- **Haptics come only from `src/components/feedback.ts`,** named by moment: light
+  for choosing, firmer only for what matters, silent navigation, never an error
+  buzz. Read the Settings toggle at call time; off on web; fire-and-forget.
+- **Ask for notifications and ratings at a moment that earned it,** never on
+  launch, never after something went wrong.
+- **Every completion or save that closes the screen** gets a short, calm
+  confirmation toast and the matching haptic (never a toast for what's on screen).
+- **Light-only. No dark mode. No OTA updates** (ships as normal store builds).
+- **Gate before every commit:** `npm run typecheck`, `npm test`, `npm run lint`
+  (0 errors), and `npm run deadcode` when removing or replacing code. Add tests
+  for anything with logic (validation, maths, retries).

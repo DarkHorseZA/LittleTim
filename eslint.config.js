@@ -1,0 +1,34 @@
+// Flat config, built on Expo's recommended rules.
+const expo = require('eslint-config-expo/flat');
+
+module.exports = [
+  ...expo,
+  {
+    rules: {
+      // The newest eslint-plugin-react-hooks ships three rules that are very
+      // aggressive and false-flag valid React Native patterns (Animated values,
+      // PanResponder refs, reading a measured width in render, prefill-from-store
+      // effects). We keep them on as warnings so genuine cases stay visible, but
+      // they do not block the build.
+      'react-hooks/refs': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react/display-name': 'warn',
+    },
+  },
+  {
+    ignores: [
+      'dist/*',
+      'web-build/*',
+      '.expo/*',
+      'node_modules/*',
+      'ios/*',
+      'android/*',
+      'backend/*', // PHP, not JS
+      'plugins/*', // config plugins
+      'babel.config.js',
+      'metro.config.js',
+      'jest.config.js',
+      'eslint.config.js',
+    ],
+  },
+];
