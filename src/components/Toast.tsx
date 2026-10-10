@@ -26,10 +26,13 @@ import { savedFeedback, confirmFeedback } from './feedback';
 
 export type ToastVariant = 'error' | 'success' | 'info';
 
+type ToastAction = { label: string; onPress: () => void };
+
 type ToastMessage = {
   id: number;
   text: string;
   variant: ToastVariant;
+  action?: ToastAction;
 };
 
 type Listener = (messages: ToastMessage[]) => void;
@@ -38,6 +41,8 @@ const listeners = new Set<Listener>();
 let queue: ToastMessage[] = [];
 let nextId = 1;
 const AUTO_DISMISS_MS = 2500;
+// An actionable toast (e.g. "Undo") lingers longer so there's time to reach it.
+const AUTO_DISMISS_WITH_ACTION_MS = 6000;
 
 // How a success toast should feel. A completion that closes a screen gets the
 // warmer `confirm`; an ordinary save gets the gentle `saved` nod. `none` opts a
@@ -53,10 +58,10 @@ function emit() {
 export function toast(
   text: string,
   variant: ToastVariant = 'info',
-  opts?: { haptic?: ToastHaptic },
+  opts?: { haptic?: ToastHaptic; action?: ToastAction },
 ) {
   const id = nextId++;
-  queue = [...queue, { id, text, variant }];
+  queue = [...queue, { id, text, variant, action: opts?.action }];
   emit();
   // Pair the feel with the message at the moment it is raised, so the hand and
   // the eye agree. Only success toasts are allowed a feel; `feedback` is itself
@@ -67,7 +72,8 @@ export function toast(
     else if (feel === 'saved') savedFeedback();
   }
   // Fire-and-forget; if the user has already dismissed, `dismiss` is a no-op.
-  setTimeout(() => dismiss(id), AUTO_DISMISS_MS);
+  const dwell = opts?.action ? AUTO_DISMISS_WITH_ACTION_MS : AUTO_DISMISS_MS;
+  setTimeout(() => dismiss(id), dwell);
 }
 
 export function dismiss(id: number) {
@@ -156,6 +162,23 @@ function ToastPill({ message }: { message: ToastMessage }) {
         <Text style={styles.text} numberOfLines={2}>
           {message.text}
         </Text>
+        {message.action ? (
+          <Pressable
+            onPress={() => {
+              message.action?.onPress();
+              dismiss(message.id);
+            }}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={message.action.label}
+            style={({ pressed }: any) => [
+              styles.action,
+              pressed && { opacity: 0.6 },
+            ]}
+          >
+            <Text style={styles.actionText}>{message.action.label}</Text>
+          </Pressable>
+        ) : null}
       </Pressable>
     </Animated.View>
   );
@@ -191,5 +214,16 @@ const styles = StyleSheet.create({
     color: colors.ink,
     marginLeft: 10,
     flex: 1,
+  },
+  action: {
+    marginLeft: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: radius.pill,
+  },
+  actionText: {
+    fontFamily: fonts.sansSemi,
+    fontSize: 14,
+    color: colors.clayDeep,
   },
 });

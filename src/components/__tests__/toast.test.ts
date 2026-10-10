@@ -46,4 +46,14 @@ describe('toast → haptic pairing', () => {
     expect(savedFeedback).not.toHaveBeenCalled();
     expect(confirmFeedback).not.toHaveBeenCalled();
   });
+
+  it('an actionable info toast (Undo) stays silent and does not throw', () => {
+    expect(() =>
+      toast('Signed out.', 'info', {
+        action: { label: 'Undo', onPress: () => {} },
+      })
+    ).not.toThrow();
+    expect(savedFeedback).not.toHaveBeenCalled();
+    expect(confirmFeedback).not.toHaveBeenCalled();
+  });
 });

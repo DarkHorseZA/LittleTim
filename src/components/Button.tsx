@@ -46,7 +46,7 @@ const webFocusStyle: any =
       }
     : {};
 
-type Variant = 'primary' | 'soft' | 'ghost' | 'dark';
+type Variant = 'primary' | 'soft' | 'ghost' | 'dark' | 'danger';
 
 type Props = {
   title: string;
@@ -159,6 +159,11 @@ const palettes = {
   },
   dark: {
     bg: colors.ink,
+    fg: colors.white,
+    border: 'transparent',
+  },
+  danger: {
+    bg: colors.danger,
     fg: colors.white,
     border: 'transparent',
   },

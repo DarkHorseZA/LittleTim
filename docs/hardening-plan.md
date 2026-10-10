@@ -101,7 +101,13 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
 - ☐ Empty-state audit — say what will appear + the one action to add the first item.
 - ◑ Pressed states — `pressScale` exists; audit coverage + disabled 40%.
 - ☐ Keyboard — "Done" bar on number pads; scroll focused field into view.
-- ☐ Destructive confirm in-UI (not a system alert) + Undo where cheap.
+- ☑ Destructive confirm in-UI (not a system alert) + Undo where cheap. New
+  reusable `ConfirmSheet` (BottomSheet-based, with a `danger` Button variant)
+  replaces the two destructive system Alerts on Account: sign-out (reversible,
+  so the toast offers "Undo" to restore the profile) and delete-everything
+  (irreversible, so a firm red confirm, no Undo). Toasts gained an optional
+  action (6s dwell when present). The "Coming soon" informational alerts stay as
+  system dialogs. Verified both sheets + Undo on web.
 - ☐ Accessibility audit — 44×44 targets, roles/labels/state, 4.5:1 contrast,
   Dynamic Type without clipping.
 - ◑ Motion — `useReducedMotion` exists; keep 150–250ms, honour Reduce Motion.

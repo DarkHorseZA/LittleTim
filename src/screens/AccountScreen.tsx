@@ -20,6 +20,7 @@ import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { PulsingMark } from '../components/PulsingMark';
+import { ConfirmSheet } from '../components/ConfirmSheet';
 import { toast } from '../components/Toast';
 import { useDay } from '../store/DayContext';
 import { clearAllData } from '../store/storage';
@@ -43,6 +44,10 @@ export function AccountScreen({ navigation }: Props) {
   const emailRef = useRef<TextInput>(null);
   const signedIn = !!profile.displayName;
 
+  // Which in-app confirmation (if any) is open. Destructive actions use the
+  // calm ConfirmSheet instead of a system Alert.
+  const [confirm, setConfirm] = useState<'none' | 'signOut' | 'delete'>('none');
+
   const save = async () => {
     await updateSettings({
       profile: {
@@ -59,23 +64,27 @@ export function AccountScreen({ navigation }: Props) {
       `${method} sign-in is on the roadmap. For now your progress is saved on this device, add a display name to personalize your experience.`
     );
 
-  const signOut = () => {
-    Alert.alert(
-      'Sign out',
-      'This clears your local display name and email. Your practice history stays on the device.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Sign out',
-          style: 'destructive',
-          onPress: async () => {
-            setName('');
-            setEmail('');
-            await updateSettings({ profile: {} });
-          },
+  const signOut = () => setConfirm('signOut');
+
+  // Signing out only clears the on-device name/email, so it's cheap to undo:
+  // we keep the previous profile and offer "Undo" on the toast to put it back.
+  const doSignOut = async () => {
+    const prev = settings.profile ?? {};
+    setConfirm('none');
+    setName('');
+    setEmail('');
+    await updateSettings({ profile: {} });
+    toast('Signed out.', 'info', {
+      action: {
+        label: 'Undo',
+        onPress: async () => {
+          setName(prev.displayName ?? '');
+          setEmail(prev.email ?? '');
+          await updateSettings({ profile: prev });
+          toast('Welcome back.', 'success', { haptic: 'none' });
         },
-      ]
-    );
+      },
+    });
   };
 
   // Account deletion (App Store Guideline 5.1.1(v)). Everything this app knows
@@ -83,27 +92,19 @@ export function AccountScreen({ navigation }: Props) {
   // clearing the whole littletim:* namespace and returning to the first-run
   // flow. A single confirmation is all Apple asks for; no support-request
   // friction.
-  const deleteData = () => {
-    Alert.alert(
-      'Delete your data',
-      'Are you sure? Once deleted, your quilt cannot be brought back.',
-      [
-        { text: 'Keep my stitches', style: 'cancel' },
-        {
-          text: 'Delete everything',
-          style: 'destructive',
-          onPress: async () => {
-            await clearAllData();
-            // refresh() re-reads the now-empty store, resetting context to
-            // defaults. The ready guard stays true, so the first-run writes on
-            // Welcome/EmailSignup persist normally.
-            await refresh();
-            toast('Your data is cleared.', 'success');
-            navigation.reset({ index: 0, routes: [{ name: 'Welcome' }] });
-          },
-        },
-      ]
-    );
+  const deleteData = () => setConfirm('delete');
+
+  // A full wipe can't be undone, so there's no Undo here, just a clear in-app
+  // confirmation. The toast carries no celebratory feel.
+  const doDelete = async () => {
+    setConfirm('none');
+    await clearAllData();
+    // refresh() re-reads the now-empty store, resetting context to defaults.
+    // The ready guard stays true, so the first-run writes on Welcome/EmailSignup
+    // persist normally.
+    await refresh();
+    toast('Your data is cleared.', 'success', { haptic: 'none' });
+    navigation.reset({ index: 0, routes: [{ name: 'Welcome' }] });
   };
 
   return (
@@ -246,6 +247,28 @@ export function AccountScreen({ navigation }: Props) {
           />
         </ScrollView>
       </SafeAreaView>
+
+      <ConfirmSheet
+        visible={confirm === 'signOut'}
+        icon="log-out-outline"
+        title="Sign out?"
+        message="This clears your display name and email from this device. Your practice history stays, and you can sign back in anytime."
+        confirmLabel="Sign out"
+        cancelLabel="Stay signed in"
+        onConfirm={doSignOut}
+        onCancel={() => setConfirm('none')}
+      />
+      <ConfirmSheet
+        visible={confirm === 'delete'}
+        destructive
+        icon="trash-outline"
+        title="Delete everything?"
+        message="This clears everything stored on this device: your entries, settings, quilt, and reflections. Once deleted, your quilt cannot be brought back."
+        confirmLabel="Delete everything"
+        cancelLabel="Keep my stitches"
+        onConfirm={doDelete}
+        onCancel={() => setConfirm('none')}
+      />
     </View>
   );
 }
