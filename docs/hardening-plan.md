@@ -45,8 +45,14 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
 - ☑ Privacy by default — offline, opt-in, no analytics. Already true.
 
 ### Speed & efficiency
-- ☐ React Compiler (app.json `experiments.reactCompiler`) + react-compiler lint,
-  smoke-tested per screen.
+- ☑ React Compiler enabled (`app.json` `experiments.reactCompiler: true`;
+  `babel-plugin-react-compiler` was already installed, React 19 needs no runtime
+  package). The healthcheck compiles 63/63 components with no incompatible
+  libraries, so the Animated/ref patterns are fine. Build logs confirm "React
+  Compiler enabled"; smoke-tested Today / Practice / gates / modals on web with
+  zero console errors. The compiler lint is already active via react-hooks v5's
+  compiler-aware rules (the `react-hooks/refs` warnings). Worth a native
+  smoke-test pass on the TestFlight build before final submission.
 - ☐ Ship only what's used — audit the web bundle / icon imports.
 - ⊘ Batch DB writes (SQLite transactions) — AsyncStorage, not SQLite.
 - ☑ Scale-test heavy compute. `buildCells` (the quilt grid builder, run on every

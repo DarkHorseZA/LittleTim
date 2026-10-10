@@ -37,7 +37,8 @@
       "favicon": "./assets/brand/icon.png"
     },
     "experiments": {
-      "baseUrl": "/LittleTim"
+      "baseUrl": "/LittleTim",
+      "reactCompiler": true
     },
     "plugins": [
       "expo-asset",
