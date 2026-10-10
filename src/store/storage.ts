@@ -20,6 +20,7 @@ export type Settings = {
   profile?: Profile;
   currentChapter?: number; // 0 = Introduction, 1-9 = chapters. Undefined = day-of-year rotation.
   hasSeenHowTo?: boolean; // true after the "How to use" screen has been shown once
+  tourSeen?: boolean; // true once the first-run "Show me around" tour has been taken or skipped
   seenTours?: Record<string, boolean>; // which per-tab tour cards have been dismissed
   baseline?: BaselineRecord; // first wellness reading, captured once for delta tracking
   lastCheckInDate?: string; // YYYY-MM-DD of most recent tracker completion
@@ -45,6 +46,7 @@ const defaultSettings: Settings = {
   profile: {},
   currentChapter: undefined,
   hasSeenHowTo: false,
+  tourSeen: false,
   seenTours: {},
   baseline: undefined,
   lastCheckInDate: undefined,

@@ -29,6 +29,7 @@ type MenuItem = {
 
 const MENU_ITEMS: MenuItem[] = [
   { label: 'How to use re-Genesis', icon: 'book-outline', screen: 'HowToUse' },
+  { label: 'Take the tour', icon: 'compass-outline', screen: 'Tour' },
   { label: 'Glossary', icon: 'list-outline', screen: 'Glossary' },
   { label: 'Settings', icon: 'settings-outline', screen: 'Settings' },
   { label: 'Connect with T', icon: 'heart-outline', screen: 'Connect' },

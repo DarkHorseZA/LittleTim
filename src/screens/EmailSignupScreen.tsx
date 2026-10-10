@@ -20,6 +20,7 @@ import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { APP_NAME, AUTHOR_NAME } from '../config';
 import { useDay } from '../store/DayContext';
+import { firstRunRoute } from '../onboarding';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'EmailSignup'>;
 
@@ -60,12 +61,26 @@ export function EmailSignupScreen({ navigation, route }: Props) {
     ]).start();
   }, [fade, rise]);
 
+  const afterTour = route.params?.afterTour === true;
+
   const proceed = () => {
-    if (!settings.hasSeenHowTo) {
-      navigation.replace('HowToUse', { firstRun: true });
-    } else {
-      navigation.replace('Tabs', { screen: 'Today' });
+    if (!firstRun) {
+      navigation.goBack();
+      return;
     }
+    // Onboarding already ran before this screen. On the read path, offer the
+    // tour now; on the skip path it was taken already, so continue straight on.
+    if (!afterTour && !settings.tourSeen) {
+      navigation.replace('Tour', { firstRun: true });
+      return;
+    }
+    const next = firstRunRoute({
+      ...settings,
+      hasSeenHowTo: true,
+      registeredEmail: trimmedEmail,
+    });
+    if (next === 'Tracker') navigation.replace('Tracker');
+    else navigation.replace('Tabs', { screen: 'Today' });
   };
 
   const register = async () => {

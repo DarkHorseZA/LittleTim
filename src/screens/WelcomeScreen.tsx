@@ -22,6 +22,7 @@ import {
   AUTHOR_NAME,
 } from '../config';
 import { useDay } from '../store/DayContext';
+import { firstRunRoute } from '../onboarding';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
 
@@ -208,11 +209,14 @@ export function WelcomeScreen({ navigation }: Props) {
             <Button
               title="Enter"
               onPress={() => {
-                if (!settings.registeredEmail) {
-                  navigation.replace('EmailSignup', { firstRun: true });
-                } else if (!settings.hasSeenHowTo) {
+                // Onboarding comes before the account ask now; firstRunRoute is
+                // the single source of truth for the resume order.
+                const next = firstRunRoute(settings);
+                if (next === 'HowToUse') {
                   navigation.replace('HowToUse', { firstRun: true });
-                } else if (!settings.lastCheckInDate) {
+                } else if (next === 'EmailSignup') {
+                  navigation.replace('EmailSignup', { firstRun: true });
+                } else if (next === 'Tracker') {
                   navigation.navigate('Tracker');
                 } else {
                   navigation.replace('Tabs', { screen: 'Today' });

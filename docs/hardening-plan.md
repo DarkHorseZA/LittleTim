@@ -87,11 +87,16 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   the quilt growing). Best-effort: unavailable/error is silent. No custom
   "please rate" prompt in front of the OS sheet.
 - ⊘ "What's new" after an update — re-Genesis has no OTA updates.
-- ☐ Onboarding before the account screen: swap the order so the value is shown
-  before the email ask. Onboarding offers "skip & take the tour"; after either
-  the onboarding **or** the tour, prompt for the account; then offer the tour if
-  not yet taken.
-- ☐ First-run tour ("Show me around"), restartable from Settings.
+- ☑ Onboarding before the account screen. First-run order is now
+  Welcome → HowToUse (onboarding) → account, not the reverse. HowToUse offers
+  "Skip, show me around" → the tour → then the account (afterTour). Going through
+  onboarding instead → account → then the tour is offered. `firstRunRoute` (pure,
+  tested) is the single source of truth for the resume cascade; the read/skip
+  ordering is threaded through explicit nav params. Verified both paths on web.
+- ☑ First-run tour ("Show me around"): a bounded four-stop carousel
+  (`TourScreen`, Today/Practice/Journal/More) with progress dots, a Skip, and
+  reduced-motion-aware fades. Restartable anytime from More → "Take the tour".
+  `tourSeen` tracks it so first-run offers it once.
 - ☐ Skeletons (soft shimmer, respects Reduce Motion), never spinners.
 - ☐ Empty-state audit — say what will appear + the one action to add the first item.
 - ◑ Pressed states — `pressScale` exists; audit coverage + disabled 40%.

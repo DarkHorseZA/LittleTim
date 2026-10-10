@@ -16,19 +16,24 @@ type Props = NativeStackScreenProps<RootStackParamList, 'HowToUse'>;
 
 export function HowToUseScreen({ navigation, route }: Props) {
   const firstRun = route.params?.firstRun === true;
-  const { settings, updateSettings } = useDay();
+  const { updateSettings } = useDay();
 
-  const done = async () => {
+  // Onboarding now comes before the account ask. "Begin" carries the reader on
+  // to the account screen; from More (not first run) it simply closes.
+  const begin = async () => {
     await updateSettings({ hasSeenHowTo: true });
     if (firstRun) {
-      if (!settings.lastCheckInDate) {
-        navigation.navigate('Tracker');
-      } else {
-        navigation.replace('Tabs', { screen: 'Today' });
-      }
+      navigation.replace('EmailSignup', { firstRun: true });
     } else {
       navigation.goBack();
     }
+  };
+
+  // First-run only: skip the reading and take the quick guided tour instead.
+  // The account ask follows the tour (see TourScreen.finish).
+  const skipToTour = async () => {
+    await updateSettings({ hasSeenHowTo: true });
+    navigation.replace('Tour', { firstRun: true });
   };
 
   return (
@@ -192,9 +197,20 @@ export function HowToUseScreen({ navigation, route }: Props) {
           <Button
             title={firstRun ? 'Begin' : 'Got it'}
             icon={firstRun ? 'arrow-forward' : 'checkmark'}
-            onPress={done}
+            onPress={begin}
             size="lg"
           />
+          {firstRun ? (
+            <>
+              <View style={{ height: 10 }} />
+              <Button
+                title="Skip, show me around"
+                variant="ghost"
+                onPress={skipToTour}
+                size="lg"
+              />
+            </>
+          ) : null}
           <View style={{ height: 40 }} />
         </ScrollView>
       </SafeAreaView>

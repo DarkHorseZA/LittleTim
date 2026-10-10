@@ -24,6 +24,7 @@ import { AccountScreen } from '../screens/AccountScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
 import { EmailSignupScreen } from '../screens/EmailSignupScreen';
 import { HowToUseScreen } from '../screens/HowToUseScreen';
+import { TourScreen } from '../screens/TourScreen';
 import { MorningRitualScreen } from '../screens/MorningRitualScreen';
 import { JournalHistoryScreen } from '../screens/JournalHistoryScreen';
 import { JournalPostScreen } from '../screens/JournalPostScreen';
@@ -48,6 +49,7 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Welcome: '',
       HowToUse: 'how-to-use',
+      Tour: 'tour',
       Tabs: {
         path: 'app',
         screens: {
@@ -262,6 +264,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="HowToUse"
           component={HowToUseScreen}
+          options={{ animation: 'slide_from_right' }}
+        />
+        <Stack.Screen
+          name="Tour"
+          component={TourScreen}
           options={{ animation: 'slide_from_right' }}
         />
         <Stack.Screen name="Tabs" component={TabsNavigator} />
