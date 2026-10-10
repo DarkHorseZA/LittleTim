@@ -152,7 +152,3 @@ export function beliefForDate(
   }
   return beliefs[dayOfYear(date) % beliefs.length];
 }
-
-export function beliefForChapter(chapter: number): Belief | undefined {
-  return beliefs.find((b) => b.chapter === chapter);
-}

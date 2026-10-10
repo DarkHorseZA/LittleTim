@@ -50,10 +50,3 @@ export const focusAreas: Record<FocusArea, FocusAreaPrompt> = {
   },
 };
 
-export const focusAreaOrder: FocusArea[] = [
-  'happiness',
-  'loved',
-  'health',
-  'wealth',
-  'relationships',
-];

@@ -98,5 +98,3 @@ export function isChapterUnlocked(
   if (currentChapter === undefined || currentChapter === null) return false;
   return chapter <= currentChapter;
 }
-
-export const CHAPTER_COUNT = chapters.length;

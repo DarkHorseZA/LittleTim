@@ -18,8 +18,6 @@ import { tapFeedback } from '../components/feedback';
 //       focused && webFocus,
 //     ]}
 //   />
-//
-//   <Pressable onPress={tapThen(doThing)} ... />
 
 // The selection tick for choosing within a screen (toggles, chips, segments).
 // All haptics live in `components/feedback.ts`; this is just the call-site name.
@@ -30,14 +28,6 @@ export const tap = tapFeedback;
 // for moving around. Kept as a no-op so existing call sites read clearly.
 export function nav() {
   /* navigation is silent */
-}
-
-// Convenience: wrap an onPress so it fires the selection tick first.
-export function tapThen(fn: () => void | Promise<void>) {
-  return () => {
-    tapFeedback();
-    return fn();
-  };
 }
 
 // Press-state transform. Applied only when `pressed` is true in Pressable's

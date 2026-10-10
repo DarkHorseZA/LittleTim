@@ -397,11 +397,3 @@ export function findPractice(id?: string): Practice | undefined {
   if (!id) return undefined;
   return allPractices().find((p) => p.id === id);
 }
-
-export function practiceForChapter(
-  kind: 'MSG' | 'SEE',
-  chapter: number
-): Practice | undefined {
-  const list = kind === 'MSG' ? msgPractices : seePractices;
-  return list.find((p) => p.chapter === chapter);
-}

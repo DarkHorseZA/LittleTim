@@ -76,12 +76,6 @@ export async function loadEntries(): Promise<Record<string, DailyEntry>> {
   }
 }
 
-export async function saveEntries(
-  entries: Record<string, DailyEntry>
-): Promise<void> {
-  await AsyncStorage.setItem(KEY_ENTRIES, JSON.stringify(entries));
-}
-
 export async function getEntry(date: string): Promise<DailyEntry> {
   const entries = await loadEntries();
   return (
@@ -91,12 +85,6 @@ export async function getEntry(date: string): Promise<DailyEntry> {
       seeDone: false,
     }
   );
-}
-
-export async function upsertEntry(entry: DailyEntry): Promise<void> {
-  const entries = await loadEntries();
-  entries[entry.date] = entry;
-  await saveEntries(entries);
 }
 
 // Deletes every key this app owns: the whole `littletim:*` namespace. Backs the
@@ -121,10 +109,6 @@ export async function loadSettings(): Promise<Settings> {
   }
 }
 
-export async function saveSettings(settings: Settings): Promise<void> {
-  await AsyncStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
-}
-
 export async function loadQuiltEntries(): Promise<QuiltEntry[]> {
   const raw = await AsyncStorage.getItem(KEY_QUILT);
   if (!raw) return [];
@@ -133,22 +117,6 @@ export async function loadQuiltEntries(): Promise<QuiltEntry[]> {
   } catch {
     return [];
   }
-}
-
-export async function saveQuiltEntries(entries: QuiltEntry[]): Promise<void> {
-  await AsyncStorage.setItem(KEY_QUILT, JSON.stringify(entries));
-}
-
-// Adds a QuiltEntry, deduplicating by date + type. Returns the updated list.
-export async function addQuiltEntry(entry: QuiltEntry): Promise<QuiltEntry[]> {
-  const existing = await loadQuiltEntries();
-  const isDuplicate = existing.some(
-    (e) => e.date === entry.date && e.type === entry.type
-  );
-  if (isDuplicate) return existing;
-  const next = [...existing, entry];
-  await saveQuiltEntries(next);
-  return next;
 }
 
 // ─── Reflection entries ───────────────────────────────────────────────────────

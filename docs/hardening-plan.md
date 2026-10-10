@@ -49,7 +49,13 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
 - ☐ Scale-test heavy compute (quilt / discovery) with a 5k-record test, 50ms ceiling.
 - ☑ No polling — no `setInterval`; sync runs on foreground.
 - ⏸ Web caching headers — only if web hosting moves off GitHub Pages. **See backlog.**
-- ☐ Dead code — knip to zero.
+- ☑ Dead code — knip reports zero. Deleted 5 unused components (Card,
+  QuiltPreview, ScoreSlider, SectionHeader, StreakStrip) and ~20 unused exports
+  (superseded storage writers now that persist.ts owns writes; unused data/theme/
+  config helpers; the unused `snapFeedback`/`achievementFeedback` feels, leaving
+  the vocabulary at tap/saved/confirm). Removed the unused `expo-build-properties`
+  dep, listed `react-test-renderer` as a devDep, and taught knip to ignore the two
+  Expo-inferred, not-installed deps (expo-updates/expo-system-ui).
 
 ### Haptics
 - ☑ `src/components/feedback.ts` owns every feel, named by moment (`tapFeedback`,

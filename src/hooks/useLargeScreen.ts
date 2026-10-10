@@ -17,9 +17,3 @@ export function useLargeScreen() {
   const scale = isLarge ? LARGE_SCALE : 1;
   return { isLarge, scale };
 }
-
-// Multiplies a base value by the large-screen scale. Kept as a helper so
-// styles that need a couple of scaled numbers stay readable at the call site.
-export function scaled(base: number, scale: number): number {
-  return Math.round(base * scale);
-}

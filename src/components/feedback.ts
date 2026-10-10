@@ -7,8 +7,6 @@
  * - tapFeedback   choosing / ticking (chips, segments, checkboxes, tab switches)
  * - savedFeedback a quiet nod for an ordinary save (settings, a note)
  * - confirmFeedback the important moments (the main thing saved, a flow finished)
- * - snapFeedback  a "click into place" when a goal or valid state is reached
- * - achievementFeedback a rare milestone (success, then a light second tap)
  *
  * Android uses its own haptics engine (crisper, respects the phone's settings),
  * iOS the Taptic primitives. Read the Settings toggle at call time; off on web.
@@ -56,28 +54,4 @@ export function confirmFeedback() {
       ? Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Confirm)
       : Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
   );
-}
-
-export function snapFeedback() {
-  run(() =>
-    isAndroid
-      ? Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Toggle_On)
-      : Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)
-  );
-}
-
-export function achievementFeedback() {
-  run(async () => {
-    if (isAndroid) {
-      await Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Confirm);
-    } else {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
-    await new Promise((r) => setTimeout(r, 260));
-    if (isAndroid) {
-      await Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Clock_Tick);
-    } else {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
-  });
 }

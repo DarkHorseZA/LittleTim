@@ -109,13 +109,6 @@ export const colors = {
   clayDeep30: 'rgba(142,63,31,0.30)', // clayDeep at 30% alpha
 };
 
-export type AreaColor =
-  | 'happiness'
-  | 'loved'
-  | 'health'
-  | 'wealth'
-  | 'relationships';
-
 export const radius = {
   sm: 10,
   md: 16,
@@ -124,9 +117,6 @@ export const radius = {
   pill: 999,
 };
 
-// 4pt spacing function (existing).
-export const spacing = (n: number) => n * 4;
-
 // Layout tokens. Keep screen padding consistent across every SafeAreaView container.
 export const layout = {
   screen: 20, // horizontal/vertical padding on the scroll container
@@ -134,16 +124,6 @@ export const layout = {
   screenLoose: 24, // for editorial / modal hero blocks
   maxWidth: 520, // cap content width on desktop/tablet web (phone-frame simulation)
   contentMaxWidth: 700, // max content column width on native iPad / large screens
-};
-
-// Icon circle sizes (avatar, list-item icon, hero icon, etc.).
-// Use these any time you draw a round icon-in-a-disc.
-export const iconSize = {
-  xs: 24,
-  sm: 30,
-  md: 40,
-  lg: 52,
-  xl: 88,
 };
 
 export const shadows = {

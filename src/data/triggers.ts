@@ -476,19 +476,3 @@ export function findTrigger(id?: string): TriggerGesture | undefined {
   if (!id) return undefined;
   return triggerGestures.find((g) => g.id === id);
 }
-
-export function triggersForChapter(chapter: number): TriggerGesture[] {
-  return triggerGestures.filter((g) => g.chapter === chapter);
-}
-
-// A trigger is unlocked when the reader has reached (or passed) its chapter.
-// currentChapter undefined means the reader has not set progress yet,
-// so only the Introduction (chapter 0) is available.
-export function isTriggerUnlocked(
-  trigger: TriggerGesture,
-  currentChapter: number | null | undefined
-): boolean {
-  if (trigger.chapter === 0) return true;
-  if (currentChapter === undefined || currentChapter === null) return false;
-  return currentChapter >= trigger.chapter;
-}
