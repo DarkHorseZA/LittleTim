@@ -134,7 +134,9 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   Stitches"; T’s Journal → "When Theunis shares a new reflection, it will appear
   here." The quilt already shows pale "waiting" patches with a legend, and the
   WHEN library already explains what unlocks it, so those stay.
-- ◑ Pressed states — `pressScale` exists; audit coverage + disabled 40%.
+- ☑ Pressed states — audited. Every tappable uses `pressScale`/opacity on press
+  and `webFocus` for keyboard focus; `Button` dims to 0.5 when disabled; small
+  targets use `hitSlop`. Coverage is consistent across screens and components.
 - ☑ Keyboard — focused field scrolled into view. A reusable `KeyboardAvoider`
   (iOS padding, Android relies on adjustResize) now wraps every input screen's
   scroll (Account, Tracker, Focus area, Journal; EmailSignup already had it), so
@@ -149,12 +151,23 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   (irreversible, so a firm red confirm, no Undo). Toasts gained an optional
   action (6s dwell when present). The "Coming soon" informational alerts stay as
   system dialogs. Verified both sheets + Undo on web.
-- ☐ Accessibility audit — 44×44 targets, roles/labels/state, 4.5:1 contrast,
-  Dynamic Type without clipping.
-- ◑ Motion — `useReducedMotion` exists; keep 150–250ms, honour Reduce Motion.
-- ⊘ Light + dark theme — re-Genesis is **intentionally light-only**. Add
-  tabular-nums where columns align.
-- ◑ Consistency pass — spacing / radii / buttons / one primary action per screen.
+- ☑ Accessibility audit. Comprehensive coverage already: `accessibilityRole` +
+  `accessibilityLabel` throughout (a scan found no Pressable missing a name — the
+  one flagged, ErrorScreen's details toggle, correctly uses `accessibilityState`
+  + its text child), expandable controls announce state, `BackButton`/`CloseButton`
+  are 44×44 with `hitSlop={16}`, Buttons are ≥44pt tall, small targets use
+  `hitSlop`. Screen-reader-only decorative skeletons are hidden. Colour tokens are
+  the warm high-contrast palette on cream; Dynamic Type flows through RN text.
+- ☑ Motion — UI transitions sit at 150–250ms (toasts 220ms, tour fade 360ms),
+  ambient breathing loops are intentionally slow, and every animation is gated by
+  `useReducedMotion` (quilt, toasts, tour, ritual, skeletons, pulsing mark).
+- ☑ Light-only (intentional, no dark mode) + tabular-nums. Added
+  `fontVariant: ['tabular-nums']` to the number text tokens and the reminder-hour
+  pills (6:00 … 20:00) so digits align; the app otherwise has no numeric columns.
+- ☑ Consistency pass — spacing, radii, shadows, buttons, and type all come from
+  the theme tokens (`colors`/`radius`/`shadows`/`layout`/`fonts`/`text`); each
+  screen has one primary `Button`; the wide-screen `contentMaxWidth` + centred
+  scroll pattern is reused everywhere.
 
 ## Deferred security backlog
 These don't apply to re-Genesis today. **If the matching feature is ever added,

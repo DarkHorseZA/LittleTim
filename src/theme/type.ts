@@ -87,10 +87,12 @@ export const text = {
     fontSize: 56,
     lineHeight: 60,
     color: colors.clay,
+    fontVariant: ['tabular-nums'],
   } as TextStyle,
   numberSm: {
     fontFamily: fonts.serifBold,
     fontSize: 22,
     color: colors.clay,
+    fontVariant: ['tabular-nums'],
   } as TextStyle,
 };

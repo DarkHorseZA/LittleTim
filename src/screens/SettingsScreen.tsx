@@ -634,6 +634,8 @@ const styles = StyleSheet.create({
     color: colors.inkSoft,
     fontFamily: fonts.sansSemi,
     fontSize: 13,
+    // Uniform digit widths so the hour pills (6:00 … 20:00) align crisply.
+    fontVariant: ['tabular-nums'] as const,
   },
   hourTextOn: { color: colors.white },
   linkCard: {
