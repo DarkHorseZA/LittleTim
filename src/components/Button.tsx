@@ -8,7 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, radius } from '../theme/colors';
 import { fonts } from '../theme/type';
 import { useLargeScreen } from '../hooks/useLargeScreen';

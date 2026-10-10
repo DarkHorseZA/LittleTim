@@ -53,7 +53,13 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   zero console errors. The compiler lint is already active via react-hooks v5's
   compiler-aware rules (the `react-hooks/refs` warnings). Worth a native
   smoke-test pass on the TestFlight build before final submission.
-- ☐ Ship only what's used — audit the web bundle / icon imports.
+- ☑ Ship only what's used. Icon audit: the app imports only two families,
+  Ionicons (114 uses) and FontAwesome6 (6 social brand logos, incl. Threads/X
+  which Ionicons lacks), both genuinely used. Converted all 26 barrel imports
+  (`{ Ionicons } from '@expo/vector-icons'`) to per-family subpath imports
+  (`@expo/vector-icons/Ionicons`, `/FontAwesome6`) so no other icon set can be
+  pulled in. No heavy util libs (no lodash/moment/date-fns). Verified Connect
+  (both families) and other screens still render every icon.
 - ⊘ Batch DB writes (SQLite transactions) — AsyncStorage, not SQLite.
 - ☑ Scale-test heavy compute. `buildCells` (the quilt grid builder, run on every
   quilt render) is now exported and covered by a 5,000-day test: it builds the

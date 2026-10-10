@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { colors, radius, shadows } from '../theme/colors';
 import { pressScale, tap, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
