@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -13,6 +7,7 @@ import { RootStackParamList } from '../navigation/types';
 import { colors, layout, shadows } from '../theme/colors';
 import { text } from '../theme/type';
 import { BackButton } from '../components/BackButton';
+import { Skeleton } from '../components/Skeleton';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'JournalPost'>;
 
@@ -57,8 +52,19 @@ export function JournalPostScreen({ navigation, route }: Props) {
             style={styles.web}
           />
           {loading ? (
-            <View style={styles.center} pointerEvents="none">
-              <ActivityIndicator color={colors.clay} />
+            // Sketch the shape of an article while the post loads, not a spinner.
+            <View style={styles.loadingCover} pointerEvents="none">
+              <Skeleton width="80%" height={26} radius={6} />
+              <View style={{ height: 22 }} />
+              <Skeleton width="100%" height={14} />
+              <View style={{ height: 10 }} />
+              <Skeleton width="97%" height={14} />
+              <View style={{ height: 10 }} />
+              <Skeleton width="92%" height={14} />
+              <View style={{ height: 10 }} />
+              <Skeleton width="99%" height={14} />
+              <View style={{ height: 10 }} />
+              <Skeleton width="58%" height={14} />
             </View>
           ) : null}
         </View>
@@ -108,6 +114,12 @@ const styles = StyleSheet.create({
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loadingCover: {
+    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: colors.bg,
+    paddingHorizontal: 24,
+    paddingTop: 28,
   },
   fallback: {
     ...text.body,

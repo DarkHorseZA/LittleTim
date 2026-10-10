@@ -20,6 +20,7 @@ import { JournalStitch } from '../types';
 import { RootStackParamList } from '../navigation/types';
 import { JournalPost, useJournalFeed } from '../data/journalFeed';
 import { toast } from '../components/Toast';
+import { SkeletonCard } from '../components/Skeleton';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -222,9 +223,13 @@ export function SavedStitches() {
       </View>
 
       {sorted.length === 0 ? (
-        <Text style={styles.emptyState}>
-          Your first stitch is waiting to be sewn.
-        </Text>
+        <View style={styles.emptyWrap}>
+          <Text style={styles.emptyTitle}>Your quilt starts here.</Text>
+          <Text style={styles.emptyState}>
+            Each stitch you sew on Today’s Stitches gathers here, a thread you
+            can return to whenever you like.
+          </Text>
+        </View>
       ) : (
         sorted.map((s) => <StitchCard key={s.id} stitch={s} />)
       )}
@@ -286,11 +291,22 @@ export function TsJournal() {
       </View>
 
       {posts.length === 0 ? (
-        <Text style={styles.emptyState}>
-          {loading
-            ? 'Gathering T’s latest threads…'
-            : 'No entries yet, check back soon.'}
-        </Text>
+        loading ? (
+          // Sketch a few cards while the feed arrives, never a spinner.
+          <View accessibilityLabel="Gathering T’s latest threads">
+            <SkeletonCard lines={2} />
+            <SkeletonCard lines={2} />
+            <SkeletonCard lines={1} />
+          </View>
+        ) : (
+          <View style={styles.emptyWrap}>
+            <Text style={styles.emptyTitle}>No posts yet.</Text>
+            <Text style={styles.emptyState}>
+              When Theunis shares a new reflection, it will appear here, ready to
+              read whenever you are.
+            </Text>
+          </View>
+        )
       ) : (
         posts.map((p) => (
           <PostCard key={p.slug} post={p} onPress={() => open(p)} />
@@ -378,6 +394,19 @@ const styles = StyleSheet.create({
   pastSub: {
     ...text.body,
     marginTop: 4,
+  },
+  emptyWrap: {
+    paddingTop: 24,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  emptyTitle: {
+    fontFamily: fonts.serifBold,
+    fontSize: 19,
+    lineHeight: 26,
+    color: colors.ink,
+    textAlign: 'center',
+    marginBottom: 6,
   },
   emptyState: {
     fontFamily: fonts.serifItalic,

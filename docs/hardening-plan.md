@@ -97,8 +97,18 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   (`TourScreen`, Today/Practice/Journal/More) with progress dots, a Skip, and
   reduced-motion-aware fades. Restartable anytime from More → "Take the tour".
   `tourSeen` tracks it so first-run offers it once.
-- ☐ Skeletons (soft shimmer, respects Reduce Motion), never spinners.
-- ☐ Empty-state audit — say what will appear + the one action to add the first item.
+- ☑ Skeletons, never spinners. New `Skeleton`/`SkeletonCard` (gentle opacity
+  breath, parks steady under Reduce Motion, a11y-hidden). The font-load gate now
+  shows the breathing `PulsingMark` (image, no font) instead of an
+  `ActivityIndicator`; the post reader (`JournalPostScreen`) sketches an article
+  while the WebView loads; T’s Journal feed shows skeleton cards while fetching.
+  The only remaining `ActivityIndicator` is the inline busy state inside
+  `Button`, which is the right pattern there.
+- ☑ Empty-state audit. Journal empties now lead with what will appear and point
+  to the one action: Saved Stitches → "Your quilt starts here… sew on Today’s
+  Stitches"; T’s Journal → "When Theunis shares a new reflection, it will appear
+  here." The quilt already shows pale "waiting" patches with a legend, and the
+  WHEN library already explains what unlocks it, so those stay.
 - ◑ Pressed states — `pressScale` exists; audit coverage + disabled 40%.
 - ☐ Keyboard — "Done" bar on number pads; scroll focused field into view.
 - ☑ Destructive confirm in-UI (not a system alert) + Undo where cheap. New

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
@@ -26,6 +26,7 @@ import { ReviewManager } from './src/components/ReviewManager';
 import { HapticsSync } from './src/components/HapticsSync';
 import { ErrorBoundary } from './src/components/ErrorBoundary';
 import { FatalErrorHandler } from './src/components/FatalErrorHandler';
+import { PulsingMark } from './src/components/PulsingMark';
 
 export default function App() {
   return (
@@ -53,6 +54,8 @@ function AppInner() {
   });
 
   if (!loaded) {
+    // Calm branded hold while fonts load, never a spinner. PulsingMark is an
+    // image, so it needs no font and respects Reduce Motion.
     return (
       <View
         style={{
@@ -62,7 +65,7 @@ function AppInner() {
           justifyContent: 'center',
         }}
       >
-        <ActivityIndicator color={colors.clay} />
+        <PulsingMark size={72} accessibilityLabel="Loading re-Genesis" />
       </View>
     );
   }
