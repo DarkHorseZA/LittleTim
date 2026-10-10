@@ -17,6 +17,7 @@ import { blend, colors, layout, radius, shadows } from '../theme/colors';
 import { fonts, text } from '../theme/type';
 import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
+import { KeyboardAvoider } from '../components/KeyboardAvoider';
 import { toast } from '../components/Toast';
 import { focusAreas } from '../data/focusAreas';
 import { COACHING_URL, hasCoachingUrl } from '../config';
@@ -72,6 +73,7 @@ export function FocusAreaScreen({ navigation, route }: Props) {
           />
         </View>
 
+        <KeyboardAvoider>
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{ flex: 1 }}
@@ -137,6 +139,7 @@ export function FocusAreaScreen({ navigation, route }: Props) {
             }}
           />
         </ScrollView>
+        </KeyboardAvoider>
       </SafeAreaView>
     </View>
   );

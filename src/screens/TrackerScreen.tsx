@@ -32,6 +32,7 @@ import { tap, pressScale, webFocus } from '../theme/interactions';
 import { fonts, text } from '../theme/type';
 import { BackButton } from '../components/BackButton';
 import { PulsingMark } from '../components/PulsingMark';
+import { KeyboardAvoider } from '../components/KeyboardAvoider';
 import { LegsIcon } from '../components/LegsIcon';
 import { BodyZone, ReflectionEntry } from '../types';
 import {
@@ -466,6 +467,7 @@ export function TrackerScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
+      <KeyboardAvoider>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={styles.container}
@@ -683,6 +685,7 @@ export function TrackerScreen({ navigation }: Props) {
 
           <View style={{ height: 40 }} />
         </ScrollView>
+      </KeyboardAvoider>
     </SafeAreaView>
   );
 }

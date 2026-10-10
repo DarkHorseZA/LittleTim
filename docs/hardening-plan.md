@@ -110,7 +110,13 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   here." The quilt already shows pale "waiting" patches with a legend, and the
   WHEN library already explains what unlocks it, so those stay.
 - ◑ Pressed states — `pressScale` exists; audit coverage + disabled 40%.
-- ☐ Keyboard — "Done" bar on number pads; scroll focused field into view.
+- ☑ Keyboard — focused field scrolled into view. A reusable `KeyboardAvoider`
+  (iOS padding, Android relies on adjustResize) now wraps every input screen's
+  scroll (Account, Tracker, Focus area, Journal; EmailSignup already had it), so
+  a field near the bottom is never covered. No "Done" bar needed: the app has no
+  number pads (only email/text keyboards, which keep their return key, and the
+  name→email chain already uses returnKeyType + onSubmitEditing). Verified the
+  Journal input layout is unchanged.
 - ☑ Destructive confirm in-UI (not a system alert) + Undo where cheap. New
   reusable `ConfirmSheet` (BottomSheet-based, with a `danger` Button variant)
   replaces the two destructive system Alerts on Account: sign-out (reversible,

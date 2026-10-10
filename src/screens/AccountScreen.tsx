@@ -21,6 +21,7 @@ import { Button } from '../components/Button';
 import { BackButton } from '../components/BackButton';
 import { PulsingMark } from '../components/PulsingMark';
 import { ConfirmSheet } from '../components/ConfirmSheet';
+import { KeyboardAvoider } from '../components/KeyboardAvoider';
 import { toast } from '../components/Toast';
 import { useDay } from '../store/DayContext';
 import { clearAllData } from '../store/storage';
@@ -125,6 +126,7 @@ export function AccountScreen({ navigation }: Props) {
           />
         </View>
 
+        <KeyboardAvoider>
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{ flex: 1 }}
@@ -246,6 +248,7 @@ export function AccountScreen({ navigation }: Props) {
             accessibilityHint="Clears everything stored on this device and returns to the start"
           />
         </ScrollView>
+        </KeyboardAvoider>
       </SafeAreaView>
 
       <ConfirmSheet

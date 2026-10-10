@@ -21,6 +21,7 @@ import { RootStackParamList } from '../navigation/types';
 import { JournalPost, useJournalFeed } from '../data/journalFeed';
 import { toast } from '../components/Toast';
 import { SkeletonCard } from '../components/Skeleton';
+import { KeyboardAvoider } from '../components/KeyboardAvoider';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -110,6 +111,7 @@ export function JournalContent() {
   // the keyboard needs two exits: drag the scroll, or tap any empty space
   // (the wrapping Pressable catches taps that no child claims).
   return (
+    <KeyboardAvoider>
     <ScrollView
       style={{ flex: 1 }}
       keyboardShouldPersistTaps="handled"
@@ -190,6 +192,7 @@ export function JournalContent() {
         </Pressable>
       </Pressable>
     </ScrollView>
+    </KeyboardAvoider>
   );
 }
 
