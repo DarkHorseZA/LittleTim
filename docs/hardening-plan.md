@@ -34,8 +34,10 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   retried on foreground. DayContext rewritten to use it. Tested: persist retry +
   latest-value + DayContext hydrate/optimistic/ready-guard (react-test-renderer).
 - ⊘ Untrusted files — no import/restore/upload exists. **See backlog.**
-- ◑ User text is never code — RN `Text` is safe; no `dangerouslySetInnerHTML`; no
-  CSV export today. **See backlog** for export. (Backend already parameterised.)
+- ☑ User text is never code — RN `Text` renders strings inertly, there is no
+  `dangerouslySetInnerHTML` anywhere, and there is no CSV/spreadsheet export
+  today. The only open case, formula injection on a future export, is in the
+  deferred backlog. (Backend is already parameterised.)
 - ⊘ Payments trusted from store side — no payments. **See backlog.**
 - ☑ No secrets in the bundle. Audited src + config + app.json: config holds only
   public URLs (the site, socials, the public journal.json), the journal fetch
