@@ -89,7 +89,7 @@ type CellData = {
 
 export type PatchworkQuiltSize = 'compact' | 'full';
 
-function buildCells(quiltEntries: QuiltEntry[], size: PatchworkQuiltSize = 'full'): CellData[] {
+export function buildCells(quiltEntries: QuiltEntry[], size: PatchworkQuiltSize = 'full'): CellData[] {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   const todayStr = todayKey(now);

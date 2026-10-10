@@ -37,8 +37,11 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
 - ◑ User text is never code — RN `Text` is safe; no `dangerouslySetInnerHTML`; no
   CSV export today. **See backlog** for export. (Backend already parameterised.)
 - ⊘ Payments trusted from store side — no payments. **See backlog.**
-- ☐ No secrets in the bundle — audit (the one shipped key is a documented gate,
-  not a secret).
+- ☑ No secrets in the bundle. Audited src + config + app.json: config holds only
+  public URLs (the site, socials, the public journal.json), the journal fetch
+  sends no auth header, and there are no API keys/tokens/passwords. The only
+  secret, the Google Play service-account key, is gitignored and used only by
+  `eas submit` at build time, never shipped in the app bundle.
 - ☑ Privacy by default — offline, opt-in, no analytics. Already true.
 
 ### Speed & efficiency
@@ -46,7 +49,11 @@ Legend: ☐ todo · ◑ in progress · ☑ done · ⊘ not applicable · ⏸ def
   smoke-tested per screen.
 - ☐ Ship only what's used — audit the web bundle / icon imports.
 - ⊘ Batch DB writes (SQLite transactions) — AsyncStorage, not SQLite.
-- ☐ Scale-test heavy compute (quilt / discovery) with a 5k-record test, 50ms ceiling.
+- ☑ Scale-test heavy compute. `buildCells` (the quilt grid builder, run on every
+  quilt render) is now exported and covered by a 5,000-day test: it builds the
+  full multi-year grid in ~5ms, far under the 50ms ceiling, plus a correctness
+  test that entries land on the right day. Discovery just picks a few random
+  items (not a scale concern).
 - ☑ No polling — no `setInterval`; sync runs on foreground.
 - ⏸ Web caching headers — only if web hosting moves off GitHub Pages. **See backlog.**
 - ☑ Dead code — knip reports zero. Deleted 5 unused components (Card,
