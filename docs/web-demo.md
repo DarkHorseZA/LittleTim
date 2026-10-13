@@ -33,7 +33,8 @@ or merge it forward first):
 node -e "const fs=require('fs');const j=JSON.parse(fs.readFileSync('./app.json','utf8'));j.expo.experiments.baseUrl='/re-genesis-preview';fs.writeFileSync('./app.json',JSON.stringify(j,null,2));"
 rm -rf dist
 EXPO_PUBLIC_DEMO=1 npx expo export --platform web
-cp dist/index.html dist/404.html   # SPA fallback
+node scripts/web-demo-polish.js    # inject font preloads + cream pre-paint (no cold-load flash)
+cp dist/index.html dist/404.html   # SPA fallback (after the polish, so 404 gets it too)
 touch dist/.nojekyll               # let Pages serve the _expo/ folder
 git checkout app.json              # restore baseUrl to /LittleTim
 
