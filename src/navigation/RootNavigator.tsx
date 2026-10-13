@@ -241,7 +241,11 @@ export function RootNavigator() {
   const content = (
     <NavigationContainer
       ref={navRef}
-      linking={linking}
+      // The public web demo lives on a subpath (GitHub Pages), where React
+      // Navigation's URL syncing drops the base prefix and breaks a refresh.
+      // The demo needs no deep links, so we turn URL syncing off: navigation
+      // stays state-only, the address bar stays on the base, and refresh works.
+      linking={isDemoMode() ? undefined : linking}
       onReady={syncRoute}
       onStateChange={syncRoute}
     >
