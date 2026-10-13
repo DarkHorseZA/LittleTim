@@ -23,6 +23,7 @@ import {
 } from '../config';
 import { useDay } from '../store/DayContext';
 import { firstRunRoute } from '../onboarding';
+import { isDemoMode } from '../demo';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
 
@@ -62,6 +63,14 @@ export function WelcomeScreen({ navigation }: Props) {
   const haloSize = isLarge ? 540 : 240;
 
   const reducedMotion = useReducedMotion();
+
+  // Public web demo: skip the splash and the sign-up entirely and open straight
+  // into the app. The demo state is seeded before anything reads storage.
+  useEffect(() => {
+    if (isDemoMode()) {
+      navigation.replace('Tabs', { screen: 'Today' });
+    }
+  }, [navigation]);
 
   const breath = useRef(new Animated.Value(0)).current;
   const fade = useRef(new Animated.Value(0)).current;

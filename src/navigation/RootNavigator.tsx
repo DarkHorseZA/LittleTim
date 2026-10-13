@@ -34,6 +34,7 @@ import { NotFoundScreen } from '../screens/NotFoundScreen';
 import { MoreScreen } from '../screens/MoreScreen';
 import { ChapterCheckInGate } from '../components/ChapterCheckInGate';
 import { ReminderOptInGate } from '../components/ReminderOptInGate';
+import { isDemoMode } from '../demo';
 import { colors, layout } from '../theme/colors';
 import { fonts } from '../theme/type';
 import { useLargeScreen } from '../hooks/useLargeScreen';
@@ -348,10 +349,12 @@ export function RootNavigator() {
     </NavigationContainer>
   );
 
+  // The once-per-launch nudges stay out of the public demo, so it opens clean.
+  const gatesActive = topRoute === 'Tabs' && !isDemoMode();
   const gate = (
     <>
-      <ChapterCheckInGate active={topRoute === 'Tabs'} />
-      <ReminderOptInGate active={topRoute === 'Tabs'} />
+      <ChapterCheckInGate active={gatesActive} />
+      <ReminderOptInGate active={gatesActive} />
     </>
   );
 

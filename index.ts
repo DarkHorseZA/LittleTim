@@ -34,9 +34,14 @@ if (LAUNCH_WIDTH >= 700) {
 
 import { registerRootComponent } from 'expo';
 import App from './App';
+import { seedDemoIfNeeded } from './src/demo';
 
 if (Platform.OS === 'web') {
   require('@expo/metro-runtime');
+
+  // Public web demo: seed a lived-in state before anything reads storage, so a
+  // visitor lands in a real-feeling app with no sign-up. No-op unless demo mode.
+  seedDemoIfNeeded();
 
   // Hide native-looking scrollbars on the web build. React Native Web renders
   // scroll containers as divs with overflow:scroll; the bars look out of place
