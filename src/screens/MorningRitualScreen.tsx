@@ -551,10 +551,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   stepLabel: {
-    fontFamily: fonts.sansBold,
-    fontSize: 11,
-    letterSpacing: 2.2,
-    textTransform: 'uppercase',
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    letterSpacing: 0.3,
     marginBottom: 22,
   },
   iconWrap: {
@@ -595,9 +594,8 @@ const styles = StyleSheet.create({
   },
   breathCue: {
     fontFamily: fonts.sansMed,
-    fontSize: 12,
-    letterSpacing: 3,
-    textTransform: 'uppercase',
+    fontSize: 13,
+    letterSpacing: 0.5,
     marginTop: -12,
     marginBottom: 10,
   },
@@ -705,9 +703,8 @@ const styles = StyleSheet.create({
   completionSub: {
     fontFamily: fonts.sansMed,
     fontSize: 13,
-    letterSpacing: 1.5,
+    letterSpacing: 0.3,
     color: colors.inkSoft,
-    textTransform: 'uppercase',
     textAlign: 'center',
   },
 });

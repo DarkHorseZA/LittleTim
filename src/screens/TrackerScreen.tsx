@@ -842,11 +842,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bgDeep,
   },
   saveBtnText: {
-    fontFamily: fonts.sansBold,
+    fontFamily: fonts.sansSemi,
     fontSize: 14,
-    letterSpacing: 1,
+    letterSpacing: 0.3,
     color: colors.white,
-    textTransform: 'uppercase',
   },
   saveBtnTextEmpty: {
     color: colors.inkFaint,

@@ -95,7 +95,6 @@ export function TriggerDetailScreen({ navigation, route }: Props) {
             <Ionicons name="time-outline" size={14} color={colors.inkSoft} />
             <Text style={styles.metaText}>{gesture.durationMin} min</Text>
           </View>
-          <Text style={styles.metaSep}>·</Text>
           <View style={styles.meta}>
             <Ionicons name="book-outline" size={14} color={colors.inkSoft} />
             <Text style={styles.metaText}>
@@ -226,6 +225,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 22,
     flexWrap: 'wrap',
+    columnGap: 14,
+    rowGap: 4,
     gap: 4,
   },
   meta: {
@@ -237,10 +238,6 @@ const styles = StyleSheet.create({
     color: colors.inkSoft,
     marginLeft: 4,
     fontSize: 13,
-  },
-  metaSep: {
-    color: colors.inkFaint,
-    marginHorizontal: 8,
   },
   framingCard: {
     backgroundColor: colors.clayWash,

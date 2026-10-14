@@ -406,10 +406,9 @@ const styles = StyleSheet.create({
   },
   rhythmTime: {
     fontFamily: fonts.sansSemi,
-    fontSize: 11,
-    letterSpacing: 1.5,
+    fontSize: 12,
+    letterSpacing: 0.3,
     color: colors.clayDeep,
-    textTransform: 'uppercase',
   },
   rhythmDuration: {
     fontFamily: fonts.sans,

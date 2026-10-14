@@ -174,10 +174,9 @@ const styles = StyleSheet.create({
     fontSize: 44,
   },
   eyebrow: {
-    fontFamily: fonts.sansBold,
-    fontSize: 11,
-    letterSpacing: 2.2,
-    textTransform: 'uppercase',
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    letterSpacing: 0.3,
     marginBottom: 12,
   },
   question: {

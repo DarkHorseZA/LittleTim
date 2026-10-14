@@ -318,15 +318,14 @@ const styles = StyleSheet.create({
   },
   breathHint: {
     fontFamily: fonts.sansMed,
-    fontSize: 12,
-    letterSpacing: 2,
+    fontSize: 13,
+    letterSpacing: 0.3,
     color: colors.inkSoft,
-    textTransform: 'uppercase',
     textAlign: 'center',
   },
   breathHintLarge: {
     fontSize: 16,
-    letterSpacing: 3,
+    letterSpacing: 0.3,
   },
   attribution: {
     fontFamily: fonts.serifItalic,

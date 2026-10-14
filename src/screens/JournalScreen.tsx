@@ -62,13 +62,13 @@ function StitchCard({ stitch }: { stitch: JournalStitch }) {
       <Text style={styles.stitchDate}>{prettyDate(stitch.date)}</Text>
       {stitch.sewedWithLove ? (
         <View style={styles.stitchSection}>
-          <Text style={styles.stitchLabel}>SEWED WITH LOVE</Text>
+          <Text style={styles.stitchLabel}>Sewed with love</Text>
           <Text style={styles.stitchBody}>{stitch.sewedWithLove}</Text>
         </View>
       ) : null}
       {stitch.oldThreadPulled ? (
         <View style={styles.stitchSection}>
-          <Text style={styles.stitchLabel}>WHEN THE OLD THREAD PULLED</Text>
+          <Text style={styles.stitchLabel}>When the old thread pulled</Text>
           <Text style={styles.stitchBody}>{stitch.oldThreadPulled}</Text>
         </View>
       ) : null}
@@ -187,7 +187,7 @@ export function JournalContent() {
             style={{ marginRight: 6 }}
           />
           <Text style={[styles.saveText, { color: hasInput ? colors.white : colors.inkFaint }]}>
-            {hasInput ? 'Save Stitch' : 'Maybe later'}
+            {hasInput ? 'Save stitch' : 'Maybe later'}
           </Text>
         </Pressable>
       </Pressable>
@@ -364,9 +364,13 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   divider: {
-    height: 1,
-    backgroundColor: colors.line,
-    marginVertical: 14,
+    // A dashed "thread" seam between the two stitches, echoing the dashed
+    // borders on the quilt's unsewn patches. The one place the textile
+    // metaphor is allowed to touch the chrome.
+    borderBottomWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: colors.thread,
+    marginVertical: 16,
   },
   saveBtn: {
     marginTop: 14,
@@ -379,10 +383,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   saveText: {
-    fontFamily: fonts.sansBold,
-    fontSize: 13,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
+    fontFamily: fonts.sansSemi,
+    fontSize: 14,
+    letterSpacing: 0.3,
   },
   listScroll: {
     flex: 1,
@@ -437,7 +440,6 @@ const styles = StyleSheet.create({
   },
   stitchLabel: {
     ...text.eyebrow,
-    fontSize: 10,
     marginBottom: 4,
   },
   stitchBody: {

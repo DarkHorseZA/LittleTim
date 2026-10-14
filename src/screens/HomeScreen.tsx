@@ -185,7 +185,7 @@ export function HomeScreen({ navigation }: Props) {
 
           {/* Patchwork Quilt — compact (4-week grid, stats, tap-to-detail) */}
           <View style={styles.quiltSection}>
-            <Text style={styles.quiltOverline}>YOUR PATCHWORK QUILT</Text>
+            <Text style={styles.quiltOverline}>Your patchwork quilt</Text>
             <Text style={styles.quiltTagline}>
               {'“'}Stitch by little stitch, it becomes beautiful.{'”'}
             </Text>
@@ -541,11 +541,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   ritualEyebrow: {
-    fontFamily: fonts.sansBold,
-    fontSize: 11,
-    letterSpacing: 2.2,
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    letterSpacing: 0.3,
     color: colors.onClaySoft,
-    textTransform: 'uppercase',
   },
   ritualBadge: {
     width: 34,
@@ -575,22 +574,20 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
   ritualCtaText: {
-    fontFamily: fonts.sansBold,
-    fontSize: 13,
-    letterSpacing: 1.2,
+    fontFamily: fonts.sansSemi,
+    fontSize: 14,
+    letterSpacing: 0.3,
     color: colors.white,
     marginRight: 6,
-    textTransform: 'uppercase',
   },
   quiltSection: {
     marginBottom: 12,
   },
   quiltOverline: {
-    fontFamily: fonts.sansBold,
-    fontSize: 10,
-    letterSpacing: 2.2,
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    letterSpacing: 0.3,
     color: colors.inkFaint,
-    textTransform: 'uppercase',
     marginBottom: 4,
   },
   quiltTagline: {

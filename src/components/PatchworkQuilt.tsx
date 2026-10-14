@@ -168,7 +168,7 @@ function GentleNote({ onDismiss }: { onDismiss: () => void }) {
         <View style={noteStyles.starCircle}>
           <Text style={noteStyles.starText}>✦</Text>
         </View>
-        <Text style={noteStyles.overline}>A GENTLE NOTE</Text>
+        <Text style={noteStyles.overline}>A gentle note</Text>
         <CloseButton onPress={onDismiss} variant="solid" accessibilityLabel="Dismiss note" />
       </View>
 
@@ -214,9 +214,9 @@ const noteStyles = StyleSheet.create({
   },
   overline: {
     flex: 1,
-    fontFamily: fonts.sansBold,
-    fontSize: 10,
-    letterSpacing: 2,
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    letterSpacing: 0.3,
     color: colors.inkFaint,
   },
   heading: {
@@ -293,8 +293,7 @@ const statStyles = StyleSheet.create({
   label: {
     ...text.caption,
     color: colors.inkFaint,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 0.3,
   },
 });
 
@@ -579,7 +578,7 @@ export function PatchworkQuilt({ size = 'full' }: { size?: PatchworkQuiltSize })
       {/* Section header — full mode only (compact uses HomeScreen's header) */}
       {!isCompact && (
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionOverline}>YOUR PATCHWORK QUILT</Text>
+          <Text style={styles.sectionOverline}>Your patchwork quilt</Text>
           <Text style={styles.sectionSub}>each patch is a day</Text>
         </View>
       )}
@@ -820,11 +819,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionOverline: {
-    fontFamily: fonts.sansBold,
-    fontSize: 10,
-    letterSpacing: 2.2,
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    letterSpacing: 0.3,
     color: colors.inkFaint,
-    textTransform: 'uppercase',
   },
   sectionSub: {
     fontFamily: fonts.serifItalic,

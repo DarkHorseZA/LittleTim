@@ -16,6 +16,20 @@ module.exports = [
     },
   },
   {
+    // Build/tooling scripts run in Node, so give them the Node globals rather
+    // than linting them as browser code (otherwise `__dirname` etc. are undef).
+    files: ['scripts/**/*.js'],
+    languageOptions: {
+      globals: {
+        __dirname: 'readonly',
+        require: 'readonly',
+        module: 'writable',
+        process: 'readonly',
+        console: 'readonly',
+      },
+    },
+  },
+  {
     ignores: [
       'dist/*',
       'web-build/*',

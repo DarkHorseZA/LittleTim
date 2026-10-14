@@ -15,12 +15,14 @@ export const fonts = {
 // Base type scale. Tablet scaling is applied globally in index.ts by patching
 // StyleSheet.create — do NOT hand-scale these tokens here or they'll double.
 export const text = {
+  // A quiet section kicker. Sentence case, barely tracked: it signposts without
+  // shouting. (It used to be tracked-out ALL-CAPS, the commonest "generated UI"
+  // tell; sentence case also reads warmer, closer to the book's voice.)
   eyebrow: {
     fontFamily: fonts.sansSemi,
-    fontSize: 11,
-    letterSpacing: 2.2,
+    fontSize: 12,
+    letterSpacing: 0.3,
     color: colors.inkFaint,
-    textTransform: 'uppercase',
   } as TextStyle,
   // Full-screen editorial hero titles (Baseline, Morning Ritual).
   hero: {

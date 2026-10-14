@@ -135,9 +135,8 @@ const styles = StyleSheet.create({
   originText: {
     fontFamily: fonts.sansSemi,
     fontSize: 12,
-    letterSpacing: 1,
+    letterSpacing: 0.3,
     color: colors.clayDeep,
-    textTransform: 'uppercase',
   },
   definition: {
     fontFamily: fonts.sans,

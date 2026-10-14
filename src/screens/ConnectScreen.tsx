@@ -488,11 +488,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   webEyebrow: {
-    fontFamily: fonts.sansBold,
-    fontSize: 11,
-    letterSpacing: 2.2,
+    fontFamily: fonts.sansSemi,
+    fontSize: 12,
+    letterSpacing: 0.3,
     color: colors.onClaySoft,
-    textTransform: 'uppercase',
   },
   webBadge: {
     width: 34,
@@ -522,12 +521,11 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
   webCtaText: {
-    fontFamily: fonts.sansBold,
-    fontSize: 13,
-    letterSpacing: 1.2,
+    fontFamily: fonts.sansSemi,
+    fontSize: 14,
+    letterSpacing: 0.3,
     color: colors.white,
     marginRight: 6,
-    textTransform: 'uppercase',
   },
   socialRow: {
     flexDirection: 'row',
@@ -570,10 +568,9 @@ const styles = StyleSheet.create({
   },
   soonPillText: {
     fontFamily: fonts.sansSemi,
-    fontSize: 10,
+    fontSize: 11,
     color: colors.inkFaint,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
+    letterSpacing: 0.3,
   },
   iconCircle: {
     width: 34,

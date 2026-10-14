@@ -209,9 +209,8 @@ export function PracticeDetailScreen({ navigation, route }: Props) {
             <Ionicons name="time-outline" size={14} color={colors.inkSoft} />
             <Text style={styles.metaText}>{practice.durationMin} min</Text>
           </View>
-          <Text style={styles.metaSep}>·</Text>
-          <Text style={styles.cue}>{practice.cue}</Text>
         </View>
+        <Text style={styles.cue}>{practice.cue}</Text>
 
         {available ? (
           <GuidedAudioControl
@@ -336,7 +335,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
-    marginBottom: 24,
+    marginBottom: 8,
     flexWrap: 'wrap',
   },
   meta: {
@@ -349,13 +348,9 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontSize: 13,
   },
-  metaSep: {
-    color: colors.inkFaint,
-    marginHorizontal: 8,
-  },
   cue: {
     ...text.body,
-    flexShrink: 1,
+    marginBottom: 24,
   },
 });
 

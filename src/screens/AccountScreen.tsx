@@ -435,8 +435,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansSemi,
     fontSize: 12,
     color: colors.inkFaint,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
+    letterSpacing: 0.3,
   },
   soonRow: {
     flexDirection: 'row',
