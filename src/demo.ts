@@ -70,16 +70,18 @@ export function seedDemoIfNeeded(): void {
   }
 
   try {
+    // A reader about ten weeks in, roughly halfway through the book. Joined
+    // ~82 days ago; reflected yesterday, so today's check-in is still open.
     const settings: Settings = {
       reminderHour: 8,
       hapticsEnabled: true,
       hasSeenHowTo: true,
       tourSeen: true,
       profile: { displayName: 'Friend', email: 'friend@example.com' },
-      currentChapter: 3,
+      currentChapter: 5,
       lastCheckInDate: dateKey(daysAgo(1)),
       registeredEmail: 'friend@example.com',
-      registeredAt: daysAgo(18).toISOString(),
+      registeredAt: daysAgo(82).toISOString(),
       notifyOffered: true,
       ratingAsked: true,
       bookCompleted: false,
@@ -87,49 +89,88 @@ export function seedDemoIfNeeded(): void {
       practiceHintDisabled: false,
     };
 
-    // A committed-but-human rhythm over the past ~18 days, with gaps. Today is
-    // left empty on purpose, so a visitor can sew their own first stitch.
+    // ~2.5 months of a believable rhythm: an eager start, a mid dip with a
+    // real week-long gap (around days 39-49), then a steady recent run.
+    // Density varies day to day, so the patches aren't a uniform block. Today
+    // (day 0) is left open on purpose, so a visitor can sew their own stitch.
     const quilt: QuiltEntry[] = [];
-    const add = (n: number, type: QuiltEntry['type']) =>
+    const push = (n: number, type: QuiltEntry['type']) =>
       quilt.push({ date: dateKey(daysAgo(n)), type });
-    for (const n of [1, 2, 3, 5, 6, 8, 9, 10, 12, 14, 15, 17]) add(n, 'ritual');
-    for (const n of [1, 2, 3, 4, 6, 8, 9, 11, 14, 15, 17]) add(n, 'belief');
-    for (const n of [2, 5, 9, 14]) add(n, 'msg');
-    for (const n of [3, 8, 15]) add(n, 'see');
-    for (const n of [4, 11]) add(n, 'journal');
 
-    const stitches: JournalStitch[] = [
-      {
-        id: String(daysAgo(4).getTime()),
-        date: dateKey(daysAgo(4)),
-        sewedWithLove:
-          'I let myself rest without earning it, and the guilt loosened its thread.',
-        oldThreadPulled:
-          'When my phone buzzed, I reached for it out of Fear, not need.',
-        savedAt: daysAgo(4).toISOString(),
-      },
-      {
-        id: String(daysAgo(11).getTime()),
-        date: dateKey(daysAgo(11)),
-        sewedWithLove:
-          'I spoke to myself as gently as I would to a dear friend.',
-        oldThreadPulled:
-          'An old voice said I was behind. I thanked it, and kept sewing.',
-        savedAt: daysAgo(11).toISOString(),
-      },
+    const ritualDays = [
+      1, 2, 3, 4, 6, 7, 8, 9, 11, 12,
+      14, 16, 17, 19, 21, 22, 24, 26, 27, 29,
+      31, 33, 36, 38, 50, 52, 54,
+      56, 57, 58, 60, 61, 63, 64, 66, 68, 69,
+      71, 72, 74, 75, 77, 78, 80, 82,
     ];
+    const beliefDays = [
+      1, 2, 3, 6, 7, 9, 10, 12,
+      14, 16, 18, 21, 24, 27, 29,
+      33, 38, 52,
+      56, 58, 60, 63, 64, 66, 69, 71, 74, 77, 80, 82,
+    ];
+    const msgDays = [2, 4, 7, 9, 11, 16, 22, 27, 36, 52, 57, 61, 66, 72, 78];
+    const seeDays = [3, 8, 12, 19, 26, 54, 58, 64, 74, 80];
+    const journalDays = [1, 6, 17, 24, 38, 68]; // each also carries a saved stitch
 
-    // One fully-sewn past day so progress is visible; today stays open.
-    const past = dateKey(daysAgo(2));
-    const entries: Record<string, DailyEntry> = {
-      [past]: {
-        date: past,
-        msgDone: true,
-        seeDone: false,
-        beliefAcknowledged: true,
-        morningRitualDone: true,
+    ritualDays.forEach((n) => push(n, 'ritual'));
+    beliefDays.forEach((n) => push(n, 'belief'));
+    msgDays.forEach((n) => push(n, 'msg'));
+    seeDays.forEach((n) => push(n, 'see'));
+    journalDays.forEach((n) => push(n, 'journal'));
+
+    // The saved stitches that pair with the journal days above. A couple have
+    // only one line filled, the way a real reader leaves them some mornings.
+    const stitchText: Record<number, { love?: string; pulled?: string }> = {
+      1: {
+        love: 'I let the morning be slow. I breathed before I reached for the day.',
+        pulled: 'A message sat unanswered and I felt the old need to chase it. I let it rest.',
+      },
+      6: {
+        love: 'I told my son I was proud of him, and I watched it land in his shoulders.',
+        pulled: 'When the work piled up, Fear whispered I was failing. I kept stitching anyway.',
+      },
+      17: {
+        love: 'I forgave myself for the day I missed. The quilt did not mind the gap.',
+      },
+      24: {
+        love: 'I said no, gently, and the sky did not fall.',
+        pulled: 'I reached for my phone out of Fear, not need. I set it down.',
+      },
+      38: {
+        pulled: 'An old voice said I was behind. I thanked it, and carried on from Love.',
+      },
+      68: {
+        love: 'I spoke to myself as kindly as I would to a dear friend.',
+        pulled: 'I wanted to be further along. I remembered small and daily beats big and rare.',
       },
     };
+    const stitches: JournalStitch[] = journalDays.map((n) => ({
+      id: String(daysAgo(n).getTime()),
+      date: dateKey(daysAgo(n)),
+      sewedWithLove: stitchText[n]?.love,
+      oldThreadPulled: stitchText[n]?.pulled,
+      savedAt: daysAgo(n).toISOString(),
+    }));
+
+    // Daily entries mirror the quilt so every past day is internally
+    // consistent. Today is absent, so it opens fresh.
+    const entries: Record<string, DailyEntry> = {};
+    for (const q of quilt) {
+      const e = entries[q.date] ?? {
+        date: q.date,
+        msgDone: false,
+        seeDone: false,
+        beliefAcknowledged: false,
+        morningRitualDone: false,
+      };
+      if (q.type === 'msg') e.msgDone = true;
+      if (q.type === 'see') e.seeDone = true;
+      if (q.type === 'belief') e.beliefAcknowledged = true;
+      if (q.type === 'ritual') e.morningRitualDone = true;
+      entries[q.date] = e;
+    }
 
     ls.setItem(KEY_SETTINGS, JSON.stringify(settings));
     ls.setItem(KEY_QUILT, JSON.stringify(quilt));

@@ -13,10 +13,12 @@ public repo holds the built web app; the code lives here.
 Triggered by the `EXPO_PUBLIC_DEMO=1` build flag (or a `?demo` / `/demo` URL for
 local testing). Web only — it does nothing in the native store app.
 
-- Seeds a lived-in state before anything reads storage: a "Friend" profile,
-  Chapter 3, ~18 days of varied quilt history (14 patches, 32 stitches), two
-  journal stitches, one fully-sewn past day. **Today is left open** so a visitor
-  can do a ritual / sew a stitch and feel the real app.
+- Seeds a lived-in state before anything reads storage: a "Friend" roughly ten
+  weeks in and about halfway through the book (Chapter 5), ~2.5 months of varied
+  quilt history (around 47 patches / 106 stitches) with believable gaps,
+  including a mid-stretch week off, plus six saved journal stitches. **Today is
+  left open** so a visitor can do a ritual / sew a stitch and feel the real app.
+  (The exact counts shift slightly with the day the page is opened.)
 - Opens straight into **Today** — no Welcome splash, no email ask.
 - Suppresses the once-per-launch chapter check-in and reminder nudges.
 - Turns off React Navigation URL syncing (the app sits on a subpath, so this
